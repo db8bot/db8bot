@@ -7,6 +7,8 @@ const fs = require("fs");
 const Enmap = require("enmap");
 // Require our logger
 client.logger = require("./modules/Logger.js");
+// const Enmap = require("enmap");
+client.rounds = new Enmap({name: "rounds"});
 
 // Let's start by getting some useful functions that we'll use throughout
 // the bot, like logs and elevation features.
