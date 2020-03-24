@@ -13,6 +13,7 @@ exports.run = function (client, message, args) {
     // message.channel.send(args[args.length-2])
     if ((args[args.length - 1].indexOf('<@!') != -1) || (args[args.length - 2].indexOf('<@!')) != -1 || args.length < 5) {
         message.reply(`round start failed :(`)
+        return;
     } else {
         for (var i = 0; i < args.length - 3; i++) {
             guild.member(message.mentions.users.array()[i]).roles.add(currentlyDebating)
