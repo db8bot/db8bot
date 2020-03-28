@@ -10,13 +10,13 @@ exports.run = function (client, message, MessageEmbed) {
     const config = client.config;
     var guild = message.guild;
     var select = getRandomIntInclusive(1, 3);
-    if (select === 1) {
-        const embed = new Discord.MessageEmbed()
-            .setColor('#ccff00')
+    const embed = new Discord.MessageEmbed()
+            .setColor(select===1?"#ccff00":select===2?"#0072bb":select===3?"#ff4f00":"#ccff00")
             .setTitle("DB8Bot Help\n")
             .addField('Prefix', `\`${config.prefix}\``)
             .addField('Example:', `\`${config.prefix}ping\``)
             .addField('Commands:', `Do \`${config.prefix}commands\` to see a full list of commands.`)
+            .addField(`Setup`,`${config.name} requires a **modlog text channel**, a **debatelog text channel** and a **Mute role called "Mute"**. For automatic setup please use \`${config.prefix}setup\`. Otherwise please create these roles and channels.`)
             // .addField('Checklist:', `Please run the command \`${config.prefix}checklist\` to check if PowerBot has all the required permissions to run.`)
             .addField('Github', `The repo for this bot can be found [here](https://github.com/AirFusion45/db8bot).`)
             .addField('Support Server:', `Come [here](https://discord.gg/rEQc7C7) to get help or just hang out.`)
@@ -25,37 +25,4 @@ exports.run = function (client, message, MessageEmbed) {
             .setTimestamp()
 
         message.channel.send({ embed: embed })
-    }
-    if (select === 2) {
-        const embed = new Discord.MessageEmbed()
-            .setColor('#0072bb')
-            .setTitle("DB8Bot Help\n")
-            .addField('Prefix:', `\`${config.prefix}\``)
-            .addField('Example:', `\`${config.prefix}ping\``)
-            .addField('Commands:', `Do \`${config.prefix}commands\` to see a full list of commands.`)
-            // .addField('Checklist:', `Please run the command \`${config.prefix}checklist\` to check if PowerBot has all the required permissions to run.`)
-            .addField('Github', `The repo for this bot can be found [here](https://github.com/AirFusion45/db8bot).`)
-            .addField('Support Server:', `Come [here](https://discord.gg/rEQc7C7) to get help or just hang out.`)
-            .addField('Bot Invite Link', `Use \`${config.prefix}invite\` for the bot's invite link, or click [here](https://discordapp.com/oauth2/authorize?client_id=689368779305779204&scope=bot&permissions=2146958847)`)
-            .setFooter(`Made by ${config.ownerTag}`)
-            .setTimestamp()
-
-        message.channel.send({ embed: embed })
-    }
-    if (select === 3) {
-        const embed = new Discord.MessageEmbed()
-            .setColor('#ff4f00')
-            .setTitle("DB8Bot Help\n")
-            .addField('Prefix:', `\`${config.prefix}\``)
-            .addField('Example:', `\`${config.prefix}ping\``)
-            .addField('Commands:', `Do \`${config.prefix}commands\` to see a full list of commands.`)
-            // .addField('Checklist:', `Please run the command \`${config.prefix}checklist\` to check if PowerBot has all the required permissions to run. If nothing returns, then the bot have essential permissions missing.`)
-            .addField('Github', `The repo for this bot can be found [here](https://github.com/AirFusion45/db8bot).`)
-            .addField('Support Server:', `Come [here](https://discord.gg/rEQc7C7) to get help or just hang out.`)
-            .addField('Bot Invite Link', `Use \`${config.prefix}invite\` for the bot's invite link, or click [here](https://discordapp.com/oauth2/authorize?client_id=689368779305779204&scope=bot&permissions=2146958847)`)
-            .setFooter(`Made by ${config.ownerTag}`)
-            .setTimestamp()
-
-        message.channel.send({ embed: embed })
-    }
 }

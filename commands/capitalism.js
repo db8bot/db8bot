@@ -5,7 +5,7 @@ function getRandomIntInclusive(min, max) {
 }
 
 exports.run = function (client, message) {
-    const quotes = require("../quotes.json");
+    const quotes = require("../quotesCap.json");
     const Discord = require('discord.js');
     const fs = require("fs")
     const translate = require('@vitalets/google-translate-api');
@@ -17,7 +17,7 @@ exports.run = function (client, message) {
         // console.log(res)
         // console.log(quotes[num].quote)
         const quoteSend = new Discord.MessageEmbed()
-            .setColor("#dd0200")
+            .setColor("#2c80c6")
             .setTitle(`Quote by ${quotes[num].author}`)
             .setDescription(`"${res.text}"\n-${quotes[num].author}`)
             .setFooter(`Disclaimer: This command is purely for satirical purposes. It does not represent the creator, the owner, or the user's views.`)
@@ -28,7 +28,7 @@ exports.run = function (client, message) {
 
     quotes[quotes.length - 1].lastQuote = quotes[num].quote
     quotes[quotes.length - 1].lastNumber = num
-    fs.writeFile('../quotes.json', JSON.stringify(quotes, null, 2), function (err) {
+    fs.writeFile('../quotesCap.json', JSON.stringify(quotes, null, 2), function (err) {
         if (err) return console.error(err);
         // message.channel.send(`Prefix Successfully Changed to ${config.prefix}.`)
     });

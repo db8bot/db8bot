@@ -4,6 +4,7 @@ exports.run = function (client, message, args) {
     var guild = message.guild;
     let game = ''
     let customStatus = ''
+    let mentionedObj = message.mentions.users.first()
     let user;
     if (message.mentions.users.first()) {
         user = message.channel.guild.members.cache.get(message.mentions.users.first().id);
@@ -49,7 +50,8 @@ exports.run = function (client, message, args) {
         // else {
         //     game = user.presence.activities.name
         // }
-        if (user.activities === null) {
+        // console.log(user.presence.activities)
+        if (user.presence.activities[0] === undefined) {
             game = 'Nothing'
             customStatus = 'Nothing'
         }
@@ -64,12 +66,13 @@ exports.run = function (client, message, args) {
             game = user.presence.activities[0].name;
             customStatus = 'Nothing'
         }
-
+        // console.log(user)
+        // console.log(user[0])
         // console.log(user.presence.activities)
         var date = new Date(user.joinedTimestamp * 1000);
-        message.channel.send(user.joinedTimestamp)
+        // message.channel.send(user.joinedTimestamp)
         const userInfo = new Discord.MessageEmbed()
-            .setAuthor(`User Info for ${user.tag} - ID: ${user.id}`)
+            .setAuthor(`User Info for ${mentionedObj.tag} - ID: ${user.id}`)
             .setColor('#2D7FFF')
             .setThumbnail(user.avatar===null?null:user.avatar)
             // .addField('Discriminator: ', user.discriminator)

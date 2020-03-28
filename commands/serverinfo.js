@@ -3,7 +3,7 @@ exports.run = function (client, message, args) {
     const config = client.config;
     var guild = message.guild;
     const embed = new Discord.MessageEmbed()
-        .setColor('#7d5bbe')
+        .setColor('36393E')
         .setTitle(message.guild.name + ` Server Stats`)
         .addField('📄 Channels', `${message.guild.channels.cache.filter(chan => chan.type === 'voice').size} Voice Channels | ${message.guild.channels.cache.filter(chan => chan.type === 'text').size} Text Channels | ${message.guild.channels.cache.filter(chan => chan.type === 'category').size} Categories | ${Math.round((message.guild.channels.cache.filter(chan => chan.type === 'voice').size / message.guild.channels.cache.size) * 100)}% Voice Channels | ${Math.round((message.guild.channels.cache.filter(chan => chan.type === 'text').size / message.guild.channels.cache.size) * 100)}% Text Channels | ${Math.round((message.guild.channels.cache.filter(chan => chan.type === 'category').size/message.guild.channels.cache.size)*100)}% Categories`, true)
         .addField(':man: Members', `${message.guild.members.cache.filter(member => member.user.bot).size} Bots  | ${message.guild.memberCount} Total Members | ${Math.round((message.guild.members.cache.filter(member => member.user.bot).size / message.guild.memberCount) * 100)} % Bots`, true)
