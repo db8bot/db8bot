@@ -15,6 +15,7 @@ exports.run = function (client, message, args) {
     }
     const Discord = require('discord.js');
     var guild = message.guild;
+    client.logger.log('info', `startspeech command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
     const config = client.config;
     const help = new Discord.MessageEmbed()
         .setColor("#f0ffff")

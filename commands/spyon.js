@@ -1,4 +1,5 @@
-exports.run = function (client, message) {
+exports.run = function (client, message, args, args2, cmd) {
+    const config = client.config;
     var guild = message.guild;
     function getDefaultChannel(guild) {
         if (guild.channels.cache.some(name1 => name1.name === "general"))
@@ -12,8 +13,14 @@ exports.run = function (client, message) {
                 Long.fromString(a.id).sub(Long.fromString(b.id)).toNumber())
             .first();
     }
-    getDefaultChannel(message.guild).createInvite({ maxAge: 300 }).then(inv => message.channel.send(inv.url ? inv.url : "discord.gg/" + inv.code))
-    client.logger.log('info', `serverinv command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${guild}`)
-
+    if (message.author.id === config.owner) {
+        try {
+            getDefaultChannel(client.guilds.cache.find(val1 => val1.name === args.join(' '))).createInvite({ maxAge: 30 }).then(inv => message.channel.send(inv.url ? inv.url : "discord.gg/" + inv.code)).catch(e => console.error(e))
+        } catch (error) {
+            console.log(error)
+            message.reply(' they don\'t allow me to generate invites :(')
+        }
+    } else {
+        message.reply(" only AirFusion gets to spy on servers, sorry.")
+    }
 }
-

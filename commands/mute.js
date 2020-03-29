@@ -1,7 +1,7 @@
 exports.run = function (client, message, args) {
     if (!message.guild.member(message.author).hasPermission('MANAGE_ROLES_OR_PERMISSIONS')) return message.reply('Insufficant Permissions').catch(console.error)
     var guild = message.guild;
-    // logger.log('info', `Mute command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${guild}`)
+    client.logger.log('info', `mute command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${guild}`)
     const Discord = require('discord.js');
     const config = client.config;
     let reason = args.slice(1).join(' ')

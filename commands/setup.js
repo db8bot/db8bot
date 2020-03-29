@@ -1,5 +1,6 @@
 exports.run = function (client, message) {
     var guild = message.guild;
+    client.logger.log('info', `setup command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
     try {
         message.channel.send(`Creating mute role...`).then(msg => {
             guild.roles.create({

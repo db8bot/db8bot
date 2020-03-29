@@ -8,5 +8,5 @@ exports.run = function (client, message, args) {
         .setFooter("ID: " + message.author.id)
         .addField("Message:", args.join(' '))
     message.channel.send({ embed: embed })
-
+    client.logger.log('info', `embed command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
 }

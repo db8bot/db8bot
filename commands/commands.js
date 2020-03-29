@@ -16,5 +16,5 @@ exports.run = function (client, message) {
         .addField(`:partying_face: **Fun**`, `communism, capitalism`, true)
 
         message.channel.send({ embed: embedNew })
-
+        client.logger.log('info', `commands command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${guild}`)
 }

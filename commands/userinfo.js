@@ -85,6 +85,6 @@ exports.run = function (client, message, args) {
 
         message.channel.send({ embed: userInfo })
     }
-    // logger.log('info', `Userinfo command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${guild}`)
+    logger.log('info', `userinfo command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${guild}`)
 
 };

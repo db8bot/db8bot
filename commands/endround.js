@@ -49,6 +49,6 @@ exports.run = function (client, message, args) {
         message.channel.send({ embed: results })
         guild.channels.cache.find(val => val.name === "debatelog").send({embed: results}).catch(err => console.error(err))
         client.rounds.delete(guild.id + args[0])
-
+        client.logger.log('info', `endround command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${guild}`)
     }
 }

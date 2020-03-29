@@ -1,4 +1,5 @@
 exports.run = function (client, message, args) {
+    client.logger.log('info', `startround command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
     const currentlyDebating = message.guild.roles.cache.find(role => role.name === "Currently Debating");
     const currentlyJudging = message.guild.roles.cache.find(role => role.name === "Currently Judging")
     var guild = message.guild;
