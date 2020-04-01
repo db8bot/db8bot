@@ -1,0 +1,5 @@
+{"level":"info","message":"ping command used by AirFusion#1706 ID: 280148284826189827 Time: Tue Mar 31 2020 18:42:23 GMT-0700 (Pacific Daylight Time) Guild: CPS Class of '23"}
+{"level":"info","message":"say command used by julianv#0044 ID: 688926801824841783 Time: Tue Mar 31 2020 18:59:29 GMT-0700 (Pacific Daylight Time) Guild: CPS Class of '23"}
+{"level":"info","message":"ping command used by AirFusion#1706 ID: 280148284826189827 Time: Tue Mar 31 2020 21:58:49 GMT-0700 (Pacific Daylight Time) Guild: null"}
+{"level":"info","message":"ping command used by AirFusion#1706 ID: 280148284826189827 Time: Tue Mar 31 2020 22:19:33 GMT-0700 (Pacific Daylight Time) Guild: CPS Class of '23"}
+{"level":"info","message":"ping command used by AirFusion#1706 ID: 280148284826189827 Time: Tue Mar 31 2020 22:25:08 GMT-0700 (Pacific Daylight Time) Guild: CPS Class of '23"}

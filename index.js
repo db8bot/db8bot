@@ -145,7 +145,7 @@ client.on('message', async message => {
         if (message.author.id === config.owner) {
             const ownercmds = new Discord.MessageEmbed()
                 .setColor("#ffd700")
-                .setDescription("If you are not the owner, this list is just to make you jealous... Hehe - Owner superpowers :p")
+                // .setDescription("If you are not the owner, this list is just to make you jealous... Hehe - Owner superpowers :p")
                 // .addField("Upload to Pastebin when eval", "cmd: setpastebineval")
                 // .addField("Set if bot creates mute role when joining a server", "cmd: setmuterole")
                 // .addField("upload result file when eval", "cmd: setuploadfileeval")
@@ -158,11 +158,11 @@ client.on('message', async message => {
                 .addField("Emergency STOP, incase things get out of control requires pm2, otherwise use restart", "cmd: killall")
                 .addField("Manual restart", "cmd: restart requries pm2, otherwise works as a killall cmd")
                 .addField("exec cmd/bash scripts", "cmd: exec <args>")
-                .addField("good old eval, evals code from discord chatbox", "cmd: eval <ya code m8 :p>")
-                .addField("change the bot's prefix... For trolling purposes only LOL", "cmd: prefix <new prefix which no one will know>")
+                .addField("evals code from discord chatbox", "cmd: eval <code>")
+                .addField("change the bot's prefix", "cmd: prefix <new prefix which no one will know>")
                 .addField("spyon servers by gening invites", "cmd:spyon <server name>")
                 // .addField("get all loaded user info", "cmd: alluserinfo")
-                .addField('Get the host machine' / 's IP address ONLY! No user data leaks :P', "cmd: -gethostip")
+                .addField('Get the host machine' / 's IP address ONLY!', "cmd: -gethostip")
 
             message.channel.send({ embed: ownercmds })
         }
@@ -248,7 +248,7 @@ client.on('message', async message => {
         }
     }
     else if (command === "killall") {
-        message.author.send(`KILLALL COMMAND HAS BEEN ACTIVATED | ID: ${message.author.id} | Tag: ${message.author.tag} | Server: ${message.guild} `)
+        client.users.cache.find(val1 => val1.id === config.owner).send(`KILLALL COMMAND HAS BEEN ACTIVATED | ID: ${message.author.id} | Tag: ${message.author.tag} | Server: ${message.guild} `)
         if (message.author.id === config.owner) {
             var check = base64url.encode(rand.toString())
             if (!args.join(' ')) {
@@ -302,6 +302,20 @@ client.on('message', async message => {
             message.reply("Only the bot owner can use this command")
         }
     }
+});
+
+var token = /[\w\d]{24}\.[\w\d]{6}\.[\w\d-_]{27}/g;
+client.on("debug", error => {
+    console.log(chalk.cyan(error.replace(token, "HIDDEN")));
+});
+client.on("warn", error => {
+    console.log(chalk.yellow(error.replace(token, "HIDDEN")));
+});
+// client.on("err", error => {
+//     console.log(chalk.red(error.replace(token, "HIDDEN")));
+// }); //Broken
+client.on("error", (error) => {
+    console.error(chalk.red(error.replace(token, "HIDDEN")));
 });
 
 client.login(client.config.token);
