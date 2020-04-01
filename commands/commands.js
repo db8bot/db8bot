@@ -13,7 +13,7 @@ exports.run = function (client, message) {
         .addField(`:hammer: **Moderation**`, `lockdown (lockdown unlock), mute & unmute(mute role required), purge`, true)
         .addField(`:information_source: **Information**`, `botinfo, serverinfo, userinfo`, true)
         .addField(`:trophy: **Debate**`, `get, **startround: startspeech, endround, roundstatus, flip**`, true)
-        .addField(`:partying_face: **Fun**`, `communism, capitalism`, true)
+        .addField(`:partying_face: **Fun**`, `communism, capitalism, trump`, true)
 
         message.channel.send({ embed: embedNew })
         client.logger.log('info', `commands command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${guild}`)

