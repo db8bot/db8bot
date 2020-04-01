@@ -1,0 +1,5 @@
+{"level":"info","message":"purge command used by AirFusion#1706 ID: 280148284826189827 Time: Wed Apr 01 2020 10:40:11 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"purge command used by AirFusion#1706 ID: 280148284826189827 Time: Wed Apr 01 2020 10:40:13 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"purge command used by AirFusion#1706 ID: 280148284826189827 Time: Wed Apr 01 2020 10:40:16 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"purge command used by AirFusion#1706 ID: 280148284826189827 Time: Wed Apr 01 2020 10:40:19 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"purge command used by AirFusion#1706 ID: 280148284826189827 Time: Wed Apr 01 2020 10:40:21 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
