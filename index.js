@@ -11,6 +11,8 @@ var localStorage = require('localStorage')
 // localStorage = new LocalStorage('./');
 var base64url = require('base64-url');
 const { exec } = require("child_process");
+const Sentry = require('@sentry/node');
+Sentry.init({ dsn: 'https://3a8ab5afe5824525ac1f41ebe688fbd0@sentry.io/5188131' });
 function getRandomIntInclusive(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);

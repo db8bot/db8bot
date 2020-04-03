@@ -1,0 +1,8 @@
+{
+    "token": "",
+    "owner": "owner ID here",
+    "ownerTag": "owner username & discrim here",
+    "prefix": "bot prefix: only support 1 character prefixes",
+    "name": "name of your bot w/ discrim",
+    "invLink": "bot's invite link"
+  }
