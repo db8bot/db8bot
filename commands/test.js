@@ -28,18 +28,6 @@ exports.run = function (client, message, args) {
             return s.replace(translate_re, translator);
         };
     })();
-    client.logger.log('info', `judgeinfo command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
-    const help = new Discord.MessageEmbed()
-        .setColor("#f0ffff")
-        .setDescription("**Command: **" + `${config.prefix}judgeinfo`)
-        .addField("**Usage:**", `${config.prefix}judgeinfo <tabroom judge's firstname> <judge lastname>`)
-        .addField("**Example:**", `${config.prefix}judgeinfo Bob Ross`)
-        .addField("**Expected Result From Example:**", "Bot will return the judge's paradigm along with the direct link to the paradigm.")
-        .addField("**NOTES:**", "This command is in beta. It might not work as expected. The bot will return the paradigm in discord code blocks (cause it's better looking), however if something goes wrong, it will send the paradigm in plain text!")
-    if (args.join(' ') === "" || args.join(' ').indexOf(" ") === -1) {
-        message.channel.send({ embed: help })
-        return;
-    }
     superagent
         .get(`https://www.tabroom.com/index/paradigm.mhtml?search_first=${args[0]}&search_last=${args[1]}`)
         .end((err, res) => {

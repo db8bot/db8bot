@@ -29,7 +29,7 @@ exports.run = function (client, message, args) {
             mentionableDebaters+=`<@!${debatersID[j]}> `
         }
         // console.log(mentionableDebaters)
-        roundstats.addField(`Debate ${i+1}`, `Name: ${currentInteration.name} | Round Type: ${currentInteration.type} | Judge: <@!${currentInteration.judge}> | Debaters: ${mentionableDebaters} | Current Speech: ${currentInteration.speech===""?"No speech started yet (Before 1AC)":currentInteration.speech}`)
+        roundstats.addField(`Debate ${i+1}`, `Name: ${currentInteration.name} | Round Type: ${currentInteration.type} | Judge: <@!${currentInteration.judge}> | Debaters: ${mentionableDebaters} | Current Speech: ${currentInteration.speech===""?"No speech started yet":currentInteration.speech}`)
         mentionableDebaters="";
     }
     message.channel.send({embed: roundstats})

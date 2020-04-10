@@ -1,6 +1,6 @@
 {
   "name": "db8bot",
-  "version": "1.0.0-alpha1",
+  "version": "1.0.0-alpha2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -15,6 +15,7 @@
     "base64-url": "^2.3.3",
     "better-sqlite3": "^6.0.1",
     "chalk": "^4.0.0",
+    "detergent": "^5.8.12",
     "discord.js": "^12.1.1",
     "enmap": "^5.2.4",
     "goodreads-quote-scraper": "^1.0.4",
@@ -30,6 +31,8 @@
     "os": "^0.1.1",
     "python-shell": "^1.0.8",
     "querystring": "^0.2.0",
+    "request": "^2.88.2",
+    "string-strip-html": "^4.3.19",
     "superagent": "^5.2.2",
     "winston": "^3.2.1"
   }

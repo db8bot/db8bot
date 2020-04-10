@@ -1,6 +1,6 @@
 const ms = require('ms');
 exports.run = function (client, message, args) {
-let guild = message.guild;
+    let guild = message.guild;
     client.logger.log('info', `lockdown command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${guild}`)
     const Discord = require('discord.js');
     let member = message.author;
@@ -29,10 +29,10 @@ let guild = message.guild;
     if (validUnlocks.includes(time)) {
         message.channel.overwritePermissions([
             {
-               id: message.guild.id,
-               deny: [],
+                id: message.guild.id,
+                deny: [],
             },
-          ], 'Lockdown').then(() => {
+        ], 'Lockdown').then(() => {
             message.channel.send('Lockdown lifted.');
             clearTimeout(client.lockit[message.channel.id]);
             delete client.lockit[message.channel.id];
@@ -42,19 +42,19 @@ let guild = message.guild;
     } else {
         message.channel.overwritePermissions([
             {
-               id: message.guild.id,
-               deny: ['SEND_MESSAGES'],
+                id: message.guild.id,
+                deny: ['SEND_MESSAGES'],
             },
-          ], 'Lockdown').then(() => {
+        ], 'Lockdown').then(() => {
             message.channel.send(`Channel locked down for ${ms(ms(time), { long: true })}`).then(() => {
 
                 client.lockit[message.channel.id] = setTimeout(() => {
                     message.channel.overwritePermissions([
                         {
-                           id: message.guild.id,
-                           deny: [],
+                            id: message.guild.id,
+                            deny: [],
                         },
-                      ], 'Lockdown').then(message.channel.send('Lockdown lifted.')).catch(console.error);
+                    ], 'Lockdown').then(message.channel.send('Lockdown lifted.')).catch(console.error);
                     delete client.lockit[message.channel.id];
                 }, ms(time));
 
