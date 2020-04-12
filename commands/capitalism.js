@@ -28,7 +28,7 @@ exports.run = function (client, message) {
     client.logger.log('info', `capitalism command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
     quotes[quotes.length - 1].lastQuote = quotes[num].quote
     quotes[quotes.length - 1].lastNumber = num
-    fs.writeFile('../quotesCap.json', JSON.stringify(quotes, null, 2), function (err) {
+    fs.writeFile('./quotesCap.json', JSON.stringify(quotes, null, 2), function (err) {
         if (err) return console.error(err);
         // message.channel.send(`Prefix Successfully Changed to ${config.prefix}.`)
     });
