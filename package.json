@@ -15,7 +15,7 @@
     "base64-url": "^2.3.3",
     "better-sqlite3": "^6.0.1",
     "chalk": "^4.0.0",
-    "detergent": "^5.8.12",
+    "detergent": "^5.8.13",
     "discord.js": "^12.1.1",
     "enmap": "^5.2.4",
     "goodreads-quote-scraper": "^1.0.4",
