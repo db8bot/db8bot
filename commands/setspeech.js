@@ -8,8 +8,8 @@ exports.run = function (client, message, args) {
         .setDescription("**Command: **" + `${config.prefix}setspeech`)
         .addField("**Usage:**", `${config.prefix}setspeech <round name> <speech name>`)
         .addField("**Example:**", `${config.prefix}setspeech AF-v-ND 1NC`)
-        .addField("**Expected Result From Example:**", "Bot will manually set the desired speech name into that round.")
-        .addField('**NOTES**', `If the bot pings you with an unsupported speech warning, that means the ${config.prefix}startspeech command and the speech timing function in that command will no longer work. You are in "manual" mode where you have to update the speech using this command yourself.`)
+        .addField("**Expected Result From Example:**", "Bot will set the desired speech name into that round.")
+        // .addField('**NOTES**', `If the bot pings you with an unsupported speech warning, that means the ${config.prefix}startspeech command and the speech timing function in that command will no longer work. You are in "manual" mode where you have to update the speech using this command yourself.`)
         .addField('**Nested Commands**', `For a list of supported speeches, type ${config.prefix}speeches`)
     if (args.join(' ') === "") {
         message.channel.send({ embed: help })

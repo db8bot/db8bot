@@ -12,7 +12,7 @@ exports.run = function (client, message) {
         .addField(`:tools: **General**`, `commands, help, embed, feedback, invite, ping, say, serverinv, dm`, true)
         .addField(`:hammer: **Moderation**`, `lockdown (lockdown unlock), mute & unmute(mute role required), purge, setup`, true)
         .addField(`:information_source: **Information**`, `botinfo, serverinfo, userinfo`, true)
-        .addField(`:trophy: **Debate**`, `get, **startround: startspeech, setspeech, endround, roundstatus, flip**, judgeinfo, speeches`, true)
+        .addField(`:trophy: **Debate**`, `get, **startround: setspeech, endround, roundstatus, flip**, judgeinfo, speeches`, true)
         .addField(`:partying_face: **Fun**`, `communism, capitalism, trump, baudrillard, bataille`, true)
 
         message.channel.send({ embed: embedNew })

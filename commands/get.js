@@ -11,7 +11,7 @@ exports.run = function (client, message, args) {
     const config = client.config
     // var eprint = {};
     var scholarLink = ""
-    if (args.join(' ') === "") {
+    if (args.join(' ') === "" || args.join(' ').indexOf("http")===-1) {
         const help = new Discord.MessageEmbed()
             .setColor("#f0ffff")
             .setDescription("**Command: **" + `${config.prefix}get`)
