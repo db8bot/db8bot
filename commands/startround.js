@@ -21,40 +21,46 @@ exports.run = function (client, message, args) {
             .addField("**Usage:**", `${config.prefix}startround <Mentioned debaters in the order of AFF to NEG seperated by a space per debater> <Mentioned judge: Only supports 1 judge> <Type of event: policy/cx/pol, ld/douglas, pf/pufo/forum> <Round name: No spaces allowed in the name!>`)
             .addField("**Example:**", `${config.prefix}startround @AirFusion @Bob @Nick @David @JudgeMary policy AF-v-ND`)
             .addField("**Expected Result From Example:**", "Bot returns round started message with round information.")
-        message.channel.send({embed: help})
+            .addField('**NOTES**', `The bot also supports currently debating and currently judging roles to be added to debaters and judges. Create two roles "Currently Debating" and "Currently Judging" to use this function. Make sure these two roles are below the bot's role.`)
+        message.channel.send({ embed: help })
         return;
     } else {
-        for (var i = 0; i < args.length - 3; i++) {
-            guild.member(message.mentions.users.array()[i]).roles.add(currentlyDebating)
-            debaters += message.mentions.users.array()[i] + " "
-            debatersObj += `${guild.member(message.mentions.users.array()[i])} `
+        try {
+            for (var i = 0; i < args.length - 3; i++) {
+                guild.member(message.mentions.users.array()[i]).roles.add(currentlyDebating).catch(err => console.log(err))
+                debaters += message.mentions.users.array()[i] + " "
+                debatersObj += `${guild.member(message.mentions.users.array()[i])} `
+            }
+            guild.member(message.mentions.users.array()[args.length - 3]).roles.add(currentlyJudging).catch(err => console.log(err))
+
+            debateConfig = {
+                type: args[args.length - 2],
+                name: args[args.length - 1],
+                judge: message.mentions.users.array()[args.length - 3].id,
+                debaters: debaters,
+                speech: ""
+            }
+
+            // console.log(debateConfig)
+            // message.channel.send(debateConfig)
+            // console.log(guild.id + args[args.length - 1])
+            console.log(debatersObj)
+
+            client.rounds.set(guild.id + args[args.length - 1], debateConfig)
+            // console.log(client.rounds.getProp(guild.id+args[args.length-1], debateConfig.debaters))
+            // message.channel.send("SET!")
+            const quoteSend = new Discord.MessageEmbed()
+                .setColor("#007fff")
+                .setTitle(`Round Started: ${args[args.length - 1]}`)
+                .addField(`Round Name`, args[args.length - 1])
+                .addField(`Event`, args[args.length - 2])
+                .addField(`Judge`, message.mentions.users.array()[args.length - 3])
+                .addField(`Debaters (In the order of AFF NEG)`, debatersObj)
+
+            message.channel.send({ embed: quoteSend })
         }
-        guild.member(message.mentions.users.array()[args.length - 3]).roles.add(currentlyJudging)
-
-        debateConfig = {
-            type: args[args.length - 2],
-            name: args[args.length - 1],
-            judge: message.mentions.users.array()[args.length - 3].id,
-            debaters: debaters,
-            speech: ""
+        catch (err) {
+            message.reply('Error! Please check that the "Currently Debating" & "Currently Judging" roles have been created.')
         }
-
-        // console.log(debateConfig)
-        // message.channel.send(debateConfig)
-        // console.log(guild.id + args[args.length - 1])
-        console.log(debatersObj)
-
-        client.rounds.set(guild.id + args[args.length - 1], debateConfig)
-        // console.log(client.rounds.getProp(guild.id+args[args.length-1], debateConfig.debaters))
-        // message.channel.send("SET!")
-        const quoteSend = new Discord.MessageEmbed()
-            .setColor("#007fff")
-            .setTitle(`Round Started: ${args[args.length - 1]}`)
-            .addField(`Round Name`, args[args.length - 1])
-            .addField(`Event`, args[args.length - 2])
-            .addField(`Judge`, message.mentions.users.array()[args.length - 3])
-            .addField(`Debaters (In the order of AFF NEG)`, debatersObj)
-
-        message.channel.send({ embed: quoteSend })
     }
 }
