@@ -45,9 +45,9 @@ This is not a command list. Some of the descriptions after the dash are not actu
     * Admin/Mod Commands - mute
     * Chat Management - purge & lockdown
   * Utility Commands - server info, user info, bot info 
-  * General Chat Commands - generate embed messages, quickly generate a server invite link, say
-  * Debate Comands - get research paper from sci-hub, start then track a debate round, track a new speech, end the tracked debate round, coin flip, get judge's paradigm from Tabroom
-  * Fun Commands :) - trump quotes, communism & capitalism themed quotes
+  * General Chat Commands - generate embed messages, quickly generate a server invite link, say, DM person in server as bot.
+  * Debate Comands - get research paper from sci-hub, start then track a debate round, track current speech, end the tracked debate round, coin flip, get judge's paradigm from Tabroom
+  * Fun Commands :) - trump quotes, communism, capitalism, bataille & baudrillard themed quotes
 
 # Authors
   * AirFusion45 - Owner
