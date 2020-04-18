@@ -74,6 +74,7 @@ This is not a command list. Some of the descriptions after the dash are not actu
 * *AirFusion45* - Original Author
 * *Extinction Inevitable#2404* - Capitalism command request
 * *julianv#0044* - Improvements on -say
+* [*ethamitc*](https://github.com/ethamitc) - Improvement on formatting of readme.md
 
 ## License 
 This Project is licensed under MIT License - see the LICENSE.md file for more details. The main points of the MIT License are:
