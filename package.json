@@ -16,7 +16,7 @@
     "better-sqlite3": "^6.0.1",
     "chalk": "^4.0.0",
     "clockmaker": "^2.0.0",
-    "detergent": "^5.8.13",
+    "detergent": "^5.8.14",
     "discord.js": "^12.2.0",
     "enmap": "^5.2.4",
     "goodreads-quote-scraper": "^1.0.4",
