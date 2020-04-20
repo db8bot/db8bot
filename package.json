@@ -33,7 +33,7 @@
     "python-shell": "^1.0.8",
     "querystring": "^0.2.0",
     "request": "^2.88.2",
-    "string-strip-html": "^4.3.20",
+    "string-strip-html": "^4.3.21",
     "superagent": "^5.2.2",
     "winston": "^3.2.1"
   }
