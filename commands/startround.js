@@ -8,13 +8,7 @@ exports.run = function (client, message, args) {
     var debatersObj = [];
     const Discord = require('discord.js');
     const config = client.config;
-    // console.log(args)
-    // console.log(args[args.length-1])
-    // console.log(args[args.length-2])
-    // message.channel.send(args[args.length-1])
-    // message.channel.send(args[args.length-2])
     if (args.join(" ") === "" || (args[args.length - 1].indexOf('<@!') != -1) || (args[args.length - 2].indexOf('<@!')) != -1 || args.length < 5) {
-        // message.reply(`Round start failed :(`)
         const help = new Discord.MessageEmbed()
             .setColor("#f0ffff")
             .setDescription("**Command: **" + `${config.prefix}startround`)
@@ -40,15 +34,9 @@ exports.run = function (client, message, args) {
                 debaters: debaters,
                 speech: ""
             }
-
-            // console.log(debateConfig)
-            // message.channel.send(debateConfig)
-            // console.log(guild.id + args[args.length - 1])
             console.log(debatersObj)
 
             client.rounds.set(guild.id + args[args.length - 1], debateConfig)
-            // console.log(client.rounds.getProp(guild.id+args[args.length-1], debateConfig.debaters))
-            // message.channel.send("SET!")
             const quoteSend = new Discord.MessageEmbed()
                 .setColor("#007fff")
                 .setTitle(`Round Started: ${args[args.length - 1]}`)

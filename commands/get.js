@@ -1,17 +1,11 @@
 exports.run = function (client, message, args) {
-    // let { PythonShell } = require('python-shell')
-    // let pyshell = new PythonShell('./script.py');
     const superagent = require('superagent');
-    // const fs = require("fs");
-    // const request = require("request-promise-native");
-    // const scholar = require('google-scholar-extended')
     const querystring = require('querystring');
     var scholar = require('google-scholar-link')
     const Discord = require('discord.js');
     const config = client.config
-    // var eprint = {};
     var scholarLink = ""
-    if (args.join(' ') === "" || args.join(' ').indexOf("http")===-1) {
+    if (args.join(' ') === "" || args.join(' ').indexOf("http") === -1) {
         const help = new Discord.MessageEmbed()
             .setColor("#f0ffff")
             .setDescription("**Command: **" + `${config.prefix}get`)
@@ -30,34 +24,21 @@ exports.run = function (client, message, args) {
             // console.log(found)
             if (found === null) {
                 message.reply(`Not found on Sci-Hub! :( Try the following Google Scholar link (Incase they have a free PDF)`)
-                // console.log(scholar(querystring.escape(args.join(' '))))
-                scholarLink=scholar(querystring.escape(args.join(' ')))
-                scholarLink=scholarLink.substring(0,scholarLink.length-1)
-                // console.log(scholarLink)
-                scholarLink=scholarLink.substring(0,scholarLink.indexOf('"'))+scholarLink.substring(scholarLink.indexOf('"')+1)
+                scholarLink = scholar(querystring.escape(args.join(' ')))
+                scholarLink = scholarLink.substring(0, scholarLink.length - 1)
+                scholarLink = scholarLink.substring(0, scholarLink.indexOf('"')) + scholarLink.substring(scholarLink.indexOf('"') + 1)
                 message.channel.send(scholarLink)
-               
+
             } else {
                 if (found[1].indexOf("https") === -1) {
                     found[1] = "https:" + found[1];
                 }
-                // message.channel.send(found)
-                // async function downloadPDF(pdfURL, outputFilename) {
-                //     let pdfBuffer = await request.get({ uri: pdfURL, encoding: null });
-                //     console.log("Writing downloaded PDF file to " + outputFilename + "...");
-                //     fs.writeFileSync(outputFilename, pdfBuffer);
-                // }
-
-                // downloadPDF(found[1], `./${args.join(' ')}`);
-                // console.log(found[1])
                 try {
                     message.channel.send(found[1])
                     message.channel.send({
                         files: [found[1] + ".pdf"]
                     }).catch(err => console.log(err))
                 } catch (e) {
-                    // message.channel.send("PDF too large... Sending Sci-hub link.")
-                    // message.channel.send(found[1])
                     console.log(e)
                 }
             }
@@ -81,7 +62,7 @@ exports.run = function (client, message, args) {
                 //     console.log('finished');
                 // });
                 // scholar rate limited by google :(
-                    
+
 // ARCHIVAL1:
 
  // // message.reply(`Not found on sci-hub!`)

@@ -1,4 +1,4 @@
-exports.run = function (client, message, args, args2, cmd) {
+exports.run = function (client, message) {
     const Discord = require('discord.js');
     const config = client.config;
     var guild = message.guild;

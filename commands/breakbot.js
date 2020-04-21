@@ -1,8 +1,8 @@
-exports.run = function (client, message, args) {
+exports.run = function (client, message) {
 
     const superagent = require('superagent');
     var guild = message.guild;
-    
+
     if (message.guild.id != "685646226942984206") return;
     else {
         superagent

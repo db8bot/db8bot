@@ -9,7 +9,6 @@ exports.run = function (client, message) {
     const Discord = require('discord.js');
     const fs = require("fs")
     const translate = require('@vitalets/google-translate-api');
-    // var quoteTranslated = ""
     let num = getRandomIntInclusive(1, quotes.length)
     if (num === quotes[quotes.length - 1].lastNumber) num = getRandomIntInclusive(1, quotes.length - 1)
     if (quotes[num] === quotes[quotes.length - 1].lastQuote) num = getRandomIntInclusive(1, quotes.length - 1)
@@ -30,6 +29,5 @@ exports.run = function (client, message) {
     quotes[quotes.length - 1].lastNumber = num
     fs.writeFile('./quotesBaudrillard.json', JSON.stringify(quotes, null, 2), function (err) {
         if (err) return console.error(err);
-        // message.channel.send(`Prefix Successfully Changed to ${config.prefix}.`)
     });
 }

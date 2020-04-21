@@ -1,5 +1,4 @@
 exports.run = function (client, message, args) {
-    var JSSoup = require('jssoup').default;
     const superagent = require('superagent');
     const Discord = require('discord.js');
     const config = client.config;
@@ -44,7 +43,6 @@ exports.run = function (client, message, args) {
         .get(`https://www.tabroom.com/index/paradigm.mhtml?search_first=${args[0]}&search_last=${args[1]}`)
         .end((err, res) => {
             var paradigm = res.text.substring(res.text.indexOf(`<div class="paradigm">`) + `<div class="paradigm">`.length, getPosition(res.text, '</div>', 6))
-            // console.log()
             var clean;
             clean = det(paradigm), {
                 fixBrokenEntities: true,
@@ -69,8 +67,7 @@ exports.run = function (client, message, args) {
                 cb: null
             }
             clean = stripHtml(clean.res)
-            // console.log(clean)
-            if (clean.indexOf(`Your search for ${args[0]} ${args[1]} returned no judges with paradigms.`)!=-1) {
+            if (clean.indexOf(`Your search for ${args[0]} ${args[1]} returned no judges with paradigms.`) != -1) {
                 message.channel.send(`Your search for ${args[0]} ${args[1]} returned no judges with paradigms. Please try again.`)
                 message.channel.send(`Direct Link: https://www.tabroom.com/index/paradigm.mhtml?search_first=${args[0]}&search_last=${args[1]}`)
                 return;
@@ -83,13 +80,9 @@ exports.run = function (client, message, args) {
                 for (var i = 0; i < Math.ceil((clean.length) / 2000); i++) {
 
                     if (i + 1 === Math.ceil((clean.length) / 2000)) {
-                        // console.log((clean).substring(substrVar).length)
                         if ((clean).substring(substrVar).length > 1994) {
                             i--;
                         } else {
-                            // cleaned = (clean).substring(substrVar).replace("&lt;", "<")
-                            // cleaned = cleaned.replace("&gt;", ">")
-                            // cleaned = cleaned.replace("&amp;", "&")
                             cleaned = replaceHtmlEntites((clean).substring(substrVar))
                             while (cleaned.indexOf("&rsquo;") != -1 || cleaned.indexOf("&ldquo;") != -1 || cleaned.indexOf("&rdquo;") != -1 || cleaned.indexOf("&#x2AAF") != -1) {
                                 cleaned = cleaned.replace("&rsquo;", '\'')
@@ -106,14 +99,7 @@ exports.run = function (client, message, args) {
                             est = (clean).substring(substrVar + 1985, substrVar + 1995).indexOf(" ")
                             placement = substrVar + 1985
                         }
-                        // message.channel.send((clean).substring(substrVar, substrVar+2000))
-                        // console.log((clean).substring(substrVar, placement + est).length)
-
-                        // cleaned = (clean).substring(substrVar, placement + est).replace("&lt;", "<")
-                        // cleaned = cleaned.replace("&gt;", ">")
-                        // cleaned = cleaned.replace("&amp;", "&")
                         cleaned = replaceHtmlEntites((clean).substring(substrVar, placement + est))
-                        // message.channel.send("```" + (clean).substring(substrVar, placement + est) + "```")
                         while (cleaned.indexOf("&rsquo;") != -1 || cleaned.indexOf("&ldquo;") != -1) {
                             cleaned = cleaned.replace("&rsquo;", '\'')
                             cleaned = cleaned.replace("&ldquo;", '"')
@@ -122,7 +108,6 @@ exports.run = function (client, message, args) {
                         }
                         message.channel.send("```" + cleaned + "```")
                     }
-                    // substrVar+=2000;
                     substrVar = est + placement;
                 }
             }

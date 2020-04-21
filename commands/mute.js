@@ -14,7 +14,6 @@ exports.run = function (client, message, args) {
         .addField("**Example:**", `${config.prefix}mute @AirFusion STAP SPAMMING >.<`)
         .addField("**Expected Result From Example:**", "Mentioned User Muted with Mute Role")
     if (args.join(' ') == "") return message.channel.send({ embed: embed19 })
-    // let muteRole = client.channels.cache.get(message.guild.id).roles.find(val => val.name === 'Mute')
     let muteRole = guild.roles.cache.find(val => val.name === `Mute`)
     if (!muteRole) return message.reply("Mute Role required")
     if (message.mentions.users.size < 1) return message.reply("You must mention someone to mute them.").catch(console.error)

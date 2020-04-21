@@ -8,9 +8,9 @@ exports.run = function (client, message, args) {
     // message.channel.send(args[args.length-1])
     // message.channel.send(args[args.length-2])
 
-        for (var i = 0; i < args.length; i++) {
-            guild.member(message.mentions.users.array()[i]).roles.add(currentlyDebating)
-        }
-        // guild.member(message.mentions.users.array()[args.length-3]).roles.add(currentlyJudging)
-        client.logger.log('info', `practice command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
+    for (var i = 0; i < args.length; i++) {
+        guild.member(message.mentions.users.array()[i]).roles.add(currentlyDebating)
+    }
+    // guild.member(message.mentions.users.array()[args.length-3]).roles.add(currentlyJudging)
+    client.logger.log('info', `practice command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
 }

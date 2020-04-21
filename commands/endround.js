@@ -5,18 +5,18 @@ exports.run = function (client, message, args) {
     const currentlyDebating = message.guild.roles.cache.find(role => role.name === "Currently Debating");
     const currentlyJudging = message.guild.roles.cache.find(role => role.name === "Currently Judging")
     const help = new Discord.MessageEmbed()
-            .setColor("#f0ffff")
-            .setDescription("**Command: **" + `${config.prefix}endround`)
-            .addField("**Usage:**", `${config.prefix}endround <Round Name> <Decision: Spaces supported>`)
-            .addField("**Example:**", `${config.prefix}endround AF-v-ND aff`)
-            .addField("**Expected Result From Example:**", "Bot ends round (Note: Round data will be deleted from database) and outputs round info.")
+        .setColor("#f0ffff")
+        .setDescription("**Command: **" + `${config.prefix}endround`)
+        .addField("**Usage:**", `${config.prefix}endround <Round Name> <Decision: Spaces supported>`)
+        .addField("**Example:**", `${config.prefix}endround AF-v-ND aff`)
+        .addField("**Expected Result From Example:**", "Bot ends round (Note: Round data will be deleted from database) and outputs round info.")
     if (args.join(' ') === "" || args[0] === '' || args[1] === '' || args[2] === '') {
         message.channel.send({ embed: help })
         return;
     } else {
         var roundInfo = client.rounds.get(guild.id + args[0]);
         if (roundInfo === undefined) {
-            message.channel.send({embed: help})
+            message.channel.send({ embed: help })
             return;
         }
         var decision = "";
@@ -25,8 +25,8 @@ exports.run = function (client, message, args) {
         for (var i = 1; i < args.length; i++) {
             decision += args[i]
         }
-        if (decision==="") {
-            message.channel.send({embed: help})
+        if (decision === "") {
+            message.channel.send({ embed: help })
             return;
         }
         debatersID = roundInfo.debaters.split(" ")
@@ -45,9 +45,9 @@ exports.run = function (client, message, args) {
             .addField(`Decision`, decision)
             .setFooter(config.name)
             .setTimestamp()
-        
+
         message.channel.send({ embed: results })
-        guild.channels.cache.find(val => val.name === "debatelog").send({embed: results}).catch(err => console.error(err))
+        guild.channels.cache.find(val => val.name === "debatelog").send({ embed: results }).catch(err => console.error(err))
         client.rounds.delete(guild.id + args[0])
         client.logger.log('info', `endround command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${guild}`)
     }

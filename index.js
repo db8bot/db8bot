@@ -1,4 +1,7 @@
-// https://discordapp.com/oauth2/authorize?client_id=689368779305779204&scope=bot&permissions=2146958847
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Jim Fang. All rights reserved.
+ *  Licensed under the MIT License. See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const config = require("./config.json");
@@ -7,22 +10,13 @@ const fs = require("fs");
 const Enmap = require("enmap");
 const chalk = require('chalk');
 const winston = require('winston')
-var localStorage = require('localStorage')
-// localStorage = new LocalStorage('./');
 var base64url = require('base64-url');
 const { exec } = require("child_process");
 const Sentry = require('@sentry/node');
 Sentry.init({ dsn: 'https://3a8ab5afe5824525ac1f41ebe688fbd0@sentry.io/5188131' });
-function getRandomIntInclusive(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
-}
-var rand = getRandomIntInclusive(1, 100);
-// var pastebin = require('./node_modules/pastebin/src/pastebin.js')(config.pastebin);
 
-// Require our logger
-// client.logger = require("./modules/Logger.js");
+// ---------------REQUIRE BREAK--------------------
+
 
 client.logger = new winston.createLogger({
     transports: [
@@ -36,22 +30,10 @@ client.indexLogger = winston.createLogger({
         new winston.transports.File({ filename: 'log.txt' })
     ]
 })
-// const Enmap = require("enmap");
+
 client.rounds = new Enmap({ name: "rounds" });
 
-// Let's start by getting some useful functions that we'll use throughout
-// the bot, like logs and elevation features.
-// require("./modules/functions.js")(client);
-
-
-
-// client.on('ready', () => {
-//     console.log(`Logged in at ${Date()} in ${client.channels.size} channels on ${client.guilds.size} servers, for a total of ${client.users.size} users.`);
-// });
-
 client.on('error', console.error);
-
-
 
 fs.readdir("./events/", (err, files) => {
     if (err) return console.error(err);
@@ -63,7 +45,6 @@ fs.readdir("./events/", (err, files) => {
 });
 
 client.commands = new Enmap();
-// client.aliases = new Enmap();
 
 fs.readdir("./commands/", (err, files) => {
     if (err) return console.error(err);
@@ -77,6 +58,7 @@ fs.readdir("./commands/", (err, files) => {
     });
 });
 
+// ---------------LISTENERS & FILE READS BREAK--------------------
 
 //eval cleaner
 function clean(text) {
@@ -86,8 +68,17 @@ function clean(text) {
         return text;
 }
 
+function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
+}
+var rand = getRandomIntInclusive(1, 100);
+
+// -----------------MESSAGE HANDLERS & COMMANDS------------------
+
 client.on('message', async message => {
-    const doExec = (cmd, opts = {}) => { // -exec func
+    const doExec = (cmd, opts = {}) => { // -exec function
         return new Promise((resolve, reject) => {
             exec(cmd, opts, (err, stdout, stderr) => {
                 if (err) return reject({ stdout, stderr });
@@ -186,8 +177,6 @@ client.on('message', async message => {
     else if (command === "getallserver") {
         if (message.author.id === config.owner) {
             let user = message.author;
-
-            // user.send(client.guilds.map(e => e.toString()).join(`, `));
             user.send(client.guilds.cache.map(e => e.toString()).join(`, `));
 
         }
@@ -287,7 +276,6 @@ client.on('message', async message => {
         } else {
             message.channel.send("Insufficant Permissions")
         }
-        // logger.log('info', `Killall command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date.now()} Guild: ${guild}`)
     }
     else if (command === "exec") {
 

@@ -1,4 +1,5 @@
 exports.run = function (client, message, args) {
+    if (message.author.id != client.config.owner) return;
     var JSSoup = require('jssoup').default;
     const superagent = require('superagent');
     const Discord = require('discord.js');

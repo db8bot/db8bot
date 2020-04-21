@@ -1,7 +1,6 @@
 exports.run = function (client, message, args) {
     const superagent = require('superagent');
     const Discord = require('discord.js');
-    var request = require('request');
     function getRandomIntInclusive(min, max) {
         min = Math.ceil(min);
         max = Math.floor(max);

@@ -1,4 +1,4 @@
-exports.run = function (client, message, args, args2, cmd) {
+exports.run = function (client, message, args) {
     if (!message.guild.members.cache.get(message.author.id).hasPermission('MANAGE_GUILD', { checkAdmin: true, checkOwner: true })) return message.reply('Insufficant Permissions').catch(console.error)
     var guild = message.guild;
     client.logger.log('info', `unmute command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${guild}`)
@@ -13,7 +13,6 @@ exports.run = function (client, message, args, args2, cmd) {
         .addField("**Example:**", `${config.prefix}unmute @AirFusion`)
         .addField("**Expected Result From Example:**", "Mentioned user should be unmuted.")
     if (args.join(' ') == "") return message.channel.send({ embed: embed19 })
-    // let muteRole = client.guilds.get(message.guild.id).roles.find(val => val.name === 'Mute')
     let muteRole = guild.roles.cache.find(val => val.name === `Mute`)
     if (!muteRole) return message.reply("Mute Role required")
     if (message.mentions.users.size < 1) return message.reply("You must mention someone to mute them.").catch(console.error)
