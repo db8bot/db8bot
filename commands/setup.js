@@ -15,8 +15,9 @@ exports.run = function (client, message) {
                 }, reason: "Mute role"
             })
             msg.edit(':white_check_mark: Mute role created!')
+        })
 
-            msg.edit(`Creating debatelog channel...`)
+        message.channel.send(`Creating debatelog channel...`).then(msg => {
             if (guild.channels.cache.find(val => val.name === "debatelog") === undefined) {
                 guild.channels.create('debatelog', {
                     type: 'text',
@@ -30,8 +31,9 @@ exports.run = function (client, message) {
                 })
             }
             msg.edit(`:white_check_mark: Debate log channel created!`)
+        })
 
-            msg.edit(`Creating modlog channel...`)
+        message.channel.send(`Creating modlog channel...`).then(msg => {
             if (guild.channels.cache.find(val => val.name === "modlog") === undefined) {
                 guild.channels.create('modlog', {
                     type: 'text',
@@ -45,9 +47,10 @@ exports.run = function (client, message) {
                 })
             }
             msg.edit(`:white_check_mark: Modlog channel created!`)
-
-            msg.edit(`:white_check_mark: Successfully created: Mute role, debatelog, modlog`)
         })
+
+        message.channel.send(`:white_check_mark: Successfully created: Mute role, debatelog, modlog`)
+
     } catch (err) {
         message.channel.send(`ERROR! Please make sure I have administrator permissions!`).catch(err => console.error(err))
     }
