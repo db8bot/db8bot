@@ -7,7 +7,8 @@ exports.run = function (client, message) {
         .setColor('#ff0000')
         .setFooter(config.name + " CheckList")
 
-    embed100.addField("db8bot ADMINISTRATOR Permissions: ", message.guild.member(config.botid).hasPermission("ADMINISTRATOR"))
+    embed100.addField("db8bot Manage Server Permissions (Required for the bot to function fully): ", message.guild.member(config.botid).hasPermission("MANAGE_SERVER"))
+    // embed100.addField("db8bot ADMINISTRATOR Permissions: (Note: Administrator permissions are not required but recommended. The bot will still function without administrator.)", message.guild.member(config.botid).hasPermission("ADMINISTRATOR"))
     let muteRole = message.guild.roles.cache.find(role => role.name === "Mute");
     let mute = true;
     if (!muteRole) mute = false;
