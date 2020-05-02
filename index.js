@@ -32,6 +32,7 @@ client.indexLogger = winston.createLogger({
 })
 
 client.rounds = new Enmap({ name: "rounds" });
+client.optINOUT = new Enmap({ name: "optINOUT" });
 
 client.on('error', console.error);
 
