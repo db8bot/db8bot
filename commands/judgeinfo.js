@@ -4,8 +4,9 @@ exports.run = function (client, message, args) {
     const config = client.config;
     const { det } = require("detergent");
     const stripHtml = require("string-strip-html");
-
-    function getPosition(string, subString, index) {
+    if (client.optINOUT.get(message.author.id) != undefined) {
+        if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
+    } function getPosition(string, subString, index) {
         return string.split(subString, index).join(subString).length;
     }
     var replaceHtmlEntites = (function () {

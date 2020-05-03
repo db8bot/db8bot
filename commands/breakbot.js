@@ -2,7 +2,9 @@ exports.run = function (client, message) {
 
     const superagent = require('superagent');
     var guild = message.guild;
-
+    if (client.optINOUT.get(message.author.id) != undefined) {
+        if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
+    }
     if (message.guild.id != "685646226942984206") return;
     else {
         superagent

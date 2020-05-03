@@ -5,7 +5,9 @@ exports.run = function (client, message, args) {
     const Discord = require('discord.js');
     let member = message.author;
     const config = client.config
-    const embed1 = new Discord.MessageEmbed()
+    if (client.optINOUT.get(message.author.id) != undefined) {
+        if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
+    } const embed1 = new Discord.MessageEmbed()
         .setColor("#f0ffff")
         .setDescription("**Command: **" + `${config.prefix}lockdown`)
         .addField("**Usage:**", `${config.prefix}lockdown <time for ex: 1m, 1h etc>`)

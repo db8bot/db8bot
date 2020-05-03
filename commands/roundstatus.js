@@ -5,7 +5,9 @@ exports.run = function (client, message, args) {
     const Discord = require('discord.js');
     var debatersID = [];
     var mentionableDebaters = "";
-    const roundstats = new Discord.MessageEmbed()
+    if (client.optINOUT.get(message.author.id) != undefined) {
+        if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
+    } const roundstats = new Discord.MessageEmbed()
         .setTitle(`Current Debates in ${guild.name}`)
         .setColor("#007fff")
 

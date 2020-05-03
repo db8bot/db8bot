@@ -9,7 +9,9 @@ exports.run = function (client, message) {
     const Discord = require('discord.js');
     const fs = require("fs")
     const translate = require('@vitalets/google-translate-api');
-    let num = getRandomIntInclusive(1, quotes.length)
+    if (client.optINOUT.get(message.author.id) != undefined) {
+        if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
+    } let num = getRandomIntInclusive(1, quotes.length)
     if (num === quotes[quotes.length - 1].lastNumber) num = getRandomIntInclusive(1, quotes.length - 1)
     if (quotes[num] === quotes[quotes.length - 1].lastQuote) num = getRandomIntInclusive(1, quotes.length - 1)
     translate(quotes[num].quote, { to: 'en' }).then(res => {

@@ -16,8 +16,10 @@ exports.run = function (client, message, args) {
     const Discord = require('discord.js');
     var guild = message.guild;
     var Timer = require('clockmaker').Timer,
-    Timers = require('clockmaker').Timers;
-    client.logger.log('info', `startspeech command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
+        Timers = require('clockmaker').Timers;
+    if (client.optINOUT.get(message.author.id) != undefined) {
+        if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
+    } client.logger.log('info', `startspeech command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
     const config = client.config;
     const help = new Discord.MessageEmbed()
         .setColor("#f0ffff")

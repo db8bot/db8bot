@@ -2,7 +2,9 @@ exports.run = function (client, message) {
     const Discord = require('discord.js');
     const config = client.config;
     var guild = message.guild;
-    const embed100 = new Discord.MessageEmbed()
+    if (client.optINOUT.get(message.author.id) != undefined) {
+        if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
+    } const embed100 = new Discord.MessageEmbed()
         .setTitle("If a role is true, means you have the role setup correctly, if it is false, then there is something wrong with the role.")
         .setColor('#ff0000')
         .setFooter(config.name + " CheckList")

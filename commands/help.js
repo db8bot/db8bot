@@ -17,6 +17,7 @@ exports.run = function (client, message) {
         .addField('Commands:', `Do \`${config.prefix}commands\` to see a full list of commands.`)
         .addField(`Setup`, `${config.name} requires a **modlog text channel**, a **debatelog text channel** and a **Mute role called "Mute"**. For automatic setup please use \`${config.prefix}setup\`. Otherwise please create these roles and channels.`)
         .addField('Checklist:', `Please run the command \`${config.prefix}checklist\` to check if db8bot has all the required permissions to run.`)
+        .addField(`Opt-outs`, `User the \`${config.prefix}optout\` to opt-out of any command including dm & userinfo.`)
         .addField('Github', `The repo for this bot can be found [here](https://github.com/AirFusion45/db8bot).`)
         .addField('Support Server:', `Come [here](https://discord.gg/rEQc7C7) to get help or just hang out.`)
         .addField('Bot Invite Link', `Use \`${config.prefix}invite\` for the bot's invite link, or click [here](https://discordapp.com/oauth2/authorize?client_id=689368779305779204&scope=bot&permissions=2146958847)`)

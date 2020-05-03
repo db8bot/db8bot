@@ -2,7 +2,9 @@ exports.run = function (client, message, args) {
     var guild = message.guild;
     const config = client.config;
     const filter = require('leo-profanity')
-    message.delete()
+    if (client.optINOUT.get(message.author.id) != undefined) {
+        if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
+    } message.delete()
     client.options.disableEveryone = true;
     if (message.author.id != config.owner) {
         message.channel.send(filter.clean(args.join(' ')) + `\n**-${message.author.tag}**`)

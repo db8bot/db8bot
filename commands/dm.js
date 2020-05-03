@@ -10,11 +10,15 @@ exports.run = function (client, message, args, args2, cmd) {
         .addField("**Example:**", `${config.prefix}dm @AirFusion hello`)
         .addField("**Expected Result From Example:**", "Mentioned user should get a DM from the bot with the correct message & message in chat should be deleted.")
     if (!user || args[1] === undefined) return message.channel.send({ embed: embed1 })
-    if (client.optINOUT.get(message.author.id).value.includes("dm")) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
-    if (client.optINOUT.get(user.id).value.includes("dm")) return message.channel.send("The user you are DMing has opted out of DMs.")
+    if (client.optINOUT.get(message.author.id) != undefined) {
+        if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
+    }
+    if (client.optINOUT.get(user.id) != undefined) {
+        if (client.optINOUT.get(user.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send(`The user you are mentioning has opted out of the service: ${__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js"))}.`)
+    }
     const embed = new Discord.MessageEmbed()
         .setColor("#008000")
-        .setTitle(`You Have a New Message From ${message.author.username}`)
+        .setTitle(`You Have a New Message from user ${message.author.username} from server ${guild.name}`)
         .setDescription("ID: " + message.author.id)
         .setThumbnail(message.author.avatarURL)
         .setTimestamp()

@@ -2,8 +2,9 @@ exports.run = function (client, message, args) {
     var guild = message.guild;
     const Discord = require('discord.js');
     const config = client.config;
-
-    if (args.join(' ') !== "") {
+    if (client.optINOUT.get(message.author.id) != undefined) {
+        if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
+    } if (args.join(' ') !== "") {
         message.reply("Feedback received from Discord Chatbox! Thank you for your feedback!")
         message.delete()
         message.delete()

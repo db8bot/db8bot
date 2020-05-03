@@ -5,14 +5,15 @@ exports.run = function (client, message, args, args2, cmd) {
 
     const embed1 = new Discord.MessageEmbed()
         .setColor("#f0ffff")
-        .setDescription("**Command: **" + `${config.prefix}dm`)
-        .addField("**Usage:**", `${config.prefix}dm <@username> <Your message>`)
-        .addField("**Example:**", `${config.prefix}dm @AirFusion hello`)
-        .addField("**Expected Result From Example:**", "Mentioned user should get a DM from the bot with the correct message & message in chat should be deleted.")
+        .setDescription("**Command: **" + `${config.prefix}optout`)
+        .addField("**Usage:**", `${config.prefix}optout <command>`)
+        .addField("**Example:**", `${config.prefix}optout dm`)
+        .addField("**Expected Result From Example:**", "You should be opted out of that paticular command. In the DM comamnd you will be unable to send or receive DMs.")
+        .addField("**List of Opted out services**", `Use ${config.prefix}opts`)
 
     // console.log(args)
     // console.log(args[0])
-    var cmds = "commands help embed feedback invite ping say serverinv dm lockdown mute unmute purge setup botinfo serverinfo userinfo get setspeech endround roundstatus flip judgeinfo speeches communism capitalism trump baudrillard bataille"
+    var cmds = "embed feedback invite ping say serverinv dm lockdown mute unmute purge setup botinfo serverinfo userinfo get setspeech endround roundstatus flip judgeinfo speeches communism capitalism trump baudrillard bataille"
     if (cmds.indexOf(args[0]) < 0) return message.channel.send({embed: embed1})
     // if (args[0] != "dm") return
     // let tf = (args[1] === 'yes') ? "true" : "false"

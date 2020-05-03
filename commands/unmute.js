@@ -6,7 +6,9 @@ exports.run = function (client, message, args) {
     const config = require("../config.json");
     let user = message.mentions.users.first()
     let member = message.guild.member(user)
-    const embed19 = new Discord.MessageEmbed()
+    if (client.optINOUT.get(message.author.id) != undefined) {
+        if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
+    } const embed19 = new Discord.MessageEmbed()
         .setColor("#f0ffff")
         .setDescription("**Command: **" + `${config.prefix}unmute`)
         .addField("**Usage:**", `${config.prefix}unmute <@username>`)

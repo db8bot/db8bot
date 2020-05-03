@@ -6,8 +6,14 @@ exports.run = function (client, message, args) {
     let customStatus = ''
     let mentionedObj = message.mentions.users.first()
     let user;
+    if (client.optINOUT.get(message.author.id) != undefined) {
+        if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
+    }
     if (message.mentions.users.first()) {
         user = message.channel.guild.members.cache.get(message.mentions.users.first().id);
+        if (!client.optINOUT.get(user.id) === undefined) {
+            if (client.optINOUT.get(user.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send(`The user you are mentioning has opted out of the service: ${__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js"))}.`)
+        }
     }
     let mentioned = message.mentions.users.first();
     if (message.author === user || !user) {

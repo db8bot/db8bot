@@ -2,8 +2,9 @@ exports.run = function (client, message, args, args2, cmd1) {
     const config = client.config;
     const Discord = require('discord.js');
     var guild = message.guild;
-
-    const embed1 = new Discord.MessageEmbed()
+    if (client.optINOUT.get(message.author.id) != undefined) {
+        if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
+    } const embed1 = new Discord.MessageEmbed()
         .setColor("#f0ffff")
         .setDescription("**Command: **" + `${config.prefix}purge`)
         .addField("**Usage:**", `${config.prefix}purge <x messages>`)

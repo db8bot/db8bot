@@ -6,7 +6,9 @@ exports.run = function (client, message, args) {
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
     }
-    if (getRandomIntInclusive(0, 1) === 1) {
+    if (client.optINOUT.get(message.author.id) != undefined) {
+        if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
+    } if (getRandomIntInclusive(0, 1) === 1) {
         superagent
             .get(`https://api.whatdoestrumpthink.com/api/v1/quotes/random`)
             .end((err, res) => {

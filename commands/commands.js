@@ -9,7 +9,7 @@ exports.run = function (client, message) {
         .setFooter(`${config.name} Commands`)
         .setTimestamp()
         .setTitle(`Please use the prefix "${config.prefix}" in front of all commands!`)
-        .addField(`:tools: **General**`, `commands, help, embed, feedback, invite, ping, say, serverinv, dm`, true)
+        .addField(`:tools: **General**`, `commands, help, embed, feedback, invite, ping, say, serverinv, dm, optout, opts`, true)
         .addField(`:hammer: **Moderation**`, `lockdown (lockdown unlock), mute & unmute(mute role required), purge, setup`, true)
         .addField(`:information_source: **Information**`, `botinfo, serverinfo, userinfo`, true)
         .addField(`:trophy: **Debate**`, `get, **startround: setspeech, endround, roundstatus, flip**, judgeinfo, speeches`, true)

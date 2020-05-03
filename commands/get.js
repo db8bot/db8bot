@@ -5,7 +5,9 @@ exports.run = function (client, message, args) {
     const Discord = require('discord.js');
     const config = client.config
     var scholarLink = ""
-    if (args.join(' ') === "" || args.join(' ').indexOf("http") === -1) {
+    if (client.optINOUT.get(message.author.id) != undefined) {
+        if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
+    } if (args.join(' ') === "" || args.join(' ').indexOf("http") === -1) {
         const help = new Discord.MessageEmbed()
             .setColor("#f0ffff")
             .setDescription("**Command: **" + `${config.prefix}get`)

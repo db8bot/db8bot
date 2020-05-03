@@ -2,7 +2,9 @@ exports.run = function (client, message, args) {
     var guild = message.guild;
     const config = client.config;
     const Discord = require('discord.js');
-    const currentlyDebating = message.guild.roles.cache.find(role => role.name === "Currently Debating");
+    if (client.optINOUT.get(message.author.id) != undefined) {
+        if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
+    } const currentlyDebating = message.guild.roles.cache.find(role => role.name === "Currently Debating");
     const currentlyJudging = message.guild.roles.cache.find(role => role.name === "Currently Judging")
     const help = new Discord.MessageEmbed()
         .setColor("#f0ffff")
