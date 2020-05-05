@@ -157,6 +157,7 @@ client.on('message', async message => {
                 .addField("spyon servers by gening invites", "cmd:spyon <server name>")
                 // .addField("get all loaded user info", "cmd: alluserinfo")
                 .addField(`Get the host machine's IP address ONLY!`, "cmd: -gethostip")
+                .addField(`Send Msg to a server`, `cmd: sendmsgto <server name: exact> <msg>`)
 
             message.channel.send({ embed: ownercmds })
         }
@@ -209,6 +210,21 @@ client.on('message', async message => {
         else {
             return message.channel.send("Insufficant Permissions");
         }
+    } 
+    else if (command === "sendmsgto") {
+        function getDefaultChannel(guild) {
+            if (guild.channels.cache.some(name1 => name1.name === "general"))
+                return guild.channels.cache.find(name => name.name === "general");
+            // Now we get into the heavy stuff: first channel in order where the bot can speak
+            // hold on to your hats!
+            return guild.channels.cache
+                .filter(c => c.type === "text" &&
+                    c.permissionsFor(guild.client.user).has("SEND_MESSAGES"))
+                .sort((a, b) => a.position - b.position ||
+                    Long.fromString(a.id).sub(Long.fromString(b.id)).toNumber())
+                .first();
+        }
+        getDefaultChannel(client.guilds.cache.find(server => server.name === args[0])).send(args.slice(1).join(' '))
     }
     else if (command === "leaveserver") {
         if (message.author.id === config.owner) {
