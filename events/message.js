@@ -4,7 +4,7 @@ module.exports = (client, message) => {
 
     // Ignore messages not starting with the prefix (in config.json)
     if (message.content.indexOf(client.config.prefix) !== 0) return;
-    client.options.disableEveryone = true;
+    client.options.disableMentions = "everyone";
     if (!message.content.startsWith(client.config.prefix) || message.author.bot) return;
 
     // Our standard argument/command name definition.
