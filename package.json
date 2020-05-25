@@ -27,7 +27,7 @@
     "os": "^0.1.1",
     "python-shell": "^2.0.1",
     "querystring": "^0.2.0",
-    "string-strip-html": "^4.4.5",
+    "string-strip-html": "^4.4.7",
     "superagent": "^5.2.2",
     "winston": "^3.2.1"
   },
