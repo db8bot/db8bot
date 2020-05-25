@@ -25,7 +25,7 @@
     "moment": "^2.25.3",
     "ms": "^2.1.2",
     "os": "^0.1.1",
-    "python-shell": "^2.0.0",
+    "python-shell": "^2.0.1",
     "querystring": "^0.2.0",
     "string-strip-html": "^4.4.5",
     "superagent": "^5.2.2",
