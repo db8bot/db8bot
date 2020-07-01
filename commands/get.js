@@ -13,7 +13,7 @@ exports.run = function (client, message, args) {
             .setDescription("**Command: **" + `${config.prefix}get`)
             .addField("**Usage:**", `${config.prefix}get <research report link/doi link>`)
             .addField("**Example:**", `${config.prefix}get https://www.doi.org/10.2307/1342499/`)
-            .addField("**Expected Result From Example:**", "Bot will search sci-hub for the specified document. If it is found, it will return a PDF to the channel. If PDF is too alrge, the PDF link will be sent.")
+            .addField("**Expected Result From Example:**", "Bot will search sci-hub for the specified document. If it is found, it will return a PDF to the channel. If PDF is too large, the PDF link will be sent.")
         message.channel.send({ embed: help })
         return;
     }
