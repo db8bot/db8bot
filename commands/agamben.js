@@ -5,7 +5,7 @@ function getRandomIntInclusive(min, max) {
 }
 
 exports.run = function (client, message) {
-    const quotes = require("../quotesCap.json");
+    const quotes = require("../agambenQuotes.json");
     const Discord = require('discord.js');
     const fs = require("fs")
     const translate = require('@vitalets/google-translate-api');
@@ -14,9 +14,10 @@ exports.run = function (client, message) {
     } let num = getRandomIntInclusive(1, quotes.length)
     if (num === quotes[quotes.length - 1].lastNumber) num = getRandomIntInclusive(1, quotes.length - 1)
     if (quotes[num] === quotes[quotes.length - 1].lastQuote) num = getRandomIntInclusive(1, quotes.length - 1)
+    // console.log(num)
     translate(quotes[num].quote, { to: 'en' }).then(res => {
         const quoteSend = new Discord.MessageEmbed()
-            .setColor("#2c80c6")
+            .setColor("#add8e6")
             .setTitle(`Quote by ${quotes[num].author}`)
             .setDescription(`"${res.text}"\n-${quotes[num].author}`)
             .setFooter(`Disclaimer: This command is purely for satirical purposes. It does not represent the creator, the owner, or the user's views.`)
@@ -24,10 +25,10 @@ exports.run = function (client, message) {
     }).catch(err => {
         console.log(err)
     })
-    client.logger.log('info', `capitalism command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
+    client.logger.log('info', `agamben command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
     quotes[quotes.length - 1].lastQuote = quotes[num].quote
     quotes[quotes.length - 1].lastNumber = num
-    fs.writeFile('./quotesCap.json', JSON.stringify(quotes, null, 2), function (err) {
+    fs.writeFile('./agambenQuotes.json', JSON.stringify(quotes, null, 2), function (err) {
         if (err) return console.error(err);
     });
 }
