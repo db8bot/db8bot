@@ -30,7 +30,7 @@
     "querystring": "^0.2.0",
     "string-strip-html": "^4.5.0",
     "superagent": "^5.2.2",
-    "winston": "^3.2.1"
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "clockmaker": "^2.0.0",
