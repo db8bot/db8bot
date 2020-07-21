@@ -75,7 +75,7 @@ exports.run = function (client, message, args) {
                     console.log(`${fileName} was deleted.`)
                 })
             }, 1000);
-        } else {
+        } else if ()else {
             // send help!
             message.channel.send({ embed: embed1 })
         }

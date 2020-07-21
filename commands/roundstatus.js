@@ -1,6 +1,7 @@
 exports.run = function (client, message, args) {
     var guild = message.guild;
     var serverRounds = [];
+    var serverRoundsNotClean = [];
     var currentInteration = "";
     const Discord = require('discord.js');
     var debatersID = [];
@@ -14,10 +15,15 @@ exports.run = function (client, message, args) {
     var keys = client.rounds.indexes;
     for (var i = 0; i < keys.length; i++) {
         if (keys[i].indexOf(guild.id) != -1) {
-            serverRounds[i] = keys[i];
+            serverRoundsNotClean[i] = keys[i];
         }
     }
-    console.log("SERVER ROUNDS  :  " + serverRounds)
+    console.log("SERVER ROUNDS  :  " + serverRoundsNotClean)
+    for (var i = 0; i < serverRoundsNotClean.length; i++) {
+        if (serverRoundsNotClean[i] != undefined) {
+            serverRounds.push(serverRoundsNotClean[i])
+        }
+    }
     for (var i = 0; i < serverRounds.length; i++) {
         currentInteration = client.rounds.get(serverRounds[i]);
         console.log(currentInteration)
