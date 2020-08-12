@@ -17,6 +17,7 @@ exports.run = function (client, message, args) {
         message.channel.send({ embed: help })
         return;
     }
+
     superagent
         .get(`https://sci-hub.tw/${args.join(' ')}`)
         .end((err, res) => {
@@ -25,11 +26,17 @@ exports.run = function (client, message, args) {
             var found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
             // console.log(found)
             if (found === null) {
-                message.reply(`Not found on Sci-Hub! :( Try the following Google Scholar link (Incase they have a free PDF)`)
-                scholarLink = scholar(querystring.escape(args.join(' ')))
-                scholarLink = scholarLink.substring(0, scholarLink.length - 1)
-                scholarLink = scholarLink.substring(0, scholarLink.indexOf('"')) + scholarLink.substring(scholarLink.indexOf('"') + 1)
-                message.channel.send(scholarLink)
+                if (res.text.includes('libgen')) { // libgen download
+                    var libgenSection = res.text.substring(res.text.indexOf('<td colspan=2>') + 14, res.text.indexOf('</a></b></td>'))
+                    libgenSection = libgenSection.substring(libgenSection.indexOf(`<b><a href='`) + 12, libgenSection.indexOf(`'>`))
+                    message.channel.send(`Document on libgen: ${libgenSection} ${res.xhr.responseURL}`)
+                } else {
+                    message.reply(`Not found on Sci-Hub! :( Try the following Google Scholar link (Incase they have a free PDF)`)
+                    scholarLink = scholar(querystring.escape(args.join(' ')))
+                    scholarLink = scholarLink.substring(0, scholarLink.length - 1)
+                    scholarLink = scholarLink.substring(0, scholarLink.indexOf('"')) + scholarLink.substring(scholarLink.indexOf('"') + 1)
+                    message.channel.send(scholarLink)
+                }
 
             } else {
                 if (found[1].indexOf("https") === -1) {
@@ -45,6 +52,7 @@ exports.run = function (client, message, args) {
                 }
             }
         })
+
 }
 
 // ARCHIVAL2: 
