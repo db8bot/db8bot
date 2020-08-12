@@ -15,7 +15,7 @@
     "base64-url": "^2.3.3",
     "better-sqlite3": "^7.1.0",
     "chalk": "^4.1.0",
-    "detergent": "^5.10.8",
+    "detergent": "^5.10.9",
     "discord.js": "^12.2.0",
     "enmap": "^5.6.1",
     "follow-redirects": "^1.13.0",
