@@ -16,7 +16,7 @@
     "better-sqlite3": "^7.1.0",
     "chalk": "^4.1.0",
     "detergent": "^5.10.9",
-    "discord.js": "^12.2.0",
+    "discord.js": "^12.3.0",
     "enmap": "^5.6.1",
     "follow-redirects": "^1.13.0",
     "google-scholar-link": "^1.0.1",
