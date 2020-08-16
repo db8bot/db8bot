@@ -3,6 +3,7 @@ exports.run = function (client, message, args) {
     const querystring = require('querystring');
     var scholar = require('google-scholar-link')
     const Discord = require('discord.js');
+    const { http, https } = require('follow-redirects');
     const config = client.config
     var scholarLink = ""
     if (client.optINOUT.get(message.author.id) != undefined) {
@@ -17,6 +18,7 @@ exports.run = function (client, message, args) {
         message.channel.send({ embed: help })
         return;
     }
+
     superagent
         .get(`https://sci-hub.tw/${args.join(' ')}`)
         .end((err, res) => {
@@ -25,11 +27,71 @@ exports.run = function (client, message, args) {
             var found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
             // console.log(found)
             if (found === null) {
-                message.reply(`Not found on Sci-Hub! :( Try the following Google Scholar link (Incase they have a free PDF)`)
-                scholarLink = scholar(querystring.escape(args.join(' ')))
-                scholarLink = scholarLink.substring(0, scholarLink.length - 1)
-                scholarLink = scholarLink.substring(0, scholarLink.indexOf('"')) + scholarLink.substring(scholarLink.indexOf('"') + 1)
-                message.channel.send(scholarLink)
+                if (res.text.includes('libgen')) { // libgen download
+                    var libgenSection = res.text.substring(res.text.indexOf('<td colspan=2>') + 14, res.text.indexOf('</a></b></td>'))
+                    libgenSection = libgenSection.substring(libgenSection.indexOf(`<b><a href='`) + 12, libgenSection.indexOf(`'>`))
+                    const request = https.request({
+                        host: 'sci-hub.tw',
+                        path: args.join(' '),
+                    }, response => {
+                        console.log(response.responseUrl);
+                        message.channel.send(`Document on libgen - Mirror selection page: ${response.responseUrl}`)
+                    });
+                    request.end();
+                    message.channel.send(`Working Download Mirror Link: ${libgenSection}`)
+                } else if (args.join(' ').includes('doi.org')) {
+                    const doiRequest = https.request({
+                        host: 'doi.org',
+                        path: args.join(' ').substring(15)
+                    }, response => {
+                        // console.log(response.responseUrl);
+                        superagent
+                            .get(`https://sci-hub.tw/${response.responseUrl}`)
+                            .end((err, res) => {
+                                found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
+                                if (found === null) {
+                                    if (res.text.includes('libgen')) { // libgen download
+                                        var libgenSection = res.text.substring(res.text.indexOf('<td colspan=2>') + 14, res.text.indexOf('</a></b></td>'))
+                                        libgenSection = libgenSection.substring(libgenSection.indexOf(`<b><a href='`) + 12, libgenSection.indexOf(`'>`))
+                                        const request = https.request({
+                                            host: 'sci-hub.tw',
+                                            path: args.join(' '),
+                                        }, response => {
+                                            console.log(response.responseUrl);
+                                            message.channel.send(`Document on libgen - Mirror selection page: ${response.responseUrl}`)
+                                        });
+                                        request.end();
+                                        message.channel.send(`Working Download Mirror Link: ${libgenSection}`)
+                                    } else {
+                                        message.reply(`Not found on Sci-Hub! :( Try the following Google Scholar link (Incase they have a free PDF)`)
+                                        scholarLink = scholar(querystring.escape(args.join(' ')))
+                                        scholarLink = scholarLink.substring(0, scholarLink.length - 1)
+                                        scholarLink = scholarLink.substring(0, scholarLink.indexOf('"')) + scholarLink.substring(scholarLink.indexOf('"') + 1)
+                                        message.channel.send(scholarLink)
+                                    }
+                                } else {
+                                    if (found[1].indexOf("https") === -1) {
+                                        found[1] = "https:" + found[1];
+                                    }
+                                    try {
+                                        message.channel.send(found[1])
+                                        message.channel.send({
+                                            files: [found[1] + ".pdf"]
+                                        }).catch(err => console.log(err))
+                                    } catch (e) {
+                                        console.log(e)
+                                    }
+                                }
+                            })
+                    });
+                    doiRequest.end();
+                } else {
+                    message.reply(`Not found on Sci-Hub! :( Try the following Google Scholar link (Incase they have a free PDF)`)
+                    scholarLink = scholar(querystring.escape(args.join(' ')))
+                    scholarLink = scholarLink.substring(0, scholarLink.length - 1)
+                    scholarLink = scholarLink.substring(0, scholarLink.indexOf('"')) + scholarLink.substring(scholarLink.indexOf('"') + 1)
+                    message.channel.send(scholarLink)
+                }
 
             } else {
                 if (found[1].indexOf("https") === -1) {
@@ -45,6 +107,7 @@ exports.run = function (client, message, args) {
                 }
             }
         })
+
 }
 
 // ARCHIVAL2: 
