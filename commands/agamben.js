@@ -25,7 +25,7 @@ exports.run = function (client, message) {
     }).catch(err => {
         console.log(err)
     })
-    client.logger.log('info', `agamben command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
+    client.logger.log('info', `agamben command used by ${message.author.username} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
     quotes[quotes.length - 1].lastQuote = quotes[num].quote
     quotes[quotes.length - 1].lastNumber = num
     fs.writeFile('./agambenQuotes.json', JSON.stringify(quotes, null, 2), function (err) {

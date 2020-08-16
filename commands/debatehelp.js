@@ -17,5 +17,5 @@ exports.run = function (client, message) {
         .addField(`Check a round's status`, `Use the roundstatus command. Rounds are identified by the name assigned at the start of the round.`)
         .addField(`Flip a coin for PF`, `Use the flip command`)
     message.channel.send({ embed: embed })
-    client.logger.log('info', `debatehelp command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
+    client.logger.log('info', `debatehelp command used by ${message.author.username} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
 }

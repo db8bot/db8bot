@@ -26,5 +26,5 @@ exports.run = function (client, message) {
         .setTimestamp()
 
     message.channel.send({ embed: embed })
-    client.logger.log('info', `help command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
+    client.logger.log('info', `help command used by ${message.author.username} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
 }

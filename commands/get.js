@@ -22,7 +22,7 @@ exports.run = function (client, message, args) {
     superagent
         .get(`https://sci-hub.tw/${args.join(' ')}`)
         .end((err, res) => {
-            client.logger.log('info', `get command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
+            client.logger.log('info', `get command used by ${message.author.username} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
             // Calling the end function will send the request
             var found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
             // console.log(found)

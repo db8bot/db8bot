@@ -1,7 +1,7 @@
 const ms = require('ms');
 exports.run = function (client, message, args) {
     let guild = message.guild;
-    client.logger.log('info', `lockdown command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${guild}`)
+    client.logger.log('info', `lockdown command used by ${message.author.username} ID: ${message.author.id} Time: ${Date()} Guild: ${guild}`)
     const Discord = require('discord.js');
     let member = message.author;
     const config = client.config

@@ -27,5 +27,5 @@ exports.run = function (client, message, args, args2, cmd) {
     user.send({ embed: embed })
     message.delete()
     message.reply("Message sent!")
-    client.logger.log('info', `dm command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${guild}`)
+    client.logger.log('info', `dm command used by ${message.author.username} ID: ${message.author.id} Time: ${Date()} Guild: ${guild}`)
 }

@@ -12,5 +12,5 @@ exports.run = function (client, message, args) {
         client.options.disableMentions = "none";
         message.channel.send(args.join(' '))
     }
-    client.logger.log('info', `say command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
+    client.logger.log('info', `say command used by ${message.author.username} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
 }
