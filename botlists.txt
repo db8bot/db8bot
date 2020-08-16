@@ -1,0 +1,31 @@
+Bot lists:
+
+
+https://botsfordiscord.com/ (server: 374071874222686211 Bots for Discord) - Pending verification, 
+updated permissions 
+
+
+https://botlist.space/ (387812458661937152 botlist.space) - verified, permissions updated, widget on github
+
+
+https://arcane-center.xyz/ (561851349831122954 Arcane Center) - verified, permissions updated, widget on github
+
+
+https://mythicalbots.xyz/ (521461252317249537 Mythical bot list) - verified, permissions updated, widget on github
+
+
+https://listmybots.com/ (576272105772023808 List my bots) - verified, permissions updated, no widget
+
+
+https://glennbotlist.xyz/ (623600255987875870 Glenn Bot List) - Previously verified, lost in data loss, resubmitted, permissions updated, no widgets
+
+
+https://discordapps.dev/ (330777295952543744 - >terminal_) - pending verification, permissions updated
+
+
+https://bots.ondiscord.xyz/ (446425626988249089 - bots on discord) - pending verification, permissions updated
+
+
+https://tog.gg/ (264445053596991498 - discord bot list) - approved, permissions updated, widget on github
+
+https://discordbotlist.com (450100127256936458 - discordbotlist.com) - approved, permissions updated, html widget only - not updated

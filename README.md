@@ -1,6 +1,15 @@
 # DB8Bot
 DB8Bot or db8bot is a high school/college debate discord bot made using [discord.js](https://discord.js.org/).
 
+[![db8bot's Widget](https://api.botlist.space/widget/689368779305779204/5 "db8bot's Widget")](https://botlist.space/bot/689368779305779204?utm_source=bls&utm_medium=widget&utm_campaign=689368779305779204)
+
+[![db8bot's Widget] (https://arcane-botcenter.xyz/api/widget/689368779305779204.svg) "db8bot's Widget")](https://arcane-botcenter.xyz/bot/689368779305779204)
+
+[![MBL](https://mythicalbots.xyz/bot/689368779305779204/embed?q=dark/ )](https://mythicalbots.xyz/bot/689368779305779204)
+
+[![Discord Bots](https://top.gg/api/widget/689368779305779204.svg)](https://top.gg/bot/689368779305779204)
+
+
 ## Self Hosting DB8Bot
 DB8Bot can be hosted on anything, from your personal computer, to a Raspberry Pi, or even cloud services such as Google Cloud, Amazon Web Services, or Heroku. Please refer to the appropriate guide below based on your operating system.
 
@@ -30,7 +39,7 @@ Firstly, head over to [here](https://enmap.evie.dev/install) and follow the inst
 
 **5.** Create invite link
 
-Use the Discord Permissions Calculator [here](https://discordapi.com/permissions.html#2146958591) to make your bot's invite link. The link provided already has the required permissions pre-checked. If you choose not to use the pre-checked link, the bot must have "ADMINISTRATOR" permissions to function. At the bottom of the page, place in your bot's client ID, which is found on your Discord Developers page.
+Use the Discord Permissions Calculator [here](https://discordapi.com/permissions.html#2146958591) to make your bot's invite link. The link provided already has the required permissions pre-checked. If you choose not to use the pre-checked link, the bot must have "MANAGE_SERVER" permissions to function. At the bottom of the page, place in your bot's client ID, which is found on your Discord Developers page.
 
 Then, copy the link at the bottom of the page. That is your bot's invite link, anyone who has that link and have the "Manage Server" permission or is the server owner of a server can invite your bot to their server. 
 
@@ -55,7 +64,6 @@ Instead of self-hosting your own DB8Bot, you can invite the version hosted by *A
     * For general help, the support server & additional notes type `-help`.
     * For the full commands list, type `-commands`.
     * Each command is called using the prefix, in the following form: `-<command>` where <command> is the command. For example, to call the command ping, you would type `-ping`.
-    * To check if db8bot has the correct permissions, just type `-checklist`. If `db8bot ADMINISTRATOR Permissions:` says `true` then db8bot has the required permissions to function.
     * Feel free to join [this support server](https://discord.gg/rEQc7C7) if additional help is needed!
 
 ## Features
