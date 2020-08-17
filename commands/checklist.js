@@ -16,5 +16,5 @@ exports.run = function (client, message) {
     if (!muteRole) mute = false;
     embed100.addField(`db8bot Mute Role (role required for mute command to function, use ${config.prefix}setup for auto setup): `, mute)
     message.channel.send({ embed: embed100 });
-    client.logger.log('info', `checklist command used by ${message.author.username} ID: ${message.author.id} Time: ${Date()} Guild: ${guild}`)
+    client.logger.log('info', `checklist command used by ${message.author.username} Time: ${Date()} Guild: ${guild}`)
 };

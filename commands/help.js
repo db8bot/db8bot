@@ -18,6 +18,7 @@ exports.run = function (client, message) {
         .addField(`Setup`, `${config.name} requires a **modlog text channel**, a **debatelog text channel** and a **Mute role called "Mute"**. For automatic setup please use \`${config.prefix}setup\`. Otherwise please create these roles and channels.`)
         // .addField('Checklist:', `Please run the command \`${config.prefix}checklist\` to check if db8bot has all the required permissions to run.`)
         .addField(`Opt-outs`, `User the \`${config.prefix}optout\` to opt-out of any command including dm & userinfo.`)
+        .addField(`Privacy`, `For information about the data we collect please visit [here](https://github.com/AirFusion45/db8bot#privacy)`)
         .addField(`Debate Function Help`, `For detailed help on how to use the debate functions, use the ${config.prefix}debatehelp command.`)
         .addField('Github', `The repo for this bot can be found [here](https://github.com/AirFusion45/db8bot).`)
         .addField('Support Server:', `Come [here](https://discord.gg/rEQc7C7) to get help or just hang out.`)
@@ -26,5 +27,5 @@ exports.run = function (client, message) {
         .setTimestamp()
 
     message.channel.send({ embed: embed })
-    client.logger.log('info', `help command used by ${message.author.username} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
+    client.logger.log('info', `help command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
 }

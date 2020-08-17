@@ -21,5 +21,5 @@ exports.run = function (client, message, args, args2, cmd1) {
     else {
         message.reply('Insufficant Permissions').catch(console.error)
     }
-    client.logger.log('info', `purge command used by ${message.author.username} ID: ${message.author.id} Time: ${Date()} Guild: ${guild}`)
+    client.logger.log('info', `purge command used by ${message.author.username} Time: ${Date()} Guild: ${guild}`)
 }

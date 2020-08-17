@@ -35,5 +35,5 @@ exports.run = function (client, message, args) {
         mentionableDebaters = "";
     }
     message.channel.send({ embed: roundstats })
-    client.logger.log('info', `roundstatus command used by ${message.author.username} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
+    client.logger.log('info', `roundstatus command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
 }

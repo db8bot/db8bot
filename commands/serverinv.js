@@ -15,7 +15,7 @@ exports.run = function (client, message) {
             .first();
     }
     getDefaultChannel(message.guild).createInvite({ maxAge: 300 }).then(inv => message.channel.send(inv.url ? inv.url : "discord.gg/" + inv.code))
-    client.logger.log('info', `serverinv command used by ${message.author.username} ID: ${message.author.id} Time: ${Date()} Guild: ${guild}`)
+    client.logger.log('info', `serverinv command used by ${message.author.username} Time: ${Date()} Guild: ${guild}`)
 
 }
 

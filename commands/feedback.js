@@ -18,6 +18,6 @@ exports.run = function (client, message, args) {
             .addField("**Expected Result From Example:**", "DMs the owner of the bot with your feedback.")
 
         message.channel.send({ embed: embed1 })
-        client.logger.log('info', `feedback command used by ${message.author.username} ID: ${message.author.id} Time: ${Date()} Guild: ${guild}`)
+        client.logger.log('info', `feedback command used by ${message.author.username} Time: ${Date()} Guild: ${guild}`)
     }
 }

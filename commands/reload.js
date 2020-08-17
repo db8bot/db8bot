@@ -1,6 +1,6 @@
 exports.run = (client, message, args) => {
   if (!args || args.length < 1) return message.reply("Must provide a command name to reload.");
-  client.logger.log('info', `reload command used by ${message.author.tag} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
+  client.logger.log('info', `reload command used by ${message.author.tag} Time: ${Date()} Guild: ${message.guild}`)
   const commandName = args[0];
   if (message.author.id != client.config.owner) {
     message.reply("Insufficient permissions.")

@@ -19,5 +19,5 @@ exports.run = function (client, message) {
             });
 
     }
-    client.logger.log('info', `breakbot command used by ${message.author.username} ID: ${message.author.id} Time: ${Date()} Guild: ${guild}`)
+    client.logger.log('info', `breakbot command used by ${message.author.username} Time: ${Date()} Guild: ${guild}`)
 }

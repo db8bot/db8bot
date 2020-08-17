@@ -3,7 +3,7 @@ module.exports = async (client, guild) => {
     const chalk = require('chalk');
     const Long = require("long");
 
-    console.log(chalk.white(`Joined guild ${guild.name} ID: ${guild.id}  Owner ID: ${guild.ownerID} Size: ${guild.memberCount}`))
-    client.logger.log('info', `Joined guild ${guild.name} ID: ${guild.id}  Owner ID: ${guild.ownerID} Size: ${guild.memberCount}`)
+    console.log(chalk.white(`Joined guild ${guild.name} Size: ${guild.memberCount}`))
+    client.logger.log('info', `Joined guild ${guild.name} Size: ${guild.memberCount}`)
 
 }

@@ -28,7 +28,7 @@ exports.run = function (client, message, args) {
             return s.replace(translate_re, translator);
         };
     })();
-    client.logger.log('info', `judgeinfo command used by ${message.author.username} ID: ${message.author.id} Time: ${Date()} Guild: ${message.guild}`)
+    client.logger.log('info', `judgeinfo command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
     const help = new Discord.MessageEmbed()
         .setColor("#f0ffff")
         .setDescription("**Command: **" + `${config.prefix}judgeinfo`)
