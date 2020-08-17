@@ -17,7 +17,7 @@ https://mythicalbots.xyz/ (521461252317249537 Mythical bot list) - verified, per
 https://listmybots.com/ (576272105772023808 List my bots) - verified, permissions updated, no widget
 
 
-https://glennbotlist.xyz/ (623600255987875870 Glenn Bot List) - Previously verified, lost in data loss, resubmitted, permissions updated, no widgets
+https://glennbotlist.xyz/ (623600255987875870 Glenn Bot List) - Verified, resubmitted, permissions updated, no widgets
 
 
 https://discordapps.dev/ (330777295952543744 - >terminal_) - pending verification, permissions updated
