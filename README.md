@@ -95,6 +95,19 @@ This Project is licensed under MIT License - see the LICENSE.md file for more de
   * This code has no Warranty
   * When using this code, credit must be given to the author
 
+## Privacy
+
+  # The data we collect
+  * In order to track debates, the names of each debate round are stored in our database in the form of <server id><name of the round given by the user>. For each debate round, we also store information about which members in the server are debating (in the form of mentionable user objects), the judge (in the form of a user object), the name of the debate event (ex: public forum, policy, Lincoln Douglas), and the name of the round given by the user.
+  * We also store non-personally identifiable information about what commands our users have used. This includes: the time the command was used, the name of the command that was used, the name of the server (server IDs are not stored), the username of the user that used the command (the 4 discriminator digits are not stored).
+  * We also store user IDs of users who have chosen to opt-out of specific functions and the name of the function(s) they have opted out of.
+
+  # Length of storage
+  * Debate round & opt out information are stored until the user deletes them through `-endround` & `-optout` respectively 
+
+  # Questions about the deletion of your data
+  * Please join the help server or use the `-feedback` command.
+
 ## Credits
 Here are credits for all the code I used that was from other repositories.
   * -botinfo command's uptime calculations code & general ideas/inspiration from Dank-Memer's Dank-Memer [here](https://github.com/Dank-Memer/Dank-Memer).
