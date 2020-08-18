@@ -29,12 +29,9 @@ exports.run = function (client, message, args) {
         .addField("Moderator:", message.author.username + "#" + message.author.discriminator)
 
     if (validUnlocks.includes(time)) {
-        message.channel.overwritePermissions([
-            {
-                id: message.guild.id,
-                deny: [],
-            },
-        ], 'Lockdown').then(() => {
+        message.channel.createOverwrite(message.guild.id, {
+            SEND_MESSAGES: null
+        }).then(() => {
             message.channel.send('Lockdown lifted.');
             clearTimeout(client.lockit[message.channel.id]);
             delete client.lockit[message.channel.id];
@@ -42,27 +39,27 @@ exports.run = function (client, message, args) {
             console.log(error);
         });
     } else {
-        message.channel.overwritePermissions([
-            {
-                id: message.guild.id,
-                deny: ['SEND_MESSAGES'],
-            },
-        ], 'Lockdown').then(() => {
-            message.channel.send(`Channel locked down for ${ms(ms(time), { long: true })}`).then(() => {
+        message.channel.createOverwrite(message.guild.id, {
+            SEND_MESSAGES: false
+        }).then(() => {
+            message.channel.createOverwrite(config.botid, {
+                SEND_MESSAGES: true
+            }).then(() => {
+                message.channel.send(`Channel locked down for ${ms(ms(time), { long: true })}`).then(() => {
 
-                client.lockit[message.channel.id] = setTimeout(() => {
-                    message.channel.overwritePermissions([
-                        {
-                            id: message.guild.id,
-                            deny: [],
-                        },
-                    ], 'Lockdown').then(message.channel.send('Lockdown lifted.')).catch(console.error);
-                    delete client.lockit[message.channel.id];
-                }, ms(time));
+                    client.lockit[message.channel.id] = setTimeout(() => {
+                        message.channel.createOverwrite(message.guild.id, {
+                            SEND_MESSAGES: null
+                        }).then(message.channel.send('Lockdown lifted.')).catch(console.error);
+                        delete client.lockit[message.channel.id];
+                    }, ms(time));
 
-            }).catch(error => {
-            });
+                }).catch(error => {
+                    console.log(error);
+                });
+            })
         });
     }
+
     guild.channels.cache.find(val => val.name === "modlog").send({ embed: embed }).catch(err => console.error(err));
 };

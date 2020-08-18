@@ -16,16 +16,20 @@ exports.run = function (client, message, args, args2, cmd) {
     if (client.optINOUT.get(user.id) != undefined) {
         if (client.optINOUT.get(user.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send(`The user you are mentioning has opted out of the service: ${__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js"))}.`)
     }
-    const embed = new Discord.MessageEmbed()
-        .setColor("#008000")
-        .setTitle(`You Have a New Message from user ${message.author.username} from server ${guild.name}`)
-        .setDescription("ID: " + message.author.id)
-        .setThumbnail(message.author.avatarURL)
-        .setTimestamp()
-        .addField("Message:", args.slice(1).join(' '))
-        .setFooter("Reply by using the command -dm @<replyUser> <message>")
-    user.send({ embed: embed })
-    message.delete()
-    message.reply("Message sent!")
+    if (user.bot === false) {
+        const embed = new Discord.MessageEmbed()
+            .setColor("#008000")
+            .setTitle(`You Have a New Message from user ${message.author.username} from server ${guild.name}`)
+            .setDescription("ID: " + message.author.id)
+            .setThumbnail(message.author.avatarURL)
+            .setTimestamp()
+            .addField("Message:", args.slice(1).join(' '))
+            .setFooter("Reply by using the command -dm @<replyUser> <message>")
+        user.send({ embed: embed })
+        message.delete()
+        message.reply("Message sent!")
+    } else {
+        message.reply(`Failed to send message: You cannot DM a bot!`)
+    }
     client.logger.log('info', `dm command used by ${message.author.username} Time: ${Date()} Guild: ${guild}`)
 }
