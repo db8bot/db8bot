@@ -33,6 +33,10 @@ exports.run = function (client, message, args) {
             game = message.author.presence.activities[0].name;
             customStatus = 'Nothing'
         }
+        if (message.author.presence.activities[0].emoji != null) {
+            customStatus = customStatus.replace('null', '')
+            customStatus = customStatus.substring(0, 14) + " " + message.author.presence.activities[0].emoji.name + " " + customStatus.substring(15)
+        }
         const userInfo = new Discord.MessageEmbed()
             .setAuthor(`User Info for ${message.author.tag} - ID: ${message.author.id}`)
             .setColor('#2D7FFF')
@@ -60,6 +64,10 @@ exports.run = function (client, message, args) {
         } else {
             game = user.presence.activities[0].name;
             customStatus = 'Nothing'
+        }
+        if (user.presence.activities[0].emoji != null) {
+            customStatus = customStatus.replace('null', '')
+            customStatus = customStatus.substring(0, 14) + " " + user.presence.activities[0].emoji.name + " " + customStatus.substring(15)
         }
         var date = new Date(user.joinedTimestamp * 1000);
         const userInfo = new Discord.MessageEmbed()

@@ -1,5 +1,6 @@
 exports.run = function (client, message) {
     var guild = message.guild;
+    var Long = require("long");
     if (client.optINOUT.get(message.author.id) != undefined) {
         if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
     } function getDefaultChannel(guild) {

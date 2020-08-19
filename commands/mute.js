@@ -20,7 +20,8 @@ exports.run = function (client, message, args) {
     if (!muteRole) return message.reply("Mute Role required")
     if (message.mentions.users.size < 1) return message.reply("You must mention someone to mute them.").catch(console.error)
     if (reason.length < 1) return message.reply("Reason Required")
-    if (!message.guild.member(client.user).hasPermission("MANAGE_ROLES_OR_PERMISSIONS")) return message.reply('Bot has insufficant Perms').catch(console.error)
+    // if (!message.guild.member(client.user).hasPermission("MANAGE_ROLES"), { checkAdmin: true, checkOwner: true }) return message.reply('Bot has insufficant Perms').catch(console.error)
+    if (!message.guild.member(client.user).hasPermission("MANAGE_ROLES")) return message.reply('Bot has insufficant Perms').catch(console.error)
     if (user === message.author) return message.reply("You cannot mute yourself")
     message.guild.member(user).roles.add(muteRole).catch(err => console.error(err))
 
