@@ -11,20 +11,21 @@ exports.run = function (client, message, args) {
     else {
         // console.log(args.join(' '))
         // console.log(emojiUnicode(args.join(' ')));
+        var unicode = ""
+        if (emojiUnicode(args.join(' ')).includes(" ")) {
+            unicode = emojiUnicode(args.join(' ')).substring(0, emojiUnicode(args.join(' ')).indexOf(' '))
+        } else {
+            unicode = emojiUnicode(args.join(' '))
+        }
         superagent
-            .get(`https://github.com/rodrigopolo/jqueryemoji/raw/master/img/apple40/${emojiUnicode(args.join(' ')).substring(0, emojiUnicode(args.join(' ')).indexOf(' '))}.png`)
+            .get(`https://github.com/rodrigopolo/jqueryemoji/raw/master/img/apple40/${unicode}.png`)
             .end((err, res) => {
-                // console.log(res.body)
-                try {
-                    if (res.body.includes("Page not found")) {
-                        // not found
-                    } else {
-                        message.channel.send({
-                            files: [`https://github.com/rodrigopolo/jqueryemoji/raw/master/img/apple40/${emojiUnicode(args.join(' ')).substring(0, emojiUnicode(args.join(' ')).indexOf(' '))}.png`]
-                        })
-                    }
-                } catch (err) {
+                if (res.header.status === '404 Not Found') {
                     message.channel.send(`Not found`)
+                } else {
+                    message.channel.send({
+                        files: [`https://github.com/rodrigopolo/jqueryemoji/raw/master/img/apple40/${unicode}.png`]
+                    })
                 }
             })
     }
