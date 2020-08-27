@@ -61,5 +61,9 @@ exports.run = function (client, message, args) {
         });
     }
 
-    guild.channels.cache.find(val => val.name === "modlog").send({ embed: embed }).catch(err => console.error(err));
+    try {
+        guild.channels.cache.find(val => val.name === "modlog").send({ embed: embed }).catch(err => console.error(err));
+    } catch (err) {
+        message.channel.send(`No modlog`)
+    }
 };
