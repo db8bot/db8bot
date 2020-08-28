@@ -1,2 +1,0 @@
-{"level":"info","message":"lockdown command used by AirFusion Time: Fri Aug 21 2020 15:33:32 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
-{"level":"info","message":"ping command used by AirFusion Time: Tue Aug 25 2020 22:07:26 GMT-0700 (Pacific Daylight Time) Guild: CPS Class of '23"}

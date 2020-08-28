@@ -210,7 +210,7 @@ client.on('message', async message => {
         else {
             return message.channel.send("Insufficant Permissions");
         }
-    } 
+    }
     else if (command === "sendmsgto") {
         function getDefaultChannel(guild) {
             if (guild.channels.cache.some(name1 => name1.name === "general"))
@@ -243,7 +243,7 @@ client.on('message', async message => {
     }
     else if (command === "restart") {
 
-        if (message.author.id === config.owner) {
+        if (message.author.id === config.owner && args.join(' ') === "") {
 
             message.channel.send(config.name + " is restarting...")
             message.reply(":white_check_mark: Restart should be complete, check -botinfo for confirmation.")
@@ -251,6 +251,27 @@ client.on('message', async message => {
             setTimeout(function () {
                 process.abort();
             }, 1000);
+        } else if (message.author.id === '646956106827956233' || message.author.id === config.owner) {
+            var goVerifyRestart = false
+            if (message.author.id === config.owner && args.join(' ') === "verify") {
+                goVerifyRestart = true
+            } else if (author.id === '646956106827956233') {
+                goVerifyRestart = true;
+            }
+            if (goVerifyRestart) {
+                message.channel.send(`Authorized ${message.author.tag}. Restarting verify.py - verify bot #7802...`)
+                message.reply(`:white_check_mark: Restart complete.`)
+                setTimeout(async function () {
+                    const command = `pm2 restart verify` // add exec cmd to credits NOTE: 0 = powerbot or default host of the code [add in readme that make sure process is in #0 if using pm2] 1 = signature
+                    const outMessage = await message.channel.send(`Running \`${command}\`...`);
+                    let stdOut = await doExec(command).catch(data => outputErr(outMessage, data));
+                    stdOut = stdOut.substring(0, 1750);
+                    outMessage.edit(`\`OUTPUT\`
+          \`\`\`sh
+          ${clean(stdOut)}
+          \`\`\``);
+                }, 3000);
+            }
         } else {
             message.channel.send("Insufficant Permissions")
         }
