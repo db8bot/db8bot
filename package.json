@@ -30,7 +30,7 @@
     "pngjs": "^5.0.0",
     "python-shell": "^2.0.1",
     "querystring": "^0.2.0",
-    "string-strip-html": "^5.0.0",
+    "string-strip-html": "^5.0.1",
     "superagent": "^6.0.0",
     "winston": "^3.3.3"
   },
