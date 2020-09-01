@@ -251,11 +251,11 @@ client.on('message', async message => {
             setTimeout(function () {
                 process.abort();
             }, 1000);
-        } else if (message.author.id === '646956106827956233' || message.author.id === config.owner) {
+        } else if (message.author.id === '646956106827956233' || message.author.id === config.owner || message.author.id === '601134106188709889' || message.author.id === '443554564847697922') {
             var goVerifyRestart = false
             if (message.author.id === config.owner && args.join(' ') === "verify") {
                 goVerifyRestart = true
-            } else if (author.id === '646956106827956233') {
+            } else if (message.author.id === '646956106827956233' || message.author.id === '601134106188709889' || message.author.id === '443554564847697922') {
                 goVerifyRestart = true;
             }
             if (goVerifyRestart) {

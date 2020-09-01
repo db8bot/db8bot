@@ -37,7 +37,8 @@ exports.run = function (client, message, args) {
     let totalPeople = 0;
     let botNumber = 0;
     // var brokenglass = client.emojis.cache.find(val => val.name === 'brokenGlass')
-    client.guilds.cache.map(person => totalPeople += person.memberCount)
+    // client.guilds.cache.map(person => totalPeople += person.memberCount)
+    totalPeople = client.guilds.cache.map(person => person.memberCount).reduce(function (s, v) { return s + (v || 0); }, 0);
     client.guilds.cache.map(botPerson => botNumber += botPerson.members.cache.filter(member => member.user.bot).size)
     const embed = new Discord.MessageEmbed()
         .setColor('36393E')
