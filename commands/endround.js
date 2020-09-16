@@ -49,7 +49,12 @@ exports.run = function (client, message, args) {
             .setTimestamp()
 
         message.channel.send({ embed: results })
+        try {
         guild.channels.cache.find(val => val.name === "debatelog").send({ embed: results }).catch(err => console.error(err))
+        } catch (err) {
+            console.log(err)
+            message.channel.send('Friendly reminder to create a #debatelog channel for storing debate results :)')
+        }
         client.rounds.delete(guild.id + args[0])
         client.logger.log('info', `endround command used by ${message.author.username} Time: ${Date()} Guild: ${guild}`)
     }

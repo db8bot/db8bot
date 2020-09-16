@@ -68,6 +68,7 @@ exports.run = function (client, message, args) {
                 cb: null
             }
             clean = stripHtml(clean.res)
+            clean = clean.result
             if (clean.indexOf(`Your search for ${args[0]} ${args[1]} returned no judges with paradigms.`) != -1) {
                 message.channel.send(`Your search for ${args[0]} ${args[1]} returned no judges with paradigms. Please try again.`)
                 message.channel.send(`Direct Link: https://www.tabroom.com/index/paradigm.mhtml?search_first=${args[0]}&search_last=${args[1]}`)
