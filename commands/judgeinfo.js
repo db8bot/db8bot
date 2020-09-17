@@ -82,7 +82,7 @@ exports.run = function (client, message, args) {
                 for (var i = 0; i < Math.ceil((clean.length) / 2000); i++) {
 
                     if (i + 1 === Math.ceil((clean.length) / 2000)) {
-                        if ((clean).substring(substrVar).length > 1994) {
+                        if ((clean).substring(substrVar).length > 1990) {
                             i--;
                         } else {
                             cleaned = replaceHtmlEntites((clean).substring(substrVar))
@@ -95,10 +95,10 @@ exports.run = function (client, message, args) {
                             message.channel.send("```\n" + cleaned + "\n```")
                         }
                     } else {
-                        var est = (clean).substring(substrVar + 1994, substrVar + 1995).indexOf(" ")
-                        placement = substrVar + 1994
+                        var est = (clean).substring(substrVar + 1990, substrVar + 1991).indexOf(" ")
+                        placement = substrVar + 1990
                         if (est === -1) {
-                            est = (clean).substring(substrVar + 1985, substrVar + 1995).indexOf(" ")
+                            est = (clean).substring(substrVar + 1985, substrVar + 1991).indexOf(" ")
                             placement = substrVar + 1985
                         }
                         cleaned = replaceHtmlEntites((clean).substring(substrVar, placement + est))
