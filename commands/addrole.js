@@ -2,7 +2,7 @@ exports.run = function (client, message) {
     if (message.guild.id != "685646226942984206") return;
     else {
         const member = message.guild.member(message.mentions.users.first());
-        const role = message.guild.roles.cache.find(role => role.name === ".");
+        const role = message.guild.roles.cache.find(role => role.name === "Verified");
         member.roles.add(role);
     }
     // .then((GuildMember) => {

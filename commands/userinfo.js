@@ -33,9 +33,13 @@ exports.run = function (client, message, args) {
             game = message.author.presence.activities[0].name;
             customStatus = 'Nothing'
         }
-        if (message.author.presence.activities[0].emoji != null) {
-            customStatus = customStatus.replace('null', '')
-            customStatus = customStatus.substring(0, 14) + " " + message.author.presence.activities[0].emoji.name + " " + customStatus.substring(15)
+        try {
+            if (message.author.presence.activities[0].emoji != null) {
+                customStatus = customStatus.replace('null', '')
+                customStatus = customStatus.substring(0, 14) + " " + message.author.presence.activities[0].emoji.name + " " + customStatus.substring(15)
+            }
+        } catch (err) {
+            console.log(err)
         }
         const userInfo = new Discord.MessageEmbed()
             .setAuthor(`User Info for ${message.author.tag} - ID: ${message.author.id}`)
