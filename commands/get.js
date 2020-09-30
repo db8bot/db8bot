@@ -1,3 +1,6 @@
+const { hostname } = require('os');
+const { options } = require('superagent');
+
 exports.run = function (client, message, args) {
     const superagent = require('superagent');
     const querystring = require('querystring');
@@ -21,9 +24,17 @@ exports.run = function (client, message, args) {
 
     superagent
         .get(`https://sci-hub.scihubtw.tw/${args.join(' ')}`)
+        // .get(`https://sci-hub.scihubtw.tw/https://www.doi.org/10.2307/1342499/`)
+        .set("Cache-Control", "no-cache")
+        .set('User-Agent', "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36")
+        .set("Accept", "*/*")
+        .set("Accept-Encoding", "gzip, deflate, br")
+        .set("Connection", "keep-alive")
+        .set("Host", "sci-hub.scihubtw.tw")
         .end((err, res) => {
             client.logger.log('info', `get command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
             // Calling the end function will send the request
+            // console.log(res.text)
             var found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
             // console.log(found)
             if (found === null) {
@@ -33,6 +44,13 @@ exports.run = function (client, message, args) {
                     const request = https.request({
                         host: 'sci-hub.scihubtw.tw',
                         path: args.join(' '),
+                        headers: {
+                            "Cache-Control": "no-cache",
+                            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36",
+                            "Accept": "*/*",
+                            "Accept-Encoding": "gzip, deflate, br",
+                            "Connection": "keep-alive"
+                        }
                     }, response => {
                         console.log(response.responseUrl);
                         message.channel.send(`Document on libgen - Mirror selection page: ${response.responseUrl}`)
@@ -47,6 +65,12 @@ exports.run = function (client, message, args) {
                         // console.log(response.responseUrl);
                         superagent
                             .get(`https://sci-hub.scihubtw.tw/${response.responseUrl}`)
+                            .set("Cache-Control", "no-cache")
+                            .set('User-Agent', "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36")
+                            .set("Accept", "*/*")
+                            .set("Accept-Encoding", "gzip, deflate, br")
+                            .set("Connection", "keep-alive")
+                            .set("Host", "sci-hub.scihubtw.tw")
                             .end((err, res) => {
                                 found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
                                 if (found === null) {

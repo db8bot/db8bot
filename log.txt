@@ -1,7 +1,0 @@
-{"level":"info","message":"purge command used by AirFusion Time: Wed Sep 23 2020 16:12:54 GMT-0700 (Pacific Daylight Time) Guild: CPS Class of '23"}
-{"level":"info","message":"purge command used by AirFusion Time: Thu Sep 24 2020 11:15:22 GMT-0700 (Pacific Daylight Time) Guild: CPS Class of '23"}
-{"level":"info","message":"purge command used by AirFusion Time: Thu Sep 24 2020 11:23:43 GMT-0700 (Pacific Daylight Time) Guild: CPS Class of '23"}
-{"level":"info","message":"purge command used by AirFusion Time: Thu Sep 24 2020 11:23:46 GMT-0700 (Pacific Daylight Time) Guild: CPS Class of '23"}
-{"level":"info","message":"purge command used by AirFusion Time: Thu Sep 24 2020 11:26:38 GMT-0700 (Pacific Daylight Time) Guild: CPS Class of '23"}
-{"level":"info","message":"purge command used by AirFusion Time: Thu Sep 24 2020 11:26:40 GMT-0700 (Pacific Daylight Time) Guild: CPS Class of '23"}
-{"level":"info","message":"purge command used by AirFusion Time: Thu Sep 24 2020 11:26:43 GMT-0700 (Pacific Daylight Time) Guild: CPS Class of '23"}
