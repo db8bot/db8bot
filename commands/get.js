@@ -23,14 +23,14 @@ exports.run = function (client, message, args) {
     }
 
     superagent
-        .get(`https://sci-hub.scihubtw.tw/${args.join(' ')}`)
-        // .get(`https://sci-hub.scihubtw.tw/https://www.doi.org/10.2307/1342499/`)
+        .get(`https://sci-hub.se/${args.join(' ')}`)
+        // .get(`https://sci-hub.se/https://www.doi.org/10.2307/1342499/`)
         .set("Cache-Control", "no-cache")
         .set('User-Agent', "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36")
         .set("Accept", "*/*")
         .set("Accept-Encoding", "gzip, deflate, br")
         .set("Connection", "keep-alive")
-        .set("Host", "sci-hub.scihubtw.tw")
+        .set("Host", "sci-hub.se")
         .end((err, res) => {
             client.logger.log('info', `get command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
             // Calling the end function will send the request
@@ -42,7 +42,7 @@ exports.run = function (client, message, args) {
                     var libgenSection = res.text.substring(res.text.indexOf('<td colspan=2>') + 14, res.text.indexOf('</a></b></td>'))
                     libgenSection = libgenSection.substring(libgenSection.indexOf(`<b><a href='`) + 12, libgenSection.indexOf(`'>`))
                     const request = https.request({
-                        host: 'sci-hub.scihubtw.tw',
+                        host: 'sci-hub.se',
                         path: args.join(' '),
                         headers: {
                             "Cache-Control": "no-cache",
@@ -64,13 +64,13 @@ exports.run = function (client, message, args) {
                     }, response => {
                         // console.log(response.responseUrl);
                         superagent
-                            .get(`https://sci-hub.scihubtw.tw/${response.responseUrl}`)
+                            .get(`https://sci-hub.se/${response.responseUrl}`)
                             .set("Cache-Control", "no-cache")
                             .set('User-Agent', "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36")
                             .set("Accept", "*/*")
                             .set("Accept-Encoding", "gzip, deflate, br")
                             .set("Connection", "keep-alive")
-                            .set("Host", "sci-hub.scihubtw.tw")
+                            .set("Host", "sci-hub.se")
                             .end((err, res) => {
                                 found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
                                 if (found === null) {
@@ -78,7 +78,7 @@ exports.run = function (client, message, args) {
                                         var libgenSection = res.text.substring(res.text.indexOf('<td colspan=2>') + 14, res.text.indexOf('</a></b></td>'))
                                         libgenSection = libgenSection.substring(libgenSection.indexOf(`<b><a href='`) + 12, libgenSection.indexOf(`'>`))
                                         const request = https.request({
-                                            host: 'sci-hub.scihubtw.tw',
+                                            host: 'sci-hub.se',
                                             path: args.join(' '),
                                         }, response => {
                                             console.log(response.responseUrl);
