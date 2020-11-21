@@ -28,7 +28,7 @@
     "ms": "^2.1.2",
     "os": "^0.1.1",
     "pngjs": "^6.0.0",
-    "python-shell": "^2.0.2",
+    "python-shell": "^2.0.3",
     "querystring": "^0.2.0",
     "string-strip-html": "^6.3.0",
     "superagent": "^6.1.0",
