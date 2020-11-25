@@ -1,4 +1,4 @@
-
+// <3 not supported on windows...
 exports.run = function (client, message, args) {
     if (message.guild.id != "685646226942984206" && message.guild.id != "688603800549851298") return;
     else {
