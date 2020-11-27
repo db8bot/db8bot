@@ -5,7 +5,7 @@ function getRandomIntInclusive(min, max) {
 }
 
 exports.run = function (client, message) {
-    const quotes = require("../quotes.json");
+    const quotes = require("../quoteFiles/quotesComm.json");
     const Discord = require('discord.js');
     const fs = require("fs")
     const translate = require('@vitalets/google-translate-api');
@@ -27,7 +27,7 @@ exports.run = function (client, message) {
     client.logger.log('info', `communism command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
     quotes[quotes.length - 1].lastQuote = quotes[num].quote
     quotes[quotes.length - 1].lastNumber = num
-    fs.writeFile('./quotes.json', JSON.stringify(quotes, null, 2), function (err) {
-        if (err) return console.error(err);
-    });
+    // fs.writeFile('./quoteFiles/quotesComm.json', JSON.stringify(quotes, null, 2), function (err) {
+    //     if (err) return console.error(err);
+    // });
 }

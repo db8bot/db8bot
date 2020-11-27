@@ -5,7 +5,7 @@ function getRandomIntInclusive(min, max) {
 }
 
 exports.run = function (client, message) {
-    const quotes = require("../bidenQuotes.json");
+    const quotes = require("../quoteFiles/bidenQuotes.json");
     const Discord = require('discord.js');
     const fs = require("fs")
     const translate = require('@vitalets/google-translate-api');
@@ -29,7 +29,7 @@ exports.run = function (client, message) {
     client.logger.log('info', `biden command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
     quotes[quotes.length - 1].lastQuote = quotes[num].quote
     quotes[quotes.length - 1].lastNumber = num
-    // fs.writeFile('../bidenQuotes.json', JSON.stringify(quotes, null, 2), function (err) {
+    // fs.writeFile('../quoteFiles/bidenQuotes.json', JSON.stringify(quotes, null, 2), function (err) {
     //     if (err) return console.error(err);
     // });
 }

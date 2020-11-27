@@ -59,7 +59,7 @@ exports.run = function (client, message, args) {
         .addField(`:control_knobs: Library`, `Discord JS v${Discord.version}`, true)
         .addField(`:computer: Node.js `, `${process.version}`, true)
         .addField(`:regional_indicator_h: :regional_indicator_o: :regional_indicator_s: :regional_indicator_t: Host Name`, `${os.hostname}`, true)
-        .addField(`:white_check_mark: Host OS`, `${os.platform}`, true)
+        .addField(`:white_check_mark: Host OS`, `${os.platform} ${os.release}`, true)
 
     if (args.join(' ') === "nerdy") {
         message.channel.send({ embed: embed })
