@@ -10,7 +10,7 @@
   "author": "AirFusion45",
   "license": "MIT",
   "dependencies": {
-    "@sentry/node": "^5.27.6",
+    "@sentry/node": "^5.28.0",
     "@vitalets/google-translate-api": "^4.0.0",
     "base64-url": "^2.3.3",
     "better-sqlite3": "^7.1.1",
