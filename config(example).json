@@ -2,7 +2,7 @@
     "token": "",
     "owner": "owner ID here",
     "ownerTag": "owner username & discrim here",
-    "prefix": "bot prefix: only support 1 character prefixes",
+    "prefix": "!",
     "name": "name of your bot w/ discrim",
     "botid": "your bot ID",
     "invLink": "bot's invite link"
