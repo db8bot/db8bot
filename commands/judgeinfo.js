@@ -9,25 +9,8 @@ exports.run = function (client, message, args) {
     } function getPosition(string, subString, index) {
         return string.split(subString, index).join(subString).length;
     }
-    var replaceHtmlEntites = (function () {
-        var translate_re = /&(nbsp|amp|quot|lt|gt);/g,
-            translate = {
-                'nbsp': String.fromCharCode(160),
-                'amp': '&',
-                'quot': '"',
-                'lt': '<',
-                'gt': '>',
-                'rsquo': '\'',
-                'ldquo': '"'
-            },
-            translator = function ($0, $1) {
-                return translate[$1];
-            };
 
-        return function (s) {
-            return s.replace(translate_re, translator);
-        };
-    })();
+
     client.logger.log('info', `judgeinfo command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
     const help = new Discord.MessageEmbed()
         .setColor("#f0ffff")
@@ -40,94 +23,22 @@ exports.run = function (client, message, args) {
         message.channel.send({ embed: help })
         return;
     }
+
+
     superagent
-        .get(`https://www.tabroom.com/index/paradigm.mhtml?search_first=${args[0]}&search_last=${args[1]}`)
+        .get('https://tabroomapi.herokuapp.com/paradigm')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send(JSON.parse(`{"apiauth": "${config.tabAPIKey}", "type":"name", "first":"${args[0]}", "last":"${args[1]}", "short":"${true}"}`))
         .end((err, res) => {
-            var paradigm = res.text.substring(res.text.indexOf(`<div class="paradigm">`) + `<div class="paradigm">`.length, getPosition(res.text, '</div>', 6))
-            var clean;
-            clean = det(paradigm), {
-                fixBrokenEntities: true,
-                removeWidows: true,
-                convertEntities: true,
-                convertDashes: true,
-                convertApostrophes: true,
-                replaceLineBreaks: true,
-                removeLineBreaks: false,
-                useXHTML: true,
-                dontEncodeNonLatin: true,
-                addMissingSpaces: true,
-                convertDotsToEllipsis: true,
-                stripHtml: true,
-                stripHtmlButIgnoreTags: [
-                    "b",
-                    "i",
-                    "em",
-                    "sup"
-                ],
-                stripHtmlAddNewLine: ["li", "/ul"],
-                cb: null
-            }
-            clean = stripHtml(clean.res)
-            clean = clean.result
-            if (clean.indexOf(`Your search for ${args[0]} ${args[1]} returned no judges with paradigms.`) != -1) {
-                message.channel.send(`Your search for ${args[0]} ${args[1]} returned no judges with paradigms. Please try again.`)
-                message.channel.send(`Direct Link: https://www.tabroom.com/index/paradigm.mhtml?search_first=${args[0]}&search_last=${args[1]}`)
-                return;
-            }
-
-            var substrVar = 0;
-            var placement = 0;
-            var cleaned = "";
-            try {
-                for (var i = 0; i < Math.ceil((clean.length) / 2000); i++) {
-
-                    if (i + 1 === Math.ceil((clean.length) / 2000)) {
-                        if ((clean).substring(substrVar).length > 1990) {
-                            i--;
-                        } else {
-                            cleaned = replaceHtmlEntites((clean).substring(substrVar))
-                            while (cleaned.indexOf("&rsquo;") != -1 || cleaned.indexOf("&ldquo;") != -1 || cleaned.indexOf("&rdquo;") != -1 || cleaned.indexOf("&#x2AAF") != -1) {
-                                cleaned = cleaned.replace("&rsquo;", '\'')
-                                cleaned = cleaned.replace("&ldquo;", '"')
-                                cleaned = cleaned.replace("&rdquo;", '"')
-                                cleaned = cleaned.replace("&#x2AAF", "&")
-                            }
-                            message.channel.send("```\n" + cleaned + "\n```")
-                        }
-                    } else {
-                        var est = (clean).substring(substrVar + 1990, substrVar + 1991).indexOf(" ")
-                        placement = substrVar + 1990
-                        if (est === -1) {
-                            est = (clean).substring(substrVar + 1985, substrVar + 1991).indexOf(" ")
-                            placement = substrVar + 1985
-                        }
-                        cleaned = replaceHtmlEntites((clean).substring(substrVar, placement + est))
-                        while (cleaned.indexOf("&rsquo;") != -1 || cleaned.indexOf("&ldquo;") != -1) {
-                            cleaned = cleaned.replace("&rsquo;", '\'')
-                            cleaned = cleaned.replace("&ldquo;", '"')
-                            cleaned = cleaned.replace("&rdquo;", '"')
-                            cleaned = cleaned.replace("&#x2AAF", "&")
-                        }
-                        message.channel.send("```" + cleaned + "```")
-                    }
-                    substrVar = est + placement;
+            var paradigm = res.body[0]
+            if (paradigm.length > 1990) {
+                while (paradigm.length > 1990) {
+                    message.channel.send("```" + paradigm.substring(0, 1990).trim() + "```")
+                    paradigm = paradigm.replace(paradigm.substring(0, 1990).trim(), "")
                 }
-            }
-            catch (err) {
-                console.log("FALL BACK")
-                if (paradigm === undefined) {
-                    message.reply("Judge not found!")
-                    message.channel.send({ embed: help })
-                    return;
-                }
-                for (var i = 0; i < Math.ceil((clean.length) / 2000); i++) {
-                    if (i + 1 === Math.ceil((clean.length) / 2000)) {
-                        message.channel.send((clean).substring(substrVar))
-                    } else {
-                        message.channel.send((clean).substring(substrVar, substrVar + 2000))
-                    }
-                    substrVar += 2000;
-                }
+                message.channel.send("```" + paradigm + "```")
+            } else {
+                message.channel.send("```" + paradigm + "```")
             }
             message.channel.send(`Direct Link: https://www.tabroom.com/index/paradigm.mhtml?search_first=${args[0]}&search_last=${args[1]}`)
         })
