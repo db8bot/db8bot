@@ -15,11 +15,11 @@ exports.run = function (client, message) {
         .addField(`:keyboard: AFK Channel Timeout`, message.guild.afkTimeout + " seconds", true)
         .addField(`:frame_photo: Server Icon`, message.channel.guild.iconURL() === null ? "Default Icon" : message.channel.guild.iconURL(), true)
         .addField(`:id: Guild ID`, message.guild.id, true)
-        .addField(`:man_in_tuxedo: Server Owner`, message.guild.owner, true)
+        .addField(`:man_in_tuxedo: Server Owner`, `<@${message.guild.ownerID}>`, true)
         .addField(`:man_in_tuxedo: Server Owner ID`, message.guild.ownerID, true)
         .addField(`:closed_lock_with_key: Server Verification Level`, message.guild.verificationLevel, true)
         .addField(`:joystick: Roles Size`, message.guild.roles.cache.size, true)
-        .setFooter(message.guild.owner.user.tag, message.guild.owner.user.avatarURL)
+        // .setFooter(message.guild.owner.user.tag, message.guild.owner.user.avatarURL) needs priviliaged intents
 
 
     message.channel.send({ embed: embed })

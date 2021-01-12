@@ -128,6 +128,7 @@ client.on('message', async message => {
             y = Date.now()
             message.channel.send(`:white_check_mark: Success! Time taken: \`${y - x}ms\``)
             message.channel.send(clean(evaled), { code: "xl" });
+            console.log(clean(evaled))
         } catch (err) {
             y = Date.now()
             message.channel.send(`:x: Error! Time taken: \`${y - x}ms\``)
@@ -179,7 +180,12 @@ client.on('message', async message => {
     else if (command === "getallserver") {
         if (message.author.id === config.owner) {
             let user = message.author;
-            user.send(client.guilds.cache.map(e => e.toString()).join(`, `));
+            var serverNameStr = client.guilds.cache.map(e => e.toString()).join(`, `)
+            while (serverNameStr.length > 1990) {
+                    user.send(serverNameStr.substring(0, 1990));
+                    serverNameStr = serverNameStr.replace(serverNameStr.substring(0, 1990), "")
+            }
+            user.send(serverNameStr)
 
         }
         else {
