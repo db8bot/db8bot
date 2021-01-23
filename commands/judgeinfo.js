@@ -30,16 +30,33 @@ exports.run = function (client, message, args) {
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .send(JSON.parse(`{"apiauth": "${config.tabAPIKey}", "type":"name", "first":"${args[0]}", "last":"${args[1]}", "short":"${true}"}`))
         .end((err, res) => {
-            var paradigm = res.body[0]
-            if (paradigm.length > 1990) {
-                while (paradigm.length > 1990) {
-                    message.channel.send("```" + paradigm.substring(0, 1990).trim() + "```")
-                    paradigm = paradigm.replace(paradigm.substring(0, 1990).trim(), "")
+            if (typeof res.body[0] != 'string') { // multiple paradigms under the same name
+                message.reply(`Found ${res.body.length} paradigms/tabroom accounts under ${args[0]} ${args[1]}. Sending all of them, each direct link marks the end of a paradigm.`)
+                for (x = 0; x < res.body.length; x++) {
+                    var paradigm = res.body[x][0]
+                    if (paradigm.length > 1990) {
+                        while (paradigm.length > 1990) {
+                            message.channel.send("```" + paradigm.substring(0, 1990).trim() + "```")
+                            paradigm = paradigm.replace(paradigm.substring(0, 1990).trim(), "")
+                        }
+                        message.channel.send("```" + paradigm + "```")
+                    } else {
+                        message.channel.send("```" + paradigm + "```")
+                    }
+                    message.channel.send(`Direct Link: ${res.body[x][2]}`)
                 }
-                message.channel.send("```" + paradigm + "```")
             } else {
-                message.channel.send("```" + paradigm + "```")
+                var paradigm = res.body[0]
+                if (paradigm.length > 1990) {
+                    while (paradigm.length > 1990) {
+                        message.channel.send("```" + paradigm.substring(0, 1990).trim() + "```")
+                        paradigm = paradigm.replace(paradigm.substring(0, 1990).trim(), "")
+                    }
+                    message.channel.send("```" + paradigm + "```")
+                } else {
+                    message.channel.send("```" + paradigm + "```")
+                }
+                message.channel.send(`Direct Link: https://www.tabroom.com/index/paradigm.mhtml?search_first=${args[0]}&search_last=${args[1]}`)
             }
-            message.channel.send(`Direct Link: https://www.tabroom.com/index/paradigm.mhtml?search_first=${args[0]}&search_last=${args[1]}`)
         })
 }
