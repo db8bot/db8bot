@@ -21,6 +21,7 @@ exports.run = function (client, message) {
         .addField(`Privacy`, `For information about the data we collect please visit [here](https://github.com/AirFusion45/db8bot#privacy)`)
         .addField(`Debate Function Help`, `For detailed help on how to use the debate functions, use the ${config.prefix}debatehelp command.`)
         .addField('Github', `The repo for this bot can be found [here](https://github.com/AirFusion45/db8bot).`)
+        .addField(`Bot Status`,`The bot has a status page [here](https://airfusion.statuspage.io/). Please check this page first if a function isn't working. We might already be patching it!`)
         .addField('Support Server:', `Come [here](https://discord.gg/rEQc7C7) to get help or just hang out.`)
         .addField('Bot Invite Link', `Use \`${config.prefix}invite\` for the bot's invite link, or click [here](https://discordapp.com/oauth2/authorize?client_id=689368779305779204&scope=bot&permissions=2146958847)`)
         .setFooter(`Made by ${config.ownerTag}`)

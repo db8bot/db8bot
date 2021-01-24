@@ -30,6 +30,10 @@ exports.run = function (client, message, args) {
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .send(JSON.parse(`{"apiauth": "${config.tabAPIKey}", "type":"name", "first":"${args[0]}", "last":"${args[1]}", "short":"${true}"}`))
         .end((err, res) => {
+            if (res.statusCode === 204) {
+                message.channel.send('No judges found or the specified judge does not have a paradigm.')
+                return;
+            }
             if (typeof res.body[0] != 'string') { // multiple paradigms under the same name
                 message.reply(`Found ${res.body.length} paradigms/tabroom accounts under ${args[0]} ${args[1]}. Sending all of them, each direct link marks the end of a paradigm.`)
                 for (x = 0; x < res.body.length; x++) {
