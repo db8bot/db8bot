@@ -3,6 +3,7 @@ const { options } = require('superagent');
 
 exports.run = function (client, message, args) {
     const superagent = require('superagent');
+    require('superagent-proxy')(superagent);
     const querystring = require('querystring');
     var scholar = require('google-scholar-link')
     const Discord = require('discord.js');
@@ -31,31 +32,23 @@ exports.run = function (client, message, args) {
         .set("Accept-Encoding", "gzip, deflate, br")
         .set("Connection", "keep-alive")
         .set("Host", "sci-hub.se")
+        .redirects(5)
+        .proxy('http://12.218.209.130:53281')
         .end((err, res) => {
             client.logger.log('info', `get command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
             // Calling the end function will send the request
             // console.log(res.text)
-            var found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
+            try {
+                var found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
+            } catch {
+                found = null
+            }
             // console.log(found)
             if (found === null) {
                 if (res.text.includes('libgen')) { // libgen download
                     var libgenSection = res.text.substring(res.text.indexOf('<td colspan=2>') + 14, res.text.indexOf('</a></b></td>'))
                     libgenSection = libgenSection.substring(libgenSection.indexOf(`<b><a href='`) + 12, libgenSection.indexOf(`'>`))
-                    const request = https.request({
-                        host: 'sci-hub.se',
-                        path: args.join(' '),
-                        headers: {
-                            "Cache-Control": "no-cache",
-                            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36",
-                            "Accept": "*/*",
-                            "Accept-Encoding": "gzip, deflate, br",
-                            "Connection": "keep-alive"
-                        }
-                    }, response => {
-                        console.log(response.responseUrl);
-                        message.channel.send(`Document on libgen - Mirror selection page: ${response.responseUrl}`)
-                    });
-                    request.end();
+                    message.channel.send(`Document on libgen - Mirror selection page: ${res.request.url}`)
                     message.channel.send(`Working Download Mirror Link: ${libgenSection}`)
                 } else if (args.join(' ').includes('doi.org')) {
                     const doiRequest = https.request({
@@ -71,6 +64,7 @@ exports.run = function (client, message, args) {
                             .set("Accept-Encoding", "gzip, deflate, br")
                             .set("Connection", "keep-alive")
                             .set("Host", "sci-hub.se")
+                            .proxy('http://12.218.209.130:53281')
                             .end((err, res) => {
                                 found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
                                 if (found === null) {
