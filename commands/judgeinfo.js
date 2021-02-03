@@ -26,7 +26,7 @@ exports.run = function (client, message, args) {
 
 
     superagent
-        .get('https://tabroomapi.herokuapp.com/paradigm')
+        .post('https://debateapis.wm.r.appspot.com/paradigm')
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .send(JSON.parse(`{"apiauth": "${config.tabAPIKey}", "type":"name", "first":"${args[0]}", "last":"${args[1]}", "short":"${true}"}`))
         .end((err, res) => {

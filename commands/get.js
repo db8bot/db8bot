@@ -33,7 +33,7 @@ exports.run = function (client, message, args) {
         .set("Connection", "keep-alive")
         .set("Host", "sci-hub.se")
         .redirects(5)
-        .proxy('http://12.218.209.130:53281')
+        .proxy(config.proxy)
         .end((err, res) => {
             client.logger.log('info', `get command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
             // Calling the end function will send the request
@@ -64,7 +64,7 @@ exports.run = function (client, message, args) {
                             .set("Accept-Encoding", "gzip, deflate, br")
                             .set("Connection", "keep-alive")
                             .set("Host", "sci-hub.se")
-                            .proxy('http://12.218.209.130:53281')
+                            .proxy(config.proxy)
                             .end((err, res) => {
                                 found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
                                 if (found === null) {
