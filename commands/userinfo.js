@@ -69,9 +69,13 @@ exports.run = function (client, message, args) {
             game = user.presence.activities[0].name;
             customStatus = 'Nothing'
         }
-        if (user.presence.activities[0].emoji != null) {
-            customStatus = customStatus.replace('null', '')
-            customStatus = customStatus.substring(0, 14) + " " + user.presence.activities[0].emoji.name + " " + customStatus.substring(15)
+        try {
+            if (user.presence.activities[0].emoji != null) {
+                customStatus = customStatus.replace('null', '')
+                customStatus = customStatus.substring(0, 14) + " " + user.presence.activities[0].emoji.name + " " + customStatus.substring(15)
+            }
+        } catch (err) {
+            console.log(err)
         }
         var date = new Date(user.joinedTimestamp * 1000);
         const userInfo = new Discord.MessageEmbed()

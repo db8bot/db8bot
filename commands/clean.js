@@ -18,7 +18,7 @@ exports.run = function (client, message, args) {
     client.logger.log('info', `clean command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
     message.channel.messages.fetch({ limit: 1 }).then(chanmsg => {
         if (chanmsg.last().content === `${client.config.prefix}clean` && chanmsg.last().attachments.first() === undefined) { // no image in current msg
-            
+
             message.channel.messages.fetch({ limit: 2 }).then(chanmsg2 => { // check last message
 
                 if (chanmsg2.last().attachments.first() === undefined) {
@@ -43,14 +43,14 @@ exports.run = function (client, message, args) {
                         this.pack().pipe(fs.createWriteStream(fileName))
                         setTimeout(() => {
                             message.channel.send({ files: [fileName] })
-                        }, 500);
+                        }, 700);
                     })
                     setTimeout(() => {
                         fs.unlink(fileName, (err) => {
                             if (err) console.log(err)
                             console.log(`${fileName} was deleted.`)
                         })
-                    }, 1200);
+                    }, 1700);
                 }
             })
         } else if (chanmsg.first().attachments.first() != undefined) {
@@ -72,14 +72,14 @@ exports.run = function (client, message, args) {
                 this.pack().pipe(fs.createWriteStream(fileName))
                 setTimeout(() => {
                     message.channel.send({ files: [fileName] })
-                }, 500);
+                }, 700);
             })
             setTimeout(() => {
                 fs.unlink(fileName, (err) => {
                     if (err) console.log(err)
                     console.log(`${fileName} was deleted.`)
                 })
-            }, 1200);
+            }, 1700);
         } else if (args[0].includes("https://cdn.discordapp.com/attachments")) {
             var fileName = "./imgCleanTempFiles/" + getRndInteger(999, 999999).toString() + chanmsg.last().id + "x" + ".png" //${getRndInteger(999,999999)}- ${chanmsg.last().id}
             fileName = fileName.toString()
@@ -97,14 +97,14 @@ exports.run = function (client, message, args) {
                 this.pack().pipe(fs.createWriteStream(fileName))
                 setTimeout(() => {
                     message.channel.send({ files: [fileName] })
-                }, 500);
+                }, 700);
             })
             setTimeout(() => {
                 fs.unlink(fileName, (err) => {
                     if (err) console.log(err)
                     console.log(`${fileName} was deleted.`)
                 })
-            }, 1200);
+            }, 1700);
         }
         else {
             // send help!
