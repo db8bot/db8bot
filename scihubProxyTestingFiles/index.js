@@ -3,7 +3,7 @@ const { options } = require('superagent');
 
 exports.run = function (client, message, args) {
     const superagent = require('superagent');
-    // require('superagent-proxy')(superagent);
+    require('superagent-proxy')(superagent);
     const querystring = require('querystring');
     var scholar = require('google-scholar-link')
     const Discord = require('discord.js');
@@ -33,7 +33,7 @@ exports.run = function (client, message, args) {
         .set("Connection", "keep-alive")
         .set("Host", "sci-hub.se")
         .redirects(5)
-        // .proxy(config.proxy)
+        .proxy(config.proxy)
         .end((err, res) => {
             client.logger.log('info', `get command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
             // Calling the end function will send the request
@@ -64,7 +64,7 @@ exports.run = function (client, message, args) {
                             .set("Accept-Encoding", "gzip, deflate, br")
                             .set("Connection", "keep-alive")
                             .set("Host", "sci-hub.se")
-                            // .proxy(config.proxy)
+                            .proxy(config.proxy)
                             .end((err, res) => {
                                 found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
                                 if (found === null) {
