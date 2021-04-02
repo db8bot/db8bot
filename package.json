@@ -16,7 +16,7 @@
     "better-sqlite3": "^7.1.2",
     "chalk": "^4.1.0",
     "detergent": "^7.0.8",
-    "discord.js": "^12.5.1",
+    "discord.js": "^12.5.3",
     "emoji-unicode": "^2.0.1",
     "enmap": "^5.8.4",
     "follow-redirects": "^1.13.3",
