@@ -9,6 +9,7 @@ exports.run = function (client, message, args) {
     const Discord = require('discord.js');
     const { http, https } = require('follow-redirects');
     const config = client.config
+    const mediaDomains = require('../mediaDomains.json');
     var scholarLink = ""
     if (client.optINOUT.get(message.author.id) != undefined) {
         if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
@@ -23,110 +24,121 @@ exports.run = function (client, message, args) {
         return;
     }
 
-    superagent
-        .get(`https://sci-hub.se/${args.join(' ')}`)
-        // .get(`https://sci-hub.se/https://www.doi.org/10.2307/1342499/`)
-        .set("Cache-Control", "no-cache")
-        .set('User-Agent', "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36")
-        .set("Accept", "*/*")
-        .set("Accept-Encoding", "gzip, deflate, br")
-        .set("Connection", "keep-alive")
-        .set("Host", "sci-hub.se")
-        .redirects(5)
-        // .proxy(config.proxy)
-        .end((err, res) => {
-            client.logger.log('info', `get command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
-            // Calling the end function will send the request
-            // console.log(res.text)
-            try {
-                var found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
-            } catch {
-                found = null
-            }
-            // console.log(found)
-            if (found === null) {
-                if (res.text.includes('libgen')) { // libgen download
-                    var libgenSection = res.text.substring(res.text.indexOf('<td colspan=2>') + 14, res.text.indexOf('</a></b></td>'))
-                    libgenSection = libgenSection.substring(libgenSection.indexOf(`<b><a href='`) + 12, libgenSection.indexOf(`'>`))
-                    message.channel.send(`Document on libgen - Mirror selection page: ${res.request.url}`)
-                    message.channel.send(`Working Download Mirror Link: ${libgenSection}`)
-                } else if (args.join(' ').includes('doi.org')) {
-                    const doiRequest = https.request({
-                        host: 'doi.org',
-                        path: args.join(' ').substring(15)
-                    }, response => {
-                        // console.log(response.responseUrl);
-                        superagent
-                            .get(`https://sci-hub.se/${response.responseUrl}`)
-                            .set("Cache-Control", "no-cache")
-                            .set('User-Agent', "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36")
-                            .set("Accept", "*/*")
-                            .set("Accept-Encoding", "gzip, deflate, br")
-                            .set("Connection", "keep-alive")
-                            .set("Host", "sci-hub.se")
-                            // .proxy(config.proxy)
-                            .end((err, res) => {
-                                found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
-                                if (found === null) {
-                                    if (res.text.includes('libgen')) { // libgen download
-                                        var libgenSection = res.text.substring(res.text.indexOf('<td colspan=2>') + 14, res.text.indexOf('</a></b></td>'))
-                                        libgenSection = libgenSection.substring(libgenSection.indexOf(`<b><a href='`) + 12, libgenSection.indexOf(`'>`))
-                                        const request = https.request({
-                                            host: 'sci-hub.se',
-                                            path: args.join(' '),
-                                        }, response => {
-                                            console.log(response.responseUrl);
-                                            message.channel.send(`Document on libgen - Mirror selection page: ${response.responseUrl}`)
-                                        });
-                                        request.end();
-                                        message.channel.send(`Working Download Mirror Link: ${libgenSection}`)
-                                    } else {
-                                        message.reply(`Not found on Sci-Hub! :( Try the following Google Scholar link (Incase they have a free PDF)`)
-                                        scholarLink = scholar(querystring.escape(args.join(' ')))
-                                        scholarLink = scholarLink.substring(0, scholarLink.length - 1)
-                                        scholarLink = scholarLink.substring(0, scholarLink.indexOf('"')) + scholarLink.substring(scholarLink.indexOf('"') + 1)
-                                        message.channel.send(scholarLink)
-                                    }
-                                } else {
-                                    if (found[1].indexOf("https") === -1) {
-                                        found[1] = "https:" + found[1];
-                                    }
-                                    try {
-                                        message.channel.send(found[1])
-                                        message.channel.send({
-                                            files: [found[1] + ".pdf"]
-                                        }).catch(err => console.log(err))
-                                    } catch (e) {
-                                        console.log(e)
-                                    }
-                                }
-                            })
-                    });
-                    doiRequest.end();
-                } else {
-                    message.reply(`Not found on Sci-Hub! :( Try the following Google Scholar link (Incase they have a free PDF)`)
-                    scholarLink = scholar(querystring.escape(args.join(' ')))
-                    scholarLink = scholarLink.substring(0, scholarLink.length - 1)
-                    scholarLink = scholarLink.substring(0, scholarLink.indexOf('"')) + scholarLink.substring(scholarLink.indexOf('"') + 1)
-                    message.channel.send(scholarLink)
-                }
 
-            } else {
-                if (found[1].indexOf("https") === -1) {
-                    found[1] = "https:" + found[1];
-                }
+    // sci hub section below
+
+    // if (args[0].toLowerCase() === 'f' || mediaDomains.some(v => args.pop().includes(v))) {
+        // var reqLink = args.pop()
+        // superagent
+        // .get(reqLink)
+        // .
+    // } else {
+
+        superagent
+            .get(`https://sci-hub.se/${args.join(' ')}`)
+            // .get(`https://sci-hub.se/https://www.doi.org/10.2307/1342499/`)
+            .set("Cache-Control", "no-cache")
+            .set('User-Agent', "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36")
+            .set("Accept", "*/*")
+            .set("Accept-Encoding", "gzip, deflate, br")
+            .set("Connection", "keep-alive")
+            .set("Host", "sci-hub.se")
+            .redirects(5)
+            // .proxy(config.proxy)
+            .end((err, res) => {
+                client.logger.log('info', `get command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
+                // Calling the end function will send the request
+                // console.log(res.text)
                 try {
-                    message.channel.send(found[1])
-                    message.channel.send({
-                        files: [found[1] + ".pdf"]
-                    }).catch(err => console.log(err))
-                } catch (e) {
-                    console.log(e)
+                    var found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
+                } catch {
+                    found = null
                 }
-            }
-        })
+                // console.log(found)
+                if (found === null) {
+                    if (res.text.includes('libgen')) { // libgen download
+                        var libgenSection = res.text.substring(res.text.indexOf('<td colspan=2>') + 14, res.text.indexOf('</a></b></td>'))
+                        libgenSection = libgenSection.substring(libgenSection.indexOf(`<b><a href='`) + 12, libgenSection.indexOf(`'>`))
+                        message.channel.send(`Document on libgen - Mirror selection page: ${res.request.url}`)
+                        message.channel.send(`Working Download Mirror Link: ${libgenSection}`)
+                    } else if (args.join(' ').includes('doi.org')) {
+                        const doiRequest = https.request({
+                            host: 'doi.org',
+                            path: args.join(' ').substring(15)
+                        }, response => {
+                            // console.log(response.responseUrl);
+                            superagent
+                                .get(`https://sci-hub.se/${response.responseUrl}`)
+                                .set("Cache-Control", "no-cache")
+                                .set('User-Agent', "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36")
+                                .set("Accept", "*/*")
+                                .set("Accept-Encoding", "gzip, deflate, br")
+                                .set("Connection", "keep-alive")
+                                .set("Host", "sci-hub.se")
+                                // .proxy(config.proxy)
+                                .end((err, res) => {
+                                    found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
+                                    if (found === null) {
+                                        if (res.text.includes('libgen')) { // libgen download
+                                            var libgenSection = res.text.substring(res.text.indexOf('<td colspan=2>') + 14, res.text.indexOf('</a></b></td>'))
+                                            libgenSection = libgenSection.substring(libgenSection.indexOf(`<b><a href='`) + 12, libgenSection.indexOf(`'>`))
+                                            const request = https.request({
+                                                host: 'sci-hub.se',
+                                                path: args.join(' '),
+                                            }, response => {
+                                                console.log(response.responseUrl);
+                                                message.channel.send(`Document on libgen - Mirror selection page: ${response.responseUrl}`)
+                                            });
+                                            request.end();
+                                            message.channel.send(`Working Download Mirror Link: ${libgenSection}`)
+                                        } else {
+                                            message.reply(`Not found on Sci-Hub! :( Try the following Google Scholar link (Incase they have a free PDF)`)
+                                            scholarLink = scholar(querystring.escape(args.join(' ')))
+                                            scholarLink = scholarLink.substring(0, scholarLink.length - 1)
+                                            scholarLink = scholarLink.substring(0, scholarLink.indexOf('"')) + scholarLink.substring(scholarLink.indexOf('"') + 1)
+                                            message.channel.send(scholarLink)
+                                        }
+                                    } else {
+                                        if (found[1].indexOf("https") === -1) {
+                                            found[1] = "https:" + found[1];
+                                        }
+                                        try {
+                                            message.channel.send(found[1])
+                                            message.channel.send({
+                                                files: [found[1] + ".pdf"]
+                                            }).catch(err => console.log(err))
+                                        } catch (e) {
+                                            console.log(e)
+                                        }
+                                    }
+                                })
+                        });
+                        doiRequest.end();
+                    } else {
+                        message.reply(`Not found on Sci-Hub! :( Try the following Google Scholar link (Incase they have a free PDF)`)
+                        scholarLink = scholar(querystring.escape(args.join(' ')))
+                        scholarLink = scholarLink.substring(0, scholarLink.length - 1)
+                        scholarLink = scholarLink.substring(0, scholarLink.indexOf('"')) + scholarLink.substring(scholarLink.indexOf('"') + 1)
+                        message.channel.send(scholarLink)
+                    }
 
-}
+                } else {
+                    if (found[1].indexOf("https") === -1) {
+                        found[1] = "https:" + found[1];
+                    }
+                    try {
+                        message.channel.send(found[1])
+                        message.channel.send({
+                            files: [found[1] + ".pdf"]
+                        }).catch(err => console.log(err))
+                    } catch (e) {
+                        console.log(e)
+                    }
+                }
+            })
+
+    }
+// }
 
 // ARCHIVAL2: 
  // console.log(args.join(' '))
