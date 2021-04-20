@@ -11,7 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "@sentry/node": "^6.2.5",
-    "@vitalets/google-translate-api": "^5.1.0",
+    "@vitalets/google-translate-api": "^7.0.0",
     "base64-url": "^2.3.3",
     "better-sqlite3": "^7.1.5",
     "chalk": "^4.1.0",
