@@ -1,6 +1,3 @@
-const { hostname } = require('os');
-const { options } = require('superagent');
-
 exports.run = async function (client, message, args) {
     const superagent = require('superagent');
     // require('superagent-proxy')(superagent);
@@ -54,10 +51,13 @@ exports.run = async function (client, message, args) {
         ]
         var userAgent = userAgentsHuman[getRndInteger(0, userAgentsHuman.length - 1)]
         var xforwardedfor = xforwardedfors[getRndInteger(0, xforwardedfors.length - 1)]
+        var acceptEncoding = "gzip, deflate, br"
         if (reqLink.includes('wsj.com')) {
             xforwardedfor = "66.102.0.0"
         } else if (reqLink.includes('washingtonpost.com')) {
             xforwardedfor = "64.233.160.0"
+        } else if (reqLink.includes('economist.com')) {
+            acceptEncoding = ""
         }
         client.logger.log('info', `get (media) command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild} args: ${args} | useragent: ${userAgent} | xforward ip: ${xforwardedfor}`)
         superagent
@@ -66,16 +66,15 @@ exports.run = async function (client, message, args) {
             .get(reqLink)
             .set("Cache-Control", "no-cache")
             .set('User-Agent', userAgent)
-            // .set("Accept", "*/*")
-            .set("Accept", "text/html")
-            .set("Accept-Encoding", "gzip, deflate, br")
+            .set("Accept", "*/*")
+            .set("Accept-Encoding", acceptEncoding)
             .set("Connection", "keep-alive")
             .set("X-Forwarded-For", xforwardedfor)
             .set("Referer", "https://t.co/")
             .end(async (err, res) => {
                 var filename = "./newsTempOutFiles/" + getRndInteger(999, 999999).toString() + message.channel.id + "x" + ".pdf"
-                console.log(res.body)
-                var result = await toPDF(res.text.replace(/<input/g, "<blank"))
+                var htmlCleaning = res.text.replace(/<input/g, "<blank").replace(/<svg viewBox="0 0 24 24"/g, "<blank")
+                var result = await toPDF(htmlCleaning)
                 fs.writeFile(filename.toString(), result, function (err) {
                     if (err) return console.log(err)
                 })
@@ -90,7 +89,7 @@ exports.run = async function (client, message, args) {
                 }, 1700);
             })
         async function toPDF(html) {
-            const browser = await puppeteer.launch({ headless: false, defaultViewport: null });
+            const browser = await puppeteer.launch({ headless: true, defaultViewport: null });
             const page = await browser.newPage();
 
             await page.setContent(html)
@@ -104,7 +103,7 @@ exports.run = async function (client, message, args) {
                 }
             });
 
-            // await browser.close();
+            await browser.close();
             return pdf
         }
     }
