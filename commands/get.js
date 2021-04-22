@@ -1,7 +1,7 @@
 const { hostname } = require('os');
 const { options } = require('superagent');
 
-exports.run = function (client, message, args) {
+exports.run = async function (client, message, args) {
     const superagent = require('superagent');
     // require('superagent-proxy')(superagent);
     const querystring = require('querystring');
@@ -10,6 +10,11 @@ exports.run = function (client, message, args) {
     const { http, https } = require('follow-redirects');
     const config = client.config
     const mediaDomains = require('../mediaDomains.json');
+    const puppeteer = require('puppeteer');
+    const fs = require('fs')
+    function getRndInteger(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
     var scholarLink = ""
     if (client.optINOUT.get(message.author.id) != undefined) {
         if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
@@ -25,14 +30,86 @@ exports.run = function (client, message, args) {
     }
 
 
-    // sci hub section below
 
-    // if (args[0].toLowerCase() === 'f' || mediaDomains.some(v => args.pop().includes(v))) {
-        // var reqLink = args.pop()
-        // superagent
-        // .get(reqLink)
-        // .
-    // } else {
+    if ((args[0].toLowerCase() != 'r') && (args[0].toLowerCase() === 'm' || (mediaDomains.some(v => args[args.length - 1].includes(v))))) {
+        var reqLink = args.pop()
+        var userAgentsBots = [
+            "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+            "Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)",
+            "Mozilla/5.0 (compatible; adidxbot/2.0; +http://www.bing.com/bingbot.htm)"
+        ]
+        // https://evert.meulie.net/faqwd/googlebot-ip-ranges/
+        var xforwardedfors = [
+            "66.102.0.0",
+            "64.18.0.0",
+            "64.233.160.0"
+        ]
+        // var userAgent = userAgentsBots[getRndInteger(0, userAgentsBots.length - 1)]
+        var userAgentsHuman = [
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246",
+            "Mozilla/5.0 (X11; CrOS x86_64 8172.45.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.64 Safari/537.36",
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9",
+            "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1"
+        ]
+        var userAgent = userAgentsHuman[getRndInteger(0, userAgentsHuman.length - 1)]
+        var xforwardedfor = xforwardedfors[getRndInteger(0, xforwardedfors.length - 1)]
+        if (reqLink.includes('wsj.com')) {
+            xforwardedfor = "66.102.0.0"
+        } else if (reqLink.includes('washingtonpost.com')) {
+            xforwardedfor = "64.233.160.0"
+        }
+        client.logger.log('info', `get (media) command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild} args: ${args} | useragent: ${userAgent} | xforward ip: ${xforwardedfor}`)
+        superagent
+            // .get(`https://www.foreignaffairs.com/articles/china/2011-08-19/inevitable-superpower`)
+            // .get(`https://www.wsj.com/articles/discord-ends-deal-talks-with-microsoft-11618938806`)
+            .get(reqLink)
+            .set("Cache-Control", "no-cache")
+            .set('User-Agent', userAgent)
+            // .set("Accept", "*/*")
+            .set("Accept", "text/html")
+            .set("Accept-Encoding", "gzip, deflate, br")
+            .set("Connection", "keep-alive")
+            .set("X-Forwarded-For", xforwardedfor)
+            .set("Referer", "https://t.co/")
+            .end(async (err, res) => {
+                var filename = "./newsTempOutFiles/" + getRndInteger(999, 999999).toString() + message.channel.id + "x" + ".pdf"
+                console.log(res.body)
+                var result = await toPDF(res.text.replace(/<input/g, "<blank"))
+                fs.writeFile(filename.toString(), result, function (err) {
+                    if (err) return console.log(err)
+                })
+                setTimeout(() => {
+                    message.channel.send({ files: [filename] })
+                }, 700);
+                setTimeout(() => {
+                    fs.unlink(filename, (err) => {
+                        if (err) console.log(err)
+                        console.log(`${filename} was deleted.`)
+                    })
+                }, 1700);
+            })
+        async function toPDF(html) {
+            const browser = await puppeteer.launch({ headless: false, defaultViewport: null });
+            const page = await browser.newPage();
+
+            await page.setContent(html)
+
+            const pdf = await page.pdf({
+                format: 'Letter', margin: {
+                    left: '2.54cm',
+                    top: '2.54cm',
+                    right: '2.54cm',
+                    bottom: '2.54cm'
+                }
+            });
+
+            // await browser.close();
+            return pdf
+        }
+    }
+    // sci hub section below
+    else if (args[0].toLowerCase() === 'r' || !mediaDomains.some(v => args[args.length - 1].includes(v))) {
 
         superagent
             .get(`https://sci-hub.se/${args.join(' ')}`)
@@ -138,7 +215,7 @@ exports.run = function (client, message, args) {
             })
 
     }
-// }
+}
 
 // ARCHIVAL2: 
  // console.log(args.join(' '))
