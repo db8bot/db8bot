@@ -14,7 +14,7 @@
     "@vitalets/google-translate-api": "^7.0.0",
     "base64-url": "^2.3.3",
     "better-sqlite3": "^7.1.5",
-    "chalk": "^4.1.0",
+    "chalk": "^4.1.1",
     "detergent": "^7.0.16",
     "discord.js": "^12.5.3",
     "emoji-unicode": "^2.0.1",
