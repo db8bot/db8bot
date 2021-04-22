@@ -56,8 +56,6 @@ exports.run = async function (client, message, args) {
             xforwardedfor = "66.102.0.0"
         } else if (reqLink.includes('washingtonpost.com')) {
             xforwardedfor = "64.233.160.0"
-        } else if (reqLink.includes('economist.com')) {
-            acceptEncoding = ""
         }
         client.logger.log('info', `get (media) command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild} args: ${args} | useragent: ${userAgent} | xforward ip: ${xforwardedfor}`)
         superagent
@@ -67,7 +65,7 @@ exports.run = async function (client, message, args) {
             .set("Cache-Control", "no-cache")
             .set('User-Agent', userAgent)
             .set("Accept", "*/*")
-            .set("Accept-Encoding", acceptEncoding)
+            // .set("Accept-Encoding", acceptEncoding) - might need this later so i am leaving this here, broken on the economist.com & warontherocks.com
             .set("Connection", "keep-alive")
             .set("X-Forwarded-For", xforwardedfor)
             .set("Referer", "https://t.co/")
