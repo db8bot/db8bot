@@ -1,0 +1,30 @@
+{
+    "wsj.com": {
+        "ua": "",
+        "xforwardedfor": "66.102.0.0",
+        "referer": ""
+    },
+    "washingtonpost.com": {
+        "ua": "",
+        "xforwardedfor": "64.233.160.0",
+        "referer": ""
+    },
+    "barrons.com": {
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
+        "xforwardedfor": "66.102.0.0",
+        "referer": "none",
+        "amp": true,
+        "htmlErase": "<script id=\"amp-access\" type=\"application/json\">"
+    },
+    "seekingalpha.com": {
+        "ua": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1",
+        "xforwardedfor": "66.102.0.0",
+        "referer": "https://t.co/",
+        "amp": true,
+        "replace": "news article",
+        "open": "send"
+    },
+    "bloomberg.com": {
+        "open": true
+    }
+}

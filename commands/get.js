@@ -7,7 +7,9 @@ exports.run = async function (client, message, args) {
     const { http, https } = require('follow-redirects');
     const config = client.config
     const mediaDomains = require('../mediaDomains.json');
+    const mediaProfiles = require('../mediaProfiles.json')
     const puppeteer = require('puppeteer');
+    const psl = require('psl');
     const fs = require('fs')
     function getRndInteger(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -52,45 +54,115 @@ exports.run = async function (client, message, args) {
         var userAgent = userAgentsHuman[getRndInteger(0, userAgentsHuman.length - 1)]
         var xforwardedfor = xforwardedfors[getRndInteger(0, xforwardedfors.length - 1)]
         var acceptEncoding = "gzip, deflate, br"
-        if (reqLink.includes('wsj.com')) {
-            xforwardedfor = "66.102.0.0"
-        } else if (reqLink.includes('washingtonpost.com')) {
-            xforwardedfor = "64.233.160.0"
-        }
-        client.logger.log('info', `get (media) command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild} args: ${args} | useragent: ${userAgent} | xforward ip: ${xforwardedfor}`)
-        superagent
-            // .get(`https://www.foreignaffairs.com/articles/china/2011-08-19/inevitable-superpower`)
-            // .get(`https://www.wsj.com/articles/discord-ends-deal-talks-with-microsoft-11618938806`)
-            .get(reqLink)
-            .set("Cache-Control", "no-cache")
-            .set('User-Agent', userAgent)
-            .set("Accept", "*/*")
-            // .set("Accept-Encoding", acceptEncoding) - might need this later so i am leaving this here, broken on the economist.com & warontherocks.com
-            .set("Connection", "keep-alive")
-            .set("X-Forwarded-For", xforwardedfor)
-            .set("Referer", "https://t.co/")
-            .end(async (err, res) => {
-                var filename = "./newsTempOutFiles/" + getRndInteger(999, 999999).toString() + message.channel.id + "x" + ".pdf"
-                var htmlCleaning = res.text.replace(/<input/g, "<blank").replace(/<svg viewBox="0 0 24 24"/g, "<blank")
-                var result = await toPDF(htmlCleaning)
-                fs.writeFile(filename.toString(), result, function (err) {
-                    if (err) return console.log(err)
-                })
-                setTimeout(() => {
-                    message.channel.send({ files: [filename] })
-                }, 700);
-                setTimeout(() => {
-                    fs.unlink(filename, (err) => {
-                        if (err) console.log(err)
-                        console.log(`${filename} was deleted.`)
+        var referer = "https://t.co/"
+        var getrequest = true;
+
+        var reqLinkParsed = psl.parse(reqLink.replace('https://', "").replace('http://', "").split('/')[0])
+
+        console.log(reqLink)
+        console.log(reqLinkParsed.domain)
+        console.log(mediaProfiles[reqLinkParsed.domain])
+
+        if (mediaProfiles[reqLinkParsed.domain] != undefined) {
+            if (mediaProfiles[reqLinkParsed.domain].amp === true) {
+                reqLink = reqLink.replace(reqLinkParsed.domain, reqLinkParsed.domain + "/amp")
+            }
+            if (mediaProfiles[reqLinkParsed.domain].replace != undefined) {
+                var replaceValues = mediaProfiles[reqLinkParsed.domain].replace.split(' ')
+                reqLink = reqLink.replace(replaceValues[0], replaceValues[1])
+            }
+            if (mediaProfiles[reqLinkParsed.domain].open == "send") {
+                getrequest = false
+                message.channel.send(`Use this link: ${reqLink}`)
+            } else {
+                if (mediaProfiles[reqLinkParsed.domain].open === true) {
+                    message.channel.send(`Puppeteer with ${reqLink} | amp status: ${mediaProfiles[reqLinkParsed.domain].amp}`)
+                    console.log(`here`)
+                    getrequest = false
+                    var filename = "./newsTempOutFiles/" + getRndInteger(999, 999999).toString() + message.channel.id + "x" + ".pdf"
+                    var result = await toPDF(undefined, reqLink)
+                    fs.writeFile(filename.toString(), result, function (err) {
+                        if (err) return console.log(err)
                     })
-                }, 1700);
-            })
-        async function toPDF(html) {
+                    setTimeout(() => {
+                        message.channel.send({ files: [filename] })
+                    }, 700);
+                    setTimeout(() => {
+                        fs.unlink(filename, (err) => {
+                            if (err) console.log(err)
+                            console.log(`${filename} was deleted.`)
+                        })
+                    }, 1700);
+                } else {
+                    if (mediaProfiles[reqLinkParsed.domain].ua != "") {
+                        userAgent = mediaProfiles[reqLinkParsed.domain].ua
+                    }
+                    if (mediaProfiles[reqLinkParsed.domain].xforwardedfor != "") {
+                        xforwardedfor = mediaProfiles[reqLinkParsed.domain].xforwardedfor
+                    }
+                    if (mediaProfiles[reqLinkParsed.domain].referer != "") {
+                        if (mediaProfiles[reqLinkParsed.domain].referer != "none") {
+                            referer = mediaProfiles[reqLinkParsed.domain].referer
+                        } else if (mediaProfiles[reqLinkParsed.domain].referer === "none") {
+                            referer = ""
+                        }
+                    }
+                }
+            }
+        }
+
+        client.logger.log('info', `get (media) command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild} args: ${args} | link: ${reqLink} useragent: ${userAgent} | xforward ip: ${xforwardedfor}`)
+
+
+        if (getrequest === true) {
+            message.channel.send(`GET with ${reqLink} using useragent: ${userAgent} | X-Forwarded-For: ${xforwardedfor} | Referer: ${referer}`)
+            superagent
+                // .get(`https://www.foreignaffairs.com/articles/china/2011-08-19/inevitable-superpower`)
+                // .get(`https://www.wsj.com/articles/discord-ends-deal-talks-with-microsoft-11618938806`)
+                .get(reqLink)
+                .set("Cache-Control", "no-cache")
+                .set('User-Agent', userAgent)
+                .set("Accept", "*/*")
+                // .set("Accept-Encoding", acceptEncoding) // - might need this later so i am leaving this here, broken on the economist.com & warontherocks.com
+                .set("Connection", "keep-alive")
+                .set("X-Forwarded-For", xforwardedfor)
+                .set("Referer", referer)
+                .end(async (err, res) => {
+                    var filename = "./newsTempOutFiles/" + getRndInteger(999, 999999).toString() + message.channel.id + "x" + ".pdf"
+                    var htmlCleaning = res.text.replace(/<input/g, "<blank").replace(/<svg viewBox="0 0 24 24"/g, "<blank")
+                    if (mediaProfiles[reqLinkParsed.domain] != undefined) {
+                        if (mediaProfiles[reqLinkParsed.domain].htmlErase != undefined) {
+                            // var regex = new RegExp(`${mediaProfiles[reqLinkParsed.domain].htmlErase}`, 'g')
+                            console.log(mediaProfiles[reqLinkParsed.domain].htmlErase)
+                            htmlCleaning = htmlCleaning.replace(mediaProfiles[reqLinkParsed.domain].htmlErase, "<blank")
+                        }
+                    }
+                    var result = await toPDF(htmlCleaning)
+                    fs.writeFile(filename.toString(), result, function (err) {
+                        if (err) return console.log(err)
+                    })
+                    setTimeout(() => {
+                        message.channel.send({ files: [filename] })
+                    }, 700);
+                    setTimeout(() => {
+                        fs.unlink(filename, (err) => {
+                            if (err) console.log(err)
+                            console.log(`${filename} was deleted.`)
+                        })
+                    }, 1700);
+                })
+        }
+        async function toPDF(html, link) {
             const browser = await puppeteer.launch({ headless: true, defaultViewport: null });
             const page = await browser.newPage();
 
-            await page.setContent(html)
+            if (link != undefined) {
+                console.log(`going ${link}`)
+                await page.goto(link)
+                await page.waitForTimeout(2000)
+            } else if (link === undefined) {
+                await page.setContent(html)
+            }
 
             const pdf = await page.pdf({
                 format: 'Letter', margin: {
