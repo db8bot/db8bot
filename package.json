@@ -32,7 +32,7 @@
     "puppeteer": "^9.0.0",
     "python-shell": "^3.0.0",
     "querystring": "^0.2.1",
-    "string-strip-html": "^8.2.13",
+    "string-strip-html": "^8.3.0",
     "superagent": "^6.1.0",
     "superagent-proxy": "^2.1.0",
     "winston": "^3.3.3"
