@@ -62,11 +62,12 @@ exports.run = async function (client, message, args) {
     "blockedPageReqRegex": blockedPageReqRegexes[urlParsed.domain]
   }
   console.log(options)
+  message.channel.send(`OPTIONS:\nallowCookies: ${options.allowCookies}\nremoveCookiesAfterLoad: ${options.removeCookiesAfterLoad}\nremoveAllCookiesExcept: ${options.removeAllCookiesExcept}\nremoveCertainCookies: ${options.removeCertainCookies}\nBot: ${options.bot}\nUseragent UA: ${options.ua}\nAMP?: ${options.amp}\nblockedPageReqRegex: \`${options.blockedPageReqRegex}\``)
 
   if (options.amp != undefined && options.amp != "") {
     url = url.replace(urlParsed.domain, options.amp).replace('www.', "") // make sure we go to the amp site if it has the amp flag
   }
-  // if (options.allowCookies && !options.removeCookiesAfterLoad) { // keep cookies forever
+
   var result = await toPDF(url, ua, options.blockedPageReqRegex, options.allowCookies, options.removeCookiesAfterLoad, options.removeAllCookiesExcept, options.removeCertainCookies)
   fs.writeFile(filename.toString(), result, function (err) {
     if (err) return console.log(err)
@@ -80,36 +81,7 @@ exports.run = async function (client, message, args) {
       console.log(`${filename} was deleted.`)
     })
   }, 1700);
-  // } else if (options.allowCookies && options.removeCookiesAfterLoad) {
-  //   var result = await toPDF(url, ua, options.allowCookies, options.blockedPageReqRegex)
-  //   fs.writeFile(filename.toString(), result, function (err) {
-  //     if (err) return console.log(err)
-  //   })
-  //   // setTimeout(() => {
-  //   //   message.channel.send({ files: [filename] })
-  //   // }, 700);
-  //   // setTimeout(() => {
-  //   //   fs.unlink(filename, (err) => {
-  //   //     if (err) console.log(err)
-  //   //     console.log(`${filename} was deleted.`)
-  //   //   })
-  //   // }, 1700);
-  // }
-  // else if (!options.allowCookies && !options.removeCookiesAfterLoad) {
-  //   var result = await toPDF(url, ua, options.allowCookies, options.blockedPageReqRegex)
-  //   fs.writeFile(filename.toString(), result, function (err) {
-  //     if (err) return console.log(err)
-  //   })
-  //   // setTimeout(() => {
-  //   //   message.channel.send({ files: [filename] })
-  //   // }, 700);
-  //   // setTimeout(() => {
-  //   //   fs.unlink(filename, (err) => {
-  //   //     if (err) console.log(err)
-  //   //     console.log(`${filename} was deleted.`)
-  //   //   })
-  //   // }, 1700);
-  // }
+
 
 
 
@@ -224,11 +196,22 @@ exports.run = async function (client, message, args) {
     // }
     await page.goto(link)
     await page.screenshot({ path: 'test.png' });
-    console.log(link.includes('nytimes.com'))
-    await page.exposeFunction('removeDOMElement', removeDOMElement)
-    // switch (link) {
+    // await page.exposeFunction('removeDOMElement', removeDOMElement())
+    // cant expose functions and pass in DOM: https://github.com/puppeteer/puppeteer/issues/5320 https://github.com/puppeteer/puppeteer/issues/1590
+
     if (link.includes('americanbanker.com')) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         const inlineGate = document.querySelector('.inline-gate');
         if (inlineGate) {
           inlineGate.classList.remove('inline-gate');
@@ -239,6 +222,17 @@ exports.run = async function (client, message, args) {
     }
     else if (['ad.nl', 'ed.nl', 'bndestem.nl', 'bd.nl', 'tubantia.nl', 'destentor.nl', 'pzc.nl', 'gelderlander.nl'].some(str => str.includes(link))) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         var paywall = document.querySelector('.article__component.article__component--paywall-module-notification');
         for (var element of paywall) {
           if (element) {
@@ -249,19 +243,48 @@ exports.run = async function (client, message, args) {
     }
     else if (link.includes('washingtonpost.com')) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         var banner = document.querySelector('#leaderboard-wrapper')
         var adverts = document.querySelectorAll('div[data-qa="article-body-ad"]');
+        removeDOMElement(document.querySelector('#wall-bottom-drawer'))
         removeDOMElement(banner)
-        // removeDOMElement(adverts)
-        // for (var element of adverts) {
-        //   if (element) {
-        //     element.remove()
-        //   }
-        // }
+        removeDOMElement(adverts)
       })
     }
     else if (link.includes('wsj.com')) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         if (window.location.href.includes('/articles/')) {
           const closeButton = document.querySelector('div.close-btn[role="button"]');
           if (closeButton) { closeButton.click(); }
@@ -282,6 +305,17 @@ exports.run = async function (client, message, args) {
     }
     else if (link.includes('sloanreview.mit.edu')) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         const readMore = document.querySelector('.btn-read-more');
         if (readMore) {
           readMore.click();
@@ -290,6 +324,17 @@ exports.run = async function (client, message, args) {
     }
     else if (link.includes('mexiconewsdaily.com')) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         window.setTimeout(function () {
           const popup = document.querySelector('div.pigeon-widget-prompt');
           const cproOverlay = document.querySelector('.cpro-overlay');
@@ -299,12 +344,34 @@ exports.run = async function (client, message, args) {
     }
     else if (link.includes('the-american-interest.com')) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         const counter = document.getElementById('article-counter');
         removeDOMElement(counter);
       })
     }
     else if (link.includes('afr.com')) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         document.addEventListener('DOMContentLoaded', () => {
           const hiddenImage = document.querySelectorAll('img');
           for (const image of hiddenImage) {
@@ -323,18 +390,51 @@ exports.run = async function (client, message, args) {
     }
     else if (link.includes('firstthings.com')) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         const paywall = document.getElementsByClassName('paywall')[0];
         removeDOMElement(paywall);
       })
     }
     else if (link.includes('bloomberg.com')) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         const paywall = document.querySelector('#graphics-paywall-overlay')
         removeDOMElement(paywall);
       })
     }
     else if (link.includes('bloombergquint.com')) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         const articlesLeftModal = document.getElementsByClassName('paywall-meter-module__story-paywall-container__1UgCE')[0];
         const paywall = document.getElementById('paywallDmp');
         removeDOMElement(articlesLeftModal, paywall);
@@ -343,6 +443,17 @@ exports.run = async function (client, message, args) {
     }
     else if (link.includes('medium.com')) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         const bottomMessageText = 'Get one more story in your member preview when you sign up. It’s free.';
         const DOMElementsToTextDiv = pageContains('div', bottomMessageText);
         if (DOMElementsToTextDiv[2]) removeDOMElement(DOMElementsToTextDiv[2]);
@@ -350,14 +461,17 @@ exports.run = async function (client, message, args) {
     }
     else if (link.includes('ft.com')) {
       await page.evaluate(() => {
-        const cookieBanner = document.querySelector('.o-banner__outer');
-        const ribbon = document.querySelector('.js-article-ribbon');
-        const ads = document.querySelector('.o-ads');
-        removeDOMElement(cookieBanner, ads, ribbon);
-      })
-    }
-    else if (link.includes('ft.com')) {
-      await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         const cookieBanner = document.querySelector('.o-banner__outer');
         const ribbon = document.querySelector('.js-article-ribbon');
         const ads = document.querySelector('.o-ads');
@@ -365,8 +479,18 @@ exports.run = async function (client, message, args) {
       })
     }
     else if (link.includes('nytimes.com')) {
-      console.log('in else if (')
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         const previewButton = document.querySelector('.css-3s1ce0');
         if (previewButton) { previewButton.remove(); }
         // document.querySelector('.css-3fbowa').remove()
@@ -383,6 +507,17 @@ exports.run = async function (client, message, args) {
     }
     else if (link.includes('technologyreview.com')) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         window.setTimeout(function () {
           const bodyObscured = document.querySelector('body[class*="body__obscureContent"]');
           if (bodyObscured) { removeClassesByPrefix(bodyObscured, 'body__obscureContent'); }
@@ -397,6 +532,17 @@ exports.run = async function (client, message, args) {
     }
     else if (link.includes('bizjournals.com')) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         const sheetOverlay = document.querySelector('.sheet-overlay');
         const chunkPaywall = document.querySelector('.chunk--paywall');
         removeDOMElement(sheetOverlay, chunkPaywall);
@@ -410,6 +556,17 @@ exports.run = async function (client, message, args) {
     }
     else if (link.includes('barrons.com')) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         document.addEventListener('DOMContentLoaded', () => {
           const bodyContinuous = document.querySelector('body.is-continuous');
           const snippet = document.querySelector('meta[content="snippet"]');
@@ -434,6 +591,17 @@ exports.run = async function (client, message, args) {
     }
     else if (link.includes('seattletimes.com')) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         window.setTimeout(function () {
           // remove modal class from all elements
           document.querySelectorAll('div.modal').forEach(function (el) {
@@ -454,6 +622,17 @@ exports.run = async function (client, message, args) {
     }
     else if (link.includes('theatlantic.com')) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         // Remove all nudge elements
         document.querySelectorAll('div[class*="c-nudge"]').forEach(function (el) {
           removeDOMElement(el);
@@ -466,12 +645,34 @@ exports.run = async function (client, message, args) {
     }
     else if (link.includes('newyorker.com')) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         document.querySelector('.paywall-bar').remove()
         document.querySelector('.paywall-modal').remove()
       })
     }
     else if (link.includes('time.com')) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         const body = document.querySelector('body');
         if (body) {
           body.setAttribute('style', 'position:relative !important;');
@@ -480,6 +681,17 @@ exports.run = async function (client, message, args) {
     }
     else if (link.includes('chicagobusiness.com')) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         const body = document.querySelector('body[class]');
         if (body) {
           body.removeAttribute('class');
@@ -488,6 +700,17 @@ exports.run = async function (client, message, args) {
     }
     else if (link.includes('latimes.com')) {
       await page.evaluate(() => {
+        async function removeDOMElement(elements) {
+          if (Array.isArray(elements)) {
+            for (var element of elements) {
+              if (element) {
+                element.remove()
+              }
+            }
+          } else {
+            elements.remove()
+          }
+        }
         const paywall = document.querySelector('metering-modal');
         const incognitoWall = document.querySelector('metering-toppanel');
         if (paywall) {
@@ -501,23 +724,6 @@ exports.run = async function (client, message, args) {
       })
     }
 
-
-    // }
-
-    async function removeDOMElement(elements) {
-      if (Array.isArray(elements)) {
-        for (var element of elements) {
-          if (element) {
-            // await page.evaluate(() => {
-            element.remove()
-            // })
-          }
-        }
-      } else {
-        elements.remove()
-      }
-
-    }
 
     const client = await page.target().createCDPSession()
     if (removeCookiesAfterLoad && removeAllCookiesExcept == undefined && removeCertainCookies == undefined) {
@@ -535,13 +741,7 @@ exports.run = async function (client, message, args) {
         await page.deleteCookie({ name: element })
       });
     }
-    // else {
-
-    // }
     await page.waitForTimeout(2000)
-    // } else if (link === undefined) {
-    //   await page.setContent(html)
-    // }
 
     const pdf = await page.pdf({
       format: 'Letter', margin: {
