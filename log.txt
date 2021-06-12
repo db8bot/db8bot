@@ -1,0 +1,2 @@
+{"level":"info","message":"say command used by taswelll Time: Fri Jun 11 2021 13:43:44 GMT-0700 (Pacific Daylight Time) Guild: heavserver"}
+{"level":"info","message":"help command used by BrentF Time: Fri Jun 11 2021 23:47:13 GMT-0700 (Pacific Daylight Time) Guild: Discord Bots"}

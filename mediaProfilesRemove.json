@@ -1,0 +1,16 @@
+{
+    "ad.nl": ["temptationTrackingId"],
+    "ambito.com": ["TDNotesRead"],
+    "bd.nl": ["temptationTrackingId"],
+    "bndestem.nl": ["temptationTrackingId"],
+    "demorgen.be": ["TID_ID"],
+    "destentor.nl": ["temptationTrackingId"],
+    "ed.nl": ["temptationTrackingId"],
+    "fd.nl": ["socialread"],
+    "gelderlander.nl": ["temptationTrackingId"],
+    "humo.be": ["TID_ID"],
+    "nrc.nl": ["counter"],
+    "pzc.nl": ["temptationTrackingId"],
+    "tubantia.nl": ["temptationTrackingId"],
+    "speld.nl": ["speld-paywall"]
+  }
