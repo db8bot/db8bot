@@ -170,7 +170,8 @@ exports.run = async function (client, message, args) {
                 page.setUserAgent = ua
                 if (ua.includes('google')) {
                     await page.setExtraHTTPHeaders({
-                        "X-Forwarded-For": '64.249.66.1'
+                        // "X-Forwarded-For": '64.249.66.1'
+                        "X-Forwarded-For": '64.233.160.0'
                     })
                 }
             }
@@ -199,6 +200,25 @@ exports.run = async function (client, message, args) {
             await page.screenshot({ path: 'test.png' });
             // await page.exposeFunction('removeDOMElement', removeDOMElement())
             // cant expose functions and pass in DOM: https://github.com/puppeteer/puppeteer/issues/5320 https://github.com/puppeteer/puppeteer/issues/1590
+
+            const client = await page.target().createCDPSession()
+            if (removeCookiesAfterLoad && removeAllCookiesExcept == undefined && removeCertainCookies == undefined) {
+                await client.send('Network.clearBrowserCookies')
+            } else if (removeAllCookiesExcept != undefined) {
+                var cookies = await page.cookies()
+                cookies.forEach(async pageCookies => {
+                    removeAllCookiesExcept.forEach(async removeCookies => {
+                        if (pageCookies.name != removeCookies) {
+                            await page.deleteCookie({ name: pageCookies.name })
+                        }
+                    })
+                });
+            } else if (removeCertainCookies != undefined) {
+                removeCertainCookies.forEach(async element => {
+                    await page.deleteCookie([{ name: element }])
+                });
+            }
+            await page.waitForTimeout(2000)
 
             if (link.includes('americanbanker.com')) {
                 await page.evaluate(() => {
@@ -290,18 +310,18 @@ exports.run = async function (client, message, args) {
                         const closeButton = document.querySelector('div.close-btn[role="button"]');
                         if (closeButton) { closeButton.click(); }
                     }
-                    document.addEventListener('DOMContentLoaded', () => {
-                        const url = window.location.href;
-                        const snippet = document.querySelector('.snippet-promotion');
-                        const wsjPro = document.querySelector('meta[name="page.site"][content="wsjpro"]');
-                        if (snippet || wsjPro) {
-                            if (!window.location.hash) {
-                                if (url.includes('?')) {
-                                    window.location.href = url.replace('?', '#refreshed?');
-                                } else { window.location.href = url + '#refreshed'; }
-                            } else { window.location.href = window.location.href.replace('wsj.com', 'wsj.com/amp').replace('#refreshed', ''); }
-                        }
-                    });
+
+                    const url = window.location.href;
+                    const snippet = document.querySelector('.snippet-promotion');
+                    const wsjPro = document.querySelector('meta[name="page.site"][content="wsjpro"]');
+                    if (snippet || wsjPro) {
+                        if (!window.location.hash) {
+                            if (url.includes('?')) {
+                                window.location.href = url.replace('?', '#refreshed?');
+                            } else { window.location.href = url + '#refreshed'; }
+                        } else { window.location.href = window.location.href.replace('wsj.com', 'wsj.com/amp').replace('#refreshed', ''); }
+                    }
+
                 })
             }
             else if (link.includes('sloanreview.mit.edu')) {
@@ -726,23 +746,7 @@ exports.run = async function (client, message, args) {
             }
 
 
-            const client = await page.target().createCDPSession()
-            if (removeCookiesAfterLoad && removeAllCookiesExcept == undefined && removeCertainCookies == undefined) {
-                await client.send('Network.clearBrowserCookies')
-            } else if (removeAllCookiesExcept != undefined) {
-                await page.cookies.forEach(async pageCookies => {
-                    removeAllCookiesExcept.forEach(async removeCookies => {
-                        if (pageCookies.name != removeCookies) {
-                            await page.deleteCookie({ name: pageCookies.name })
-                        }
-                    })
-                });
-            } else if (removeCertainCookies != undefined) {
-                removeCertainCookies.forEach(async element => {
-                    await page.deleteCookie({ name: element })
-                });
-            }
-            await page.waitForTimeout(2000)
+            
 
             const pdf = await page.pdf({
                 format: 'Letter', margin: {
@@ -755,7 +759,7 @@ exports.run = async function (client, message, args) {
             await browser.close();
             return pdf
         }
-        
+
     }
     // sci hub section below
     else if (args[0].toLowerCase() === 'r' || !mediaDomains.some(v => args[args.length - 1].includes(v))) {
