@@ -97,8 +97,9 @@ exports.run = async function (client, message, args) {
                     '--window-position=0,0',
                     '--ignore-certifcate-errors',
                     '--ignore-certifcate-errors-spki-list',
-                    `--user-agent=${ua}`
-                ], headless: true, defaultViewport: null, ignoreHTTPSErrors: true
+                    `--user-agent=${ua}`,
+                    '--disable-features=ImprovedCookieControls'
+                ], headless: false, defaultViewport: null, ignoreHTTPSErrors: true
             });
             const page = await browser.newPage();
             await page.evaluateOnNewDocument(() => {
@@ -196,14 +197,18 @@ exports.run = async function (client, message, args) {
             //   // await page.waitForTimeout(10)
             //   await page.setRequestInterception(true)
             // }
+            
+            
             await page.goto(link)
             await page.screenshot({ path: 'test.png' });
             // await page.exposeFunction('removeDOMElement', removeDOMElement())
             // cant expose functions and pass in DOM: https://github.com/puppeteer/puppeteer/issues/5320 https://github.com/puppeteer/puppeteer/issues/1590
 
             const client = await page.target().createCDPSession()
+            await client.send('Emulation.setDocumentCookieDisabled', true)
+            await page.reload()
             if (removeCookiesAfterLoad && removeAllCookiesExcept == undefined && removeCertainCookies == undefined) {
-                await client.send('Network.clearBrowserCookies')
+                // await client.send('Network.clearBrowserCookies')
             } else if (removeAllCookiesExcept != undefined) {
                 var cookies = await page.cookies()
                 cookies.forEach(async pageCookies => {
@@ -217,6 +222,9 @@ exports.run = async function (client, message, args) {
                 removeCertainCookies.forEach(async element => {
                     await page.deleteCookie([{ name: element }])
                 });
+            } else {
+                console.log('here')
+                await client.send('Emulation.setDocumentCookieDisabled', true)
             }
             await page.waitForTimeout(2000)
 
@@ -746,7 +754,7 @@ exports.run = async function (client, message, args) {
             }
 
 
-            
+
 
             const pdf = await page.pdf({
                 format: 'Letter', margin: {
