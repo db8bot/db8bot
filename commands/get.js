@@ -192,6 +192,7 @@ exports.run = async function (client, message, args) {
                 })
             }
             if (disableJS) {
+                console.log('jsdisabled')
                 await page.setRequestInterception(true)
                 page.on('request', request => {
                     if (request.resourceType() === 'script')
@@ -530,15 +531,15 @@ exports.run = async function (client, message, args) {
                     const previewButton = document.querySelector('.css-3s1ce0');
                     if (previewButton) { previewButton.remove(); }
                     // document.querySelector('.css-3fbowa').remove()
-                    document.querySelector('#gateway-content').remove()
-                    document.querySelector('.css-1bd8bfl').remove()
+                    var gatewayContent = document.querySelector('#gateway-content')
+
+                    var css1bd8f1 = document.querySelector('.css-1bd8bfl')
+                    if (gatewayContent) gatewayContent.remove()
+                    if (css1bd8f1) css1bd8f1.remove()
                     // Restore scrolling
-                    document.querySelector('.css-mcm29f').setAttribute('style', 'position:relative');
-                    // document.onreadystatechange = function () {
-                    //   if (document.readyState === 'complete') {
-                    //     document.querySelector('.css-mcm29f').setAttribute('style', 'position:relative');
-                    //   }
-                    // };
+                    if (document.querySelector('.css-mcm29f')) {
+                        document.querySelector('.css-mcm29f').setAttribute('style', 'position:relative');
+                    }
                 })
             }
             else if (link.includes('technologyreview.com')) {
