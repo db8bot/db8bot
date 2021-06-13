@@ -15,6 +15,7 @@ exports.run = async function (client, message, args) {
     const bingBotList = require('../bingBot.json')
     const mediaProfilesAmp = require('../mediaProfilesAMP.json')
     const blockedPageReqRegexes = require('../mediaProfilesBlockedPageReqRegex')
+    const mediaProfilesDisableJS = require('../mediaProfilesDisableJS.json')
     var uas = {
         "google": 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
         "bing": "'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)'"
@@ -60,7 +61,8 @@ exports.run = async function (client, message, args) {
             "bot": googleBotList.some(str => str.includes(urlParsed.domain)) ? 'google' : bingBotList.some(str => str.includes(urlParsed.domain)) ? 'bing' : "",
             "ua": ua,
             "amp": mediaProfilesAmp[urlParsed.domain],
-            "blockedPageReqRegex": blockedPageReqRegexes[urlParsed.domain]
+            "blockedPageReqRegex": blockedPageReqRegexes[urlParsed.domain],
+            "disableJS": mediaProfilesDisableJS.some(str => str.includes(urlParsed.domain))
         }
         console.log(options)
         message.channel.send(`OPTIONS:\nallowCookies: ${options.allowCookies}\nremoveCookiesAfterLoad: ${options.removeCookiesAfterLoad}\nremoveAllCookiesExcept: ${options.removeAllCookiesExcept}\nremoveCertainCookies: ${options.removeCertainCookies}\nBot: ${options.bot}\nUseragent UA: ${options.ua}\nAMP?: ${options.amp}\nblockedPageReqRegex: \`${options.blockedPageReqRegex}\`\nGive it a second, it might be slow...`)
@@ -69,7 +71,7 @@ exports.run = async function (client, message, args) {
             url = url.replace(urlParsed.domain, options.amp).replace('www.', "") // make sure we go to the amp site if it has the amp flag
         }
 
-        var result = await toPDF(url, ua, options.blockedPageReqRegex, options.allowCookies, options.removeCookiesAfterLoad, options.removeAllCookiesExcept, options.removeCertainCookies)
+        var result = await toPDF(url, ua, options.blockedPageReqRegex, options.allowCookies, options.removeCookiesAfterLoad, options.removeAllCookiesExcept, options.removeCertainCookies, options.disableJS)
         fs.writeFile(filename.toString(), result, function (err) {
             if (err) return console.log(err)
         })
@@ -87,7 +89,7 @@ exports.run = async function (client, message, args) {
 
 
 
-        async function toPDF(link, ua, reg, allowCookies, removeCookiesAfterLoad, removeAllCookiesExcept, removeCertainCookies) {
+        async function toPDF(link, ua, reg, allowCookies, removeCookiesAfterLoad, removeAllCookiesExcept, removeCertainCookies, disableJS) {
             // https://intoli.com/blog/not-possible-to-block-chrome-headless/
             const browser = await puppeteer.launch({
                 args: [
@@ -189,6 +191,15 @@ exports.run = async function (client, message, args) {
                     }
                 })
             }
+            if (disableJS) {
+                await page.setRequestInterception(true)
+                page.on('request', request => {
+                    if (request.resourceType() === 'script')
+                        request.abort();
+                    else
+                        request.continue();
+                });
+            }
             // if (link.includes('seekingalpha.com')) { // special cases
             //   await page.goto(link)
             //   // await page.waitForSelector('[data-test-id="article-content"]')
@@ -197,16 +208,13 @@ exports.run = async function (client, message, args) {
             //   // await page.waitForTimeout(10)
             //   await page.setRequestInterception(true)
             // }
-            
-            
+
+            const client = await page.target().createCDPSession()
             await page.goto(link)
             await page.screenshot({ path: 'test.png' });
             // await page.exposeFunction('removeDOMElement', removeDOMElement())
             // cant expose functions and pass in DOM: https://github.com/puppeteer/puppeteer/issues/5320 https://github.com/puppeteer/puppeteer/issues/1590
 
-            const client = await page.target().createCDPSession()
-            await client.send('Emulation.setDocumentCookieDisabled', true)
-            await page.reload()
             if (removeCookiesAfterLoad && removeAllCookiesExcept == undefined && removeCertainCookies == undefined) {
                 // await client.send('Network.clearBrowserCookies')
             } else if (removeAllCookiesExcept != undefined) {
@@ -223,8 +231,7 @@ exports.run = async function (client, message, args) {
                     await page.deleteCookie([{ name: element }])
                 });
             } else {
-                console.log('here')
-                await client.send('Emulation.setDocumentCookieDisabled', true)
+                await client.send('Emulation.setDocumentCookieDisabled', { disabled: true })
             }
             await page.waitForTimeout(2000)
 
@@ -751,8 +758,12 @@ exports.run = async function (client, message, args) {
                         document.body.removeAttribute('style');
                     }
                 })
+            } else if (link.includes('forbes.com')) {
+                await page.evaluate(() => {
+                    var paywall = document.querySelector('.paywall_ribbon')
+                    if (paywall) { paywall.remove() }
+                })
             }
-
 
 
 
