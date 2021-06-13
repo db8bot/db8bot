@@ -101,7 +101,7 @@ exports.run = async function (client, message, args) {
                     '--ignore-certifcate-errors-spki-list',
                     `--user-agent=${ua}`,
                     '--disable-features=ImprovedCookieControls'
-                ], headless: false, defaultViewport: null, ignoreHTTPSErrors: true
+                ], headless: true, defaultViewport: null, ignoreHTTPSErrors: true
             });
             const page = await browser.newPage();
             await page.evaluateOnNewDocument(() => {
