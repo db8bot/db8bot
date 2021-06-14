@@ -1,0 +1,5 @@
+{
+    "qz.com": ["gdpr"],
+    "wsj.com": ["wsjregion"],
+    "seattletimes.com": ["st_newsletter_splash_seen"]
+  }
