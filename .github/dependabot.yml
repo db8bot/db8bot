@@ -1,0 +1,44 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "13:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: "@sentry/node"
+    versions:
+    - 6.0.2
+    - 6.0.3
+    - 6.0.4
+    - 6.2.3
+    - 6.2.4
+    - 6.3.1
+    - 6.3.3
+  - dependency-name: detergent
+    versions:
+    - 7.0.10
+    - 7.0.11
+    - 7.0.12
+    - 7.0.14
+    - 7.0.15
+    - 7.0.4
+    - 7.0.7
+    - 7.0.9
+  - dependency-name: string-strip-html
+    versions:
+    - 8.2.1
+    - 8.2.11
+    - 8.2.12
+    - 8.2.4
+    - 8.2.6
+    - 8.2.7
+    - 8.2.8
+    - 8.2.9
+  - dependency-name: better-sqlite3
+    versions:
+    - 7.1.4
+  - dependency-name: follow-redirects
+    versions:
+    - 1.13.2
