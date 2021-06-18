@@ -34,8 +34,11 @@ exports.run = async function (client, message, args) {
             .setColor("#f0ffff")
             .setDescription("**Command: **" + `${config.prefix}get`)
             .addField("**Usage:**", `${config.prefix}get <research report link/doi link>`)
+            .addField("**Usage 2:**", `${config.prefix}get m <media link, ex: nytimes.com>`)
             .addField("**Example:**", `${config.prefix}get https://www.doi.org/10.2307/1342499/`)
+            .addField("**Example 2:**", `${config.prefix}get m https://www.bloomberg.com/news/articles/2021-06-13/a-meme-stock-is-born-how-to-spot-the-next-reddit-favorite`)
             .addField("**Expected Result From Example:**", "Bot will search sci-hub for the specified document. If it is found, it will return a PDF to the channel. If PDF is too large, the PDF link will be sent.")
+            .addField("**Expected Result From Example 2:**", "Bot will return a PDF file that contians the unlocked content. This feature is in beta & may not always work on all media sites.")
         message.channel.send({ embed: help })
         return;
     }
