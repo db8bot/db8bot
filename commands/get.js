@@ -767,9 +767,18 @@ exports.run = async function (client, message, args) {
                     var paywall = document.querySelector('.paywall_ribbon')
                     if (paywall) { paywall.remove() }
                 })
+            } else if (link.includes('foreignpolicy.com')) {
+                await page.evaluate(() => {
+                    document.querySelector('div.content-ungated').remove()
+                    var gated = document.querySelector('div.content-gated');
+                    if (gated) { gated.classList.remove('content-gated') }
+                })
             }
 
-
+            await page.evaluate(() => {
+                window.scrollBy(0, document.body.scrollHeight);
+            })
+            await page.waitForTimeout(150)
 
             const pdf = await page.pdf({
                 format: 'Letter', margin: {
