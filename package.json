@@ -29,7 +29,7 @@
     "os": "^0.1.1",
     "pngjs": "^6.0.0",
     "psl": "^1.8.0",
-    "puppeteer": "^10.0.0",
+    "puppeteer": "^10.1.0",
     "puppeteer-extra": "^3.1.18",
     "puppeteer-extra-plugin-stealth": "^2.7.8",
     "python-shell": "^3.0.0",
