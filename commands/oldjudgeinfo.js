@@ -46,7 +46,7 @@ exports.run = function (client, message, args) {
             // var soup = new JSSoup(`<html><head></head><body><div class=paradigm><p>hihihi</p></div></body></html>`);
             // console.log(soup)
             var paraDiv = soup.find('div', { 'class': 'paradigm' })
-            
+
             // console.log(paraDiv)
             // var paraDiv = soup.find('span', {'class':'third rightalign semibold bluetext'})
             // console.log(paraDiv.nextElement.previousElement.content)

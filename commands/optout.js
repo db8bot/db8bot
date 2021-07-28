@@ -50,6 +50,6 @@ exports.run = function (client, message, args, args2, cmd) {
 
         client.optINOUT.setProp(message.author.id, "value", modArray)
     }
-    
+
     // console.log("IN SET" + client.optINOUT.get(message.author.id).value)
 }

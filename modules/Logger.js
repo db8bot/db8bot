@@ -1,5 +1,5 @@
 /*
-Logger class for easy and aesthetically pleasing console logging 
+Logger class for easy and aesthetically pleasing console logging
 */
 const chalk = require("chalk");
 const moment = require("moment");
@@ -27,7 +27,7 @@ exports.log = (content, type = "log") => {
     }
     default: throw new TypeError("Logger type must be either warn, debug, log, ready, cmd or error.");
   }
-}; 
+};
 
 exports.error = (...args) => this.log(...args, "error");
 

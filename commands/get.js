@@ -902,7 +902,7 @@ exports.run = async function (client, message, args) {
     }
 }
 
-// ARCHIVAL2: 
+// ARCHIVAL2:
  // console.log(args.join(' '))
                 // pyshell.send(args.join(' '));
                 // pyshell.on('message', function (message) {

@@ -41,7 +41,7 @@ Firstly, head over to [here](https://enmap.evie.dev/install) and follow the inst
 
 Use the Discord Permissions Calculator [here](https://discordapi.com/permissions.html#2146958591) to make your bot's invite link. The link provided already has the required permissions pre-checked. If you choose not to use the pre-checked link, the bot must have "MANAGE_SERVER" permissions to function. At the bottom of the page, place in your bot's client ID, which is found on your Discord Developers page.
 
-Then, copy the link at the bottom of the page. That is your bot's invite link, anyone who has that link and have the "Manage Server" permission or is the server owner of a server can invite your bot to their server. 
+Then, copy the link at the bottom of the page. That is your bot's invite link, anyone who has that link and have the "Manage Server" permission or is the server owner of a server can invite your bot to their server.
 
 To invite the bot to a server, paste the link into your browser, and select the server that you want to add the bot to. Make sure all the required permissions are checked and click "Authorize".
 
@@ -72,7 +72,7 @@ This is not a command list. Some of the descriptions after the dash are not actu
   * Moderation:
     * Admin/Mod Commands - mute
     * Chat Management - purge & lockdown
-  * Utility Commands - server info, user info, bot info 
+  * Utility Commands - server info, user info, bot info
   * General Chat Commands - generate embed messages, quickly generate a server invite link, say, DM person in server as bot.
   * Debate Comands - get research paper from sci-hub, start then track a debate round, track current speech, end the tracked debate round, coin flip, get judge's paradigm from Tabroom
   * Fun Commands :) - trump quotes, communism, capitalism, bataille & baudrillard themed quotes
@@ -84,9 +84,9 @@ This is not a command list. Some of the descriptions after the dash are not actu
 * *julianv#0044* - Improvements on -say
 * [*ethamitc*](https://github.com/ethamitc) - Improvement on formatting of readme.md
 
-## License 
+## License
 This Project is licensed under MIT License - see the LICENSE.md file for more details. The main points of the MIT License are:
-  
+
   * This code can be used commercially
   * This code can be modified
   * This code can be distributed
@@ -103,7 +103,7 @@ This Project is licensed under MIT License - see the LICENSE.md file for more de
   * We also store user IDs of users who have chosen to opt-out of specific functions and the name of the function(s) they have opted out of.
 
   ### Length of storage
-  * Debate round & opt out information are stored until the user deletes them through `-endround` & `-optout` respectively 
+  * Debate round & opt out information are stored until the user deletes them through `-endround` & `-optout` respectively
 
   ### Questions about the deletion of your data
   * Please join the help server or use the `-feedback` command.
@@ -120,5 +120,5 @@ Feel free to contact me if you find bugs, license issues, missing credits, etc.
     * Email: jfang.cv.ca.us@gmail.com OR jim@jimfang.me
     * Discord: AirFusion#1706
 
-## Note/Notes 
+## Note/Notes
   When self-hosting db8bot, we recommend downloading the latest release under the releases tab. As that is the most stable version.

@@ -1,8 +1,8 @@
 Bot lists:
 
 
-https://botsfordiscord.com/ (server: 374071874222686211 Bots for Discord) - Pending verification, 
-updated permissions 
+https://botsfordiscord.com/ (server: 374071874222686211 Bots for Discord) - Pending verification,
+updated permissions
 
 
 https://botlist.space/ (387812458661937152 botlist.space) - verified, permissions updated, widget on github
