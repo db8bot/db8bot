@@ -42,7 +42,7 @@ exports.run = function (client, message, args) {
     client.guilds.cache.map(botPerson => botNumber += botPerson.members.cache.filter(member => member.user.bot).size)
     const embed = new Discord.MessageEmbed()
         .setColor('36393E')
-        .setTitle(client.user.username + " V: " + pkg.version + ` Stats`)
+        .setTitle(client.user.username + " V: " + pkg.version)
         .setDescription(client.user.username + ' has been awake for ' + timeCon(process.uptime()))
         .addField(`:construction_worker: Creator`, config.ownerTag, true)
         .addField('🏠 Guilds', client.guilds.cache.size, true)
@@ -54,7 +54,8 @@ exports.run = function (client, message, args) {
         // .addField(`:heart: Upvote ${config.name}`, `[Discord Bot List (discordbots.org)](https://discordbots.org/bot/460610749283172353)\n[Discord Bot List](https://discordbotlist.com/bots/460610749283172353)\n[Bots on Discord](https://bots.ondiscord.xyz/bots/460610749283172353)\n[Bots for Discord](https://botsfordiscord.com/bots/460610749283172353)`, true) // check if this is working with the custom emoji
         // .addField(`:moneybag: Donate`, `[DonateBot](https://donatebot.io/checkout/430303752357019648)\n[Patreon](https://www.patreon.com/airfusion)`, true) //check if everything runs here.
         // .addField('💾 Last Commit', jsonBody[0].commit.message, true)
-        .addField('🐏 RAM Usage', `${((process.memoryUsage().heapUsed / 1024) / 1024).toFixed(2)} MB`, true)
+        .addField('🐏 RAM Usage', `${((process.memoryUsage().rss / 1024) / 1024).toFixed(2)} MB`, true)
+        .addField(':clock: System Uptime', timeCon(os.uptime()), true)
         .addField('🏓 Ping', `${(client.ws.ping).toFixed(0)} ms`, true)
         .addField(`:control_knobs: Library`, `Discord JS v${Discord.version}`, true)
         .addField(`:computer: Node.js `, `${process.version}`, true)
