@@ -1,8 +1,10 @@
 const fs = require('fs').promises
 const puppeteer = require('puppeteer');
+const blockedPageReqRegexes = require('../mediaProfilesBlockedPageReqRegex')
 process.on('message', async (msg) => {
-    let pdf = await toPDF(msg.link, msg.ua, msg.reg, msg.allowCookies, msg.removeCookiesAfterLoad, msg.removeAllCookiesExcept, msg.removeCertainCookies, msg.disableJS)
+    let pdf = await toPDF(msg.link, msg.ua, blockedPageReqRegexes[msg.reg], msg.allowCookies, msg.removeCookiesAfterLoad, msg.removeAllCookiesExcept, msg.removeCertainCookies, msg.disableJS)
     console.log('spawned')
+    // console.log(msg.reg)
     try {
         await fs.writeFile(msg.filename, pdf)
         process.exit(0)
@@ -24,7 +26,7 @@ async function toPDF(link, ua, reg, allowCookies, removeCookiesAfterLoad, remove
             '--ignore-certifcate-errors-spki-list',
             `--user-agent=${ua}`,
             '--disable-features=ImprovedCookieControls'
-        ], headless: false, defaultViewport: null, ignoreHTTPSErrors: true
+        ], headless: true, defaultViewport: null, ignoreHTTPSErrors: true
     });
     const page = await browser.newPage();
     await page.evaluateOnNewDocument(() => {

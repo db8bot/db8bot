@@ -76,12 +76,12 @@ exports.run = async function (client, message, args) {
 
 
         const pdfChildProcess = child_process.fork('./commands/getPDFChild.js')
-        
+        // console.log(new RegExp(options.blockedPageReqRegex))
 
         pdfChildProcess.send({
             link: url,
             ua: ua,
-            reg: options.blockedPageReqRegex,
+            reg: urlParsed.domain,
             allowCookies: options.allowCookies,
             removeCookiesAfterLoad: options.removeCookiesAfterLoad,
             removeAllCookiesExcept: options.removeAllCookiesExcept,
@@ -209,76 +209,3 @@ exports.run = async function (client, message, args) {
 
     }
 }
-
-// ARCHIVAL2: 
- // console.log(args.join(' '))
-                // pyshell.send(args.join(' '));
-                // pyshell.on('message', function (message) {
-                //     // received a message sent from the Python script (a simple "print" statement)
-                //     console.log(message);
-                // });
-
-                // // end the input stream and allow the process to exit
-                // pyshell.end(function (err, code, signal) {
-                //     if (err) throw err;
-                //     console.log('The exit code was: ' + code);
-                //     console.log('The exit signal was: ' + signal);
-                //     console.log('finished');
-                //     console.log('finished');
-                // });
-                // scholar rate limited by google :(
-
-// ARCHIVAL1:
-
- // // message.reply(`Not found on sci-hub!`)
-                // // return
-                // console.log("WOOO")
-                // // PythonShell.run('./script.py', null, function (err, results) {
-                // //     if (err) throw err;
-                // //     console.log('finished');
-                // //     console.log(results)
-                // //     // console.log(results.)
-                // // });
-                // pyshell.send(args.join(' '))
-                // console.log("sent....")
-                // pyshell.on('message', function (msg) {
-                //     // eprint = msg;
-                //     console.log(msg)
-                //     // console.log(message.indexOf("eprint"))
-                //     // callback(msg)
-                //     // if (msg.indexOf("eprint") != -1) {
-
-                //     //     eprint = msg.substring(msg.indexOf('eprint'))
-                //     //     // return eprint
-                //     //     console.log(eprint)
-                //     // }
-                // });
-                // // message.channel.send(eprint)
-                // // console.log(eprint)
-
-                // // eprint = runPy(args.join(' '))
-                // // function runPy(data){
-                // //     return new Promise((resolve, reject) => {
-                // //       let result;
-                // //       let pyshell = new PythonShell('script.py'); // , {mode: 'text', args: [date]}
-
-                // //       pyshell.send(data);
-
-                // //       pyshell.on('message', function (message) {
-                // //         // result = JSON.parse(message);
-                // //         result = message;
-                // //       });
-
-                // //       pyshell.on('stderr', function (stderr) {
-                // //         console.log(stderr);
-                // //       });
-
-                // //       pyshell.end(function (err, code, signal) {
-                // //         if (err) reject(err);
-                // //         console.log('The exit code was: ' + code);
-                // //         console.log('The exit signal was: ' + signal);
-                // //         console.log('finished');
-                // //         resolve(result);
-                // //       });
-                // //     });
-                // //   }
