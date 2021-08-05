@@ -41,5 +41,6 @@ module.exports = {
   'expansion.com': /cdn\.ampproject\.org\/v\d\/amp-(access|ad|consent)-.+\.js/,
   'chicagobusiness.com': /(\.tinypass\.com\/|\.chicagobusiness\.com\/.+\/js\/js_.+\.js)/,
   'dailytelegraph.com.au': /cdn\.ampproject\.org\/v\d\/amp-(access|ad|consent)-.+\.js/,
-  'ft.com': /amp-access-.+/
+  'ft.com': /amp-access-.+/,
+  'scmp.com': /.+\.tinypass\.com\/.+/
 };
