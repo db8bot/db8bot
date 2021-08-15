@@ -2,20 +2,29 @@ const fs = require('fs').promises
 const puppeteer = require('puppeteer');
 const blockedPageReqRegexes = require('../mediaProfilesBlockedPageReqRegex')
 process.on('message', async (msg) => {
-    let pdf = await toPDF(msg.link, msg.ua, blockedPageReqRegexes[msg.reg], msg.allowCookies, msg.removeCookiesAfterLoad, msg.removeAllCookiesExcept, msg.removeCertainCookies, msg.disableJS)
+    let pdf = await toPDF(msg.link, msg.ua, blockedPageReqRegexes[msg.reg], msg.allowCookies, msg.removeCookiesAfterLoad, msg.removeAllCookiesExcept, msg.removeCertainCookies, msg.disableJS, msg.outline)
     console.log('spawned')
     // console.log(msg.reg)
-    try {
-        await fs.writeFile(msg.filename, pdf)
+    if (msg.outline) {
+        process.send(pdf) // this will be an outline link
+        console.log(`exited with code 0`)
         process.exit(0)
-    } catch (err) {
-        if (err) console.error(err)
-        process.exit(1)
+    } else {
+        try {
+            await fs.writeFile(msg.filename, pdf)
+            process.exit(0)
+        } catch (err) {
+            if (err) console.error(err)
+            process.exit(1)
+        }
     }
 })
 
-async function toPDF(link, ua, reg, allowCookies, removeCookiesAfterLoad, removeAllCookiesExcept, removeCertainCookies, disableJS) {
+async function toPDF(link, ua, reg, allowCookies, removeCookiesAfterLoad, removeAllCookiesExcept, removeCertainCookies, disableJS, outline) {
     // https://intoli.com/blog/not-possible-to-block-chrome-headless/
+    if (outline) {
+        return `https://outline.com/${link}`
+    }
     const browser = await puppeteer.launch({
         args: [
             '--no-sandbox',
