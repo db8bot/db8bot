@@ -20,7 +20,7 @@ exports.run = function (client, message) {
             .setTitle(`Quote by ${quotes[num].author}`)
             .setDescription(`"${res.text}"\n-${quotes[num].author}`)
             .setFooter(`Disclaimer: This command is purely for satirical purposes. It does not represent the creator, the owner, or the user's views.`)
-        message.channel.send({ embeds: [quoteSend] })
+        message.channel.send({ embed: quoteSend })
     }).catch(err => {
         console.log(err)
     })

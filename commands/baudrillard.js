@@ -22,11 +22,11 @@ exports.run = function (client, message) {
             .setTitle(`Quote by ${quotes[num].author}`)
             .setDescription(`"${res.text}"\n-${quotes[num].author}`)
             .setFooter(`Disclaimer: This command is purely for satirical purposes. It does not represent the creator, the owner, or the user's views.`)
-        message.channel.send({ embeds: [quoteSend] })
+        message.channel.send({ embed: quoteSend })
     }).catch(err => {
         console.log(err)
     })
-    client.logger.log('info', `baudrillard command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
+client.logger.log('info', `baudrillard command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
     quotes[quotes.length - 1].lastQuote = quotes[num].quote
     quotes[quotes.length - 1].lastNumber = num
     // fs.writeFile('./quotesBaudrillard.json', JSON.stringify(quotes, null, 2), function (err) {

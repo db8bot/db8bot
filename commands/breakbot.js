@@ -14,6 +14,7 @@ exports.run = function (client, message) {
                     message.channel.send({ files: [`./breakbotIMG/${(Math.floor(Math.random() * Math.floor(4)))}.jpg`] })
                 } else {
                     message.channel.send({ files: [res.body] });
+                    console.log(res.body)
                 }
             });
 
