@@ -17,6 +17,7 @@ exports.run = async function (client, message, args) {
     const mediaProfilesAmp = require('../mediaProfilesAMP.json')
     const blockedPageReqRegexes = require('../mediaProfilesBlockedPageReqRegex')
     const mediaProfilesDisableJS = require('../mediaProfilesDisableJS.json')
+    const useOutline = require('../useOutline.json')
     var uas = {
         "google": 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
         "bing": "'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)'"
@@ -65,10 +66,12 @@ exports.run = async function (client, message, args) {
             "ua": ua,
             "amp": mediaProfilesAmp[urlParsed.domain],
             "blockedPageReqRegex": blockedPageReqRegexes[urlParsed.domain],
-            "disableJS": mediaProfilesDisableJS.some(str => str.includes(urlParsed.domain))
+            "disableJS": mediaProfilesDisableJS.some(str => str.includes(urlParsed.domain)),
+            "outline": useOutline.some(str => str.includes(urlParsed.domain))
         }
         console.log(options)
-        message.channel.send(`OPTIONS:\nallowCookies: ${options.allowCookies}\nremoveCookiesAfterLoad: ${options.removeCookiesAfterLoad}\nremoveAllCookiesExcept: ${options.removeAllCookiesExcept}\nremoveCertainCookies: ${options.removeCertainCookies}\nBot: ${options.bot}\nUseragent UA: ${options.ua}\nAMP?: ${options.amp}\nblockedPageReqRegex: \`${options.blockedPageReqRegex}\`\nGive it a second, it might be slow...`)
+        message.channel.send('Give it a second, it might be slow...')
+        // message.channel.send(`OPTIONS:\nallowCookies: ${options.allowCookies}\nremoveCookiesAfterLoad: ${options.removeCookiesAfterLoad}\nremoveAllCookiesExcept: ${options.removeAllCookiesExcept}\nremoveCertainCookies: ${options.removeCertainCookies}\nBot: ${options.bot}\nUseragent UA: ${options.ua}\nAMP?: ${options.amp}\nblockedPageReqRegex: \`${options.blockedPageReqRegex}\`\nGive it a second, it might be slow...`)
 
         if (options.amp != undefined && options.amp != "") {
             url = url.replace(urlParsed.domain, options.amp).replace('www.', "") // make sure we go to the amp site if it has the amp flag
@@ -87,18 +90,24 @@ exports.run = async function (client, message, args) {
             removeAllCookiesExcept: options.removeAllCookiesExcept,
             removeCertainCookies: options.removeCertainCookies,
             disableJS: options.disableJS,
-            filename: filename.toString()
+            filename: filename.toString(),
+            outline: options.outline
         })
-        pdfChildProcess.on('close', async (code) => {
-            console.log(`exited with code ${code}`)
-            await message.channel.send({ files: [filename] })
-            try {
-                await fs.rm(filename)
-            } catch (e) {
-                if (e) console.error(e)
-            }
-        })
-
+        if (options.outline) {
+            pdfChildProcess.on('message', (outlineLink) => {
+                message.channel.send(outlineLink)
+            })
+        } else {
+            pdfChildProcess.on('close', async (code) => {
+                console.log(`exited with code ${code}`)
+                await message.channel.send({ files: [filename] })
+                try {
+                    await fs.rm(filename)
+                } catch (e) {
+                    if (e) console.error(e)
+                }
+            })
+        }
 
     }
     // sci hub section below

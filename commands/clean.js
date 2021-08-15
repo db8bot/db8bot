@@ -3,8 +3,8 @@ exports.run = function (client, message, args) {
     const PNG = require("pngjs").PNG;
     const fs = require('fs')
     const Discord = require('discord.js');
-    var guild = message.guild;
     const config = client.config;
+    const stream = require('stream')
     const embed1 = new Discord.MessageEmbed()
         .setColor("#f0ffff")
         .setDescription("**Command: **" + `${config.prefix}clean`)
@@ -22,7 +22,7 @@ exports.run = function (client, message, args) {
             message.channel.messages.fetch({ limit: 2 }).then(chanmsg2 => { // check last message
 
                 if (chanmsg2.last().attachments.first() === undefined) {
-                    message.channel.send({ embed: embed1 })
+                    message.channel.send({ embeds: [embed1] })
                 } else {
 
                     // message.channel.send(chanmsg2.last().attachments.first().url)
@@ -55,7 +55,6 @@ exports.run = function (client, message, args) {
             })
         } else if (chanmsg.first().attachments.first() != undefined) {
             // message.channel.send(chanmsg.first().attachments.first().url)
-
             var fileName = "./imgCleanTempFiles/" + getRndInteger(999, 999999).toString() + chanmsg.last().id + "x" + ".png" //${getRndInteger(999,999999)}- ${chanmsg.last().id}
             fileName = fileName.toString()
 
@@ -80,7 +79,7 @@ exports.run = function (client, message, args) {
                     console.log(`${fileName} was deleted.`)
                 })
             }, 1700);
-        } else if (args[0].includes("https://cdn.discordapp.com/attachments")) {
+        } else if (args[0].includes("https://cdn.discordapp.com/attachments") || args[0].includes("https://cdn.discord.com/attachments")) {
             var fileName = "./imgCleanTempFiles/" + getRndInteger(999, 999999).toString() + chanmsg.last().id + "x" + ".png" //${getRndInteger(999,999999)}- ${chanmsg.last().id}
             fileName = fileName.toString()
 
@@ -93,22 +92,26 @@ exports.run = function (client, message, args) {
                         blue: 255,
                     },
                 })
-            ).on('parsed', function () {
-                this.pack().pipe(fs.createWriteStream(fileName))
-                setTimeout(() => {
-                    message.channel.send({ files: [fileName] })
-                }, 700);
-            })
-            setTimeout(() => {
-                fs.unlink(fileName, (err) => {
-                    if (err) console.log(err)
-                    console.log(`${fileName} was deleted.`)
+            ).on('parsed', async function () {
+                var sendDataArr = []
+                const createWriteStream = () => {
+                    return stream.Writable({
+                        write(chunk, enc, next) {
+                            sendDataArr.push(chunk)
+                            next()
+                        }
+                    })
+                }
+                const writeStream = createWriteStream()
+                this.pack().pipe(writeStream)
+                writeStream.on('finish', () => {
+                    message.channel.send({ files: [Buffer.concat(sendDataArr)] })
                 })
-            }, 1700);
+            })
         }
         else {
             // send help!
-            message.channel.send({ embed: embed1 })
+            message.channel.send({ embeds: [embed1] })
         }
     })
 }
