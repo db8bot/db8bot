@@ -1,6 +1,6 @@
 exports.run = function (client, message, args, args2, cmd) {
     const Discord = require('discord.js');
-    var guild = message.guild;
+    var guild = message.guild || { name: "DM" };
     let user = message.mentions.users.first()
     const config = client.config;
     const embed1 = new Discord.MessageEmbed()
@@ -9,7 +9,7 @@ exports.run = function (client, message, args, args2, cmd) {
         .addField("**Usage:**", `${config.prefix}dm <@username> <Your message>`)
         .addField("**Example:**", `${config.prefix}dm @AirFusion hello`)
         .addField("**Expected Result From Example:**", "Mentioned user should get a DM from the bot with the correct message & message in chat should be deleted.")
-    if (!user || args[1] === undefined) return message.channel.send({ embed: embed1 })
+    if (!user || args[1] === undefined) return message.channel.send({ embeds: [embed1] })
     if (client.optINOUT.get(message.author.id) != undefined) {
         if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
     }
@@ -19,13 +19,13 @@ exports.run = function (client, message, args, args2, cmd) {
     if (user.bot === false) {
         const embed = new Discord.MessageEmbed()
             .setColor("#008000")
-            .setTitle(`You Have a New Message from user ${message.author.username} from server ${guild.name}`)
+            .setTitle(`You Have a New Message from user ${message.author.username} from ${guild.name}`)
             .setDescription("ID: " + message.author.id)
             .setThumbnail(message.author.avatarURL)
             .setTimestamp()
             .addField("Message:", args.slice(1).join(' '))
             .setFooter("Reply by using the command -dm @<replyUser> <message>")
-        user.send({ embed: embed })
+        user.send({ embeds: [embed] })
         message.delete()
         message.reply("Message sent!")
     } else {

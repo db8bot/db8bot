@@ -11,6 +11,6 @@ exports.run = function (client, message, args) {
         .setFooter("Invite Link for " + config.name)
         .addField(`Invite link:`, `[Here](${config.invLink}) | Thanks for inviting ${config.name}!`)
 
-    message.channel.send({ embed: embed })
+    message.channel.send({ embeds: [embed] })
     client.logger.log('info', `invite command used by ${message.author.username} Time: ${Date.now()} Guild: ${guild}`)
 }

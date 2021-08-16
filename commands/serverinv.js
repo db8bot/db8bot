@@ -1,5 +1,6 @@
 exports.run = function (client, message) {
     var guild = message.guild;
+    const Discord = require('discord.js')
     var Long = require("long");
     if (client.optINOUT.get(message.author.id) != undefined) {
         if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
@@ -9,8 +10,8 @@ exports.run = function (client, message) {
         // Now we get into the heavy stuff: first channel in order where the bot can speak
         // hold on to your hats!
         return guild.channels.cache
-            .filter(c => c.type === "text" &&
-                c.permissionsFor(guild.client.user).has("SEND_MESSAGES"))
+            .filter(c => c.type === "GUILD_TEXT" &&
+                c.permissionsFor(guild.client.user).has(Discord.Permissions.FLAGS.SEND_MESSAGES))
             .sort((a, b) => a.position - b.position ||
                 Long.fromString(a.id).sub(Long.fromString(b.id)).toNumber())
             .first();

@@ -17,7 +17,7 @@ exports.run = function (client, message, args) {
             .addField("**Example:**", `${config.prefix}feedback Better hosting for db8 bot!`)
             .addField("**Expected Result From Example:**", "DMs the owner of the bot with your feedback.")
 
-        message.channel.send({ embed: embed1 })
+        message.channel.send({ embeds: [embed1] })
         client.logger.log('info', `feedback command used by ${message.author.username} Time: ${Date()} Guild: ${guild}`)
     }
 }

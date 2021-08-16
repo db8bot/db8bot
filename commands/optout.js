@@ -14,7 +14,7 @@ exports.run = function (client, message, args, args2, cmd) {
     // console.log(args)
     // console.log(args[0])
     var cmds = "embed feedback invite ping say serverinv dm lockdown mute unmute purge setup botinfo serverinfo userinfo get setspeech endround roundstatus flip judgeinfo speeches communism capitalism trump baudrillard bataille"
-    if (cmds.indexOf(args[0]) < 0) return message.channel.send({embed: embed1})
+    if (cmds.indexOf(args[0]) < 0) return message.channel.send({embeds: [embed1]})
     // if (args[0] != "dm") return
     // let tf = (args[1] === 'yes') ? "true" : "false"
     if (client.optINOUT.get(message.author.id) === undefined) { // new person who never opted out before

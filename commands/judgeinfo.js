@@ -20,7 +20,7 @@ exports.run = function (client, message, args) {
         .addField("**Expected Result From Example:**", "Bot will return the judge's paradigm along with the direct link to the paradigm.")
         .addField("**NOTES:**", "This command is in beta. It might not work as expected. The bot will return the paradigm in discord code blocks (cause it's better looking), however if something goes wrong, it will send the paradigm in plain text!")
     if (args.join(' ') === "" || args.join(' ').indexOf(" ") === -1) {
-        message.channel.send({ embed: help })
+        message.channel.send({ embeds: [help] })
         return;
     }
 

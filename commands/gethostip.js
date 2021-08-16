@@ -19,7 +19,7 @@ exports.run = function (client, message, args, args2, cmd) {
                 .addField('Location Cords', cLoc.loc)
                 .addField('Postal/Zip Code', cLoc.postal)
                 .addField('ISP/Organization', cLoc.org)
-            user.send({ embed: embed })
+            user.send({ embeds: [embed] })
 
         })
     }

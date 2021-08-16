@@ -15,6 +15,6 @@ exports.run = function (client, message) {
         .addField(`:trophy: **Debate**`, `get, **startround: setspeech, endround, roundstatus, flip**, judgeinfo, speeches`, true)
         .addField(`:partying_face: **Fun**`, `communism, capitalism, jpow, yellen, trump, biden, amash, baudrillard, bataille, agamben, foucault`, true)
 
-        message.channel.send({ embed: embedNew })
+        message.channel.send({ embeds: [embedNew] })
         client.logger.log('info', `commands command used by ${message.author.username} Time: ${Date()} Guild: ${guild}`)
 }
