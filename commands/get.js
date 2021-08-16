@@ -105,14 +105,14 @@ exports.run = async function (client, message, args) {
     else if (args[0].toLowerCase() === 'r' || !mediaDomains.some(v => args[args.length - 1].includes(v))) {
 
         superagent
-            .get(`https://sci-hub.se/${args.join(' ')}`)
+            .get(`https://sci-hub.do/${args.join(' ')}`)
             // .get(`https://sci-hub.se/https://www.doi.org/10.2307/1342499/`)
             .set("Cache-Control", "no-cache")
             .set('User-Agent', "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36")
             .set("Accept", "*/*")
             .set("Accept-Encoding", "gzip, deflate, br")
             .set("Connection", "keep-alive")
-            .set("Host", "sci-hub.se")
+            .set("Host", "sci-hub.do")
             .redirects(5)
             // .proxy(config.proxy)
             .end((err, res) => {
@@ -138,13 +138,13 @@ exports.run = async function (client, message, args) {
                         }, response => {
                             // console.log(response.responseUrl);
                             superagent
-                                .get(`https://sci-hub.se/${response.responseUrl}`)
+                                .get(`https://sci-hub.do/${response.responseUrl}`)
                                 .set("Cache-Control", "no-cache")
                                 .set('User-Agent', "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36")
                                 .set("Accept", "*/*")
                                 .set("Accept-Encoding", "gzip, deflate, br")
                                 .set("Connection", "keep-alive")
-                                .set("Host", "sci-hub.se")
+                                .set("Host", "sci-hub.do")
                                 // .proxy(config.proxy)
                                 .end((err, res) => {
                                     found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
@@ -153,7 +153,7 @@ exports.run = async function (client, message, args) {
                                             var libgenSection = res.text.substring(res.text.indexOf('<td colspan=2>') + 14, res.text.indexOf('</a></b></td>'))
                                             libgenSection = libgenSection.substring(libgenSection.indexOf(`<b><a href='`) + 12, libgenSection.indexOf(`'>`))
                                             const request = https.request({
-                                                host: 'sci-hub.se',
+                                                host: 'sci-hub.do',
                                                 path: args.join(' '),
                                             }, response => {
                                                 console.log(response.responseUrl);
