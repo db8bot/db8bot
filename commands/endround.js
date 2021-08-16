@@ -34,13 +34,15 @@ exports.run = function (client, message, args) {
                 return;
             }
             debatersID = roundInfo.debaters.split(" ").filter((element) => element != '')
-            console.log(roundInfo)
-            console.log(debatersID)
             for (var j = 0; j < debatersID.length; j++) {
-                mentionableDebaters += `<@!${debatersID[j]}> `
-                guild.members.cache.get(debatersID[j]).roles.remove(currentlyDebating)
+                mentionableDebaters += `<@!${debatersID[j]}>` + " "
+                guild.members.fetch(debatersID[j]).then(member => {
+                    member.roles.remove(currentlyDebating)
+                })
             }
-            guild.members.cache.get(roundInfo.judge).roles.remove(currentlyJudging)
+            guild.members.fetch(roundInfo.judge).then(member => {
+                member.roles.remove(currentlyJudging)
+            })
             message.reply("Round Ended! Results Below")
             const results = new Discord.MessageEmbed()
                 .setTitle(`Round Ended - ${message.guild.name} ${roundInfo.name} Results`)

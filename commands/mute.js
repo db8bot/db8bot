@@ -1,6 +1,6 @@
 exports.run = function (client, message, args) {
     const Discord = require('discord.js');
-    if (!message.guild.members.cache.get(message.author.id).permissions.has(Discord.Permissions.FLAGS.MANAGE_GUILD, { checkAdmin: true, checkOwner: true })) return message.reply('Insufficant Permissions').catch(console.error)
+    if (!message.guild.members.fetch(message.author.id).permissions.has(Discord.Permissions.FLAGS.MANAGE_GUILD, { checkAdmin: true, checkOwner: true })) return message.reply('Insufficant Permissions').catch(console.error)
     var guild = message.guild;
     client.logger.log('info', `mute command used by ${message.author.username} Time: ${Date()} Guild: ${guild}`)
     const config = client.config;
@@ -21,9 +21,9 @@ exports.run = function (client, message, args) {
     if (message.mentions.users.size < 1) return message.reply("You must mention someone to mute them.").catch(console.error)
     if (reason.length < 1) return message.reply("Reason Required")
     // if (!message.guild.member(client.user).hasPermission("MANAGE_ROLES"), { checkAdmin: true, checkOwner: true }) return message.reply('Bot has insufficant Perms').catch(console.error)
-    if (!message.guild.members.cache.get(client.user.id).permissions.has(Discord.Permissions.FLAGS.MANAGE_ROLES)) return message.reply('Bot has insufficant Perms').catch(console.error)
+    if (!message.guild.members.fetch(client.user.id).permissions.has(Discord.Permissions.FLAGS.MANAGE_ROLES)) return message.reply('Bot has insufficant Perms').catch(console.error)
     if (user === message.author) return message.reply("You cannot mute yourself")
-    message.guild.members.cache.get(user.id).roles.add(muteRole).catch(err => console.error(err))
+    message.guild.members.fetch(user.id).roles.add(muteRole).catch(err => console.error(err))
 
     const embed = new Discord.MessageEmbed()
         .setColor('#ffbf00')

@@ -26,7 +26,7 @@ exports.run = function (client, message, args) {
                 for (var i = 0; i < args.length - 3; i++) {
                     console.log([...message.mentions.users][i][1])
                     guild.members.cache.get([...message.mentions.users][i][0]).roles.add(currentlyDebating).catch(err => console.log(err))
-                    debaters += [...message.mentions.users][i][0]
+                    debaters += [...message.mentions.users][i][0] + " "
                     debatersObj += `${guild.members.cache.get([...message.mentions.users][i][0])} `
                 }
                 guild.members.cache.get([...message.mentions.users][args.length - 3][0]).roles.add(currentlyJudging).catch(err => console.log(err))
