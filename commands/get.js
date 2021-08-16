@@ -105,14 +105,14 @@ exports.run = async function (client, message, args) {
     else if (args[0].toLowerCase() === 'r' || !mediaDomains.some(v => args[args.length - 1].includes(v))) {
 
         superagent
-            .get(`https://sci-hub.do/${args.join(' ')}`)
+            .get(`https://sci-hub.se/${args.join(' ')}`)
             // .get(`https://sci-hub.se/https://www.doi.org/10.2307/1342499/`)
             .set("Cache-Control", "no-cache")
             .set('User-Agent', "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36")
             .set("Accept", "*/*")
             .set("Accept-Encoding", "gzip, deflate, br")
             .set("Connection", "keep-alive")
-            .set("Host", "sci-hub.do")
+            .set("Host", "sci-hub.se")
             .redirects(5)
             // .proxy(config.proxy)
             .end((err, res) => {
@@ -120,7 +120,8 @@ exports.run = async function (client, message, args) {
                 // Calling the end function will send the request
                 // console.log(res.text)
                 try {
-                    var found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
+                    // var found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
+                    var found = res.text.match(/src=\"(.*?)\" id = "pdf"/)
                 } catch {
                     found = null
                 }
@@ -138,22 +139,22 @@ exports.run = async function (client, message, args) {
                         }, response => {
                             // console.log(response.responseUrl);
                             superagent
-                                .get(`https://sci-hub.do/${response.responseUrl}`)
+                                .get(`https://sci-hub.se/${response.responseUrl}`)
                                 .set("Cache-Control", "no-cache")
                                 .set('User-Agent', "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36")
                                 .set("Accept", "*/*")
                                 .set("Accept-Encoding", "gzip, deflate, br")
                                 .set("Connection", "keep-alive")
-                                .set("Host", "sci-hub.do")
+                                .set("Host", "sci-hub.se")
                                 // .proxy(config.proxy)
                                 .end((err, res) => {
-                                    found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
+                                    res.text.match(/src=\"(.*?)\"[^]([\s\S])([\s\S])([\s\S])([\s\S])([\s\S])id="pdf"/g)
                                     if (found === null) {
                                         if (res.text.includes('libgen')) { // libgen download
                                             var libgenSection = res.text.substring(res.text.indexOf('<td colspan=2>') + 14, res.text.indexOf('</a></b></td>'))
                                             libgenSection = libgenSection.substring(libgenSection.indexOf(`<b><a href='`) + 12, libgenSection.indexOf(`'>`))
                                             const request = https.request({
-                                                host: 'sci-hub.do',
+                                                host: 'sci-hub.se',
                                                 path: args.join(' '),
                                             }, response => {
                                                 console.log(response.responseUrl);
