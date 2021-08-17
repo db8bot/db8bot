@@ -34,6 +34,6 @@ exports.run = function (client, message, args) {
         roundstats.addField(`Debate ${i + 1}`, `Name: ${currentInteration.name} | Round Type: ${currentInteration.type} | Judge: <@!${currentInteration.judge}> | Debaters: ${mentionableDebaters} | Current Speech: ${currentInteration.speech === "" ? "No speech started yet" : currentInteration.speech}`)
         mentionableDebaters = "";
     }
-    message.channel.send({ embed: roundstats })
+    message.channel.send({ embeds: [roundstats] })
     client.logger.log('info', `roundstatus command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
 }

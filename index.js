@@ -3,9 +3,27 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 const Discord = require('discord.js');
-const client = new Discord.Client();
-const config = require("./config.json");
-client.config = require("./config.json");
+const client = new Discord.Client({
+    intents: [
+        Discord.Intents.FLAGS.GUILDS,
+        Discord.Intents.FLAGS.GUILD_INVITES,
+        Discord.Intents.FLAGS.GUILD_MESSAGES,
+        Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+        Discord.Intents.FLAGS.DIRECT_MESSAGES,
+        Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
+    ],
+    partials: [
+        'CHANNEL'
+    ]
+});
+const versionSelector = 'dev'
+if (versionSelector == 'dev') {
+    var config = require("./configDev.json");
+    client.config = require("./configDev.json");
+} else {
+    var config = require("./config.json");
+    client.config = require("./config.json");
+}
 const fs = require("fs");
 const Enmap = require("enmap");
 const chalk = require('chalk');
@@ -78,7 +96,7 @@ var rand = getRandomIntInclusive(1, 100);
 
 // -----------------MESSAGE HANDLERS & COMMANDS------------------
 
-client.on('message', async message => {
+client.on('messageCreate', async message => {
     const doExec = (cmd, opts = {}) => { // -exec function
         return new Promise((resolve, reject) => {
             exec(cmd, opts, (err, stdout, stderr) => {
@@ -160,7 +178,7 @@ client.on('message', async message => {
                 .addField(`Get the host machine's IP address ONLY!`, "cmd: -gethostip")
                 .addField(`Send Msg to a server`, `cmd: sendmsgto <server name: exact> <msg>`)
 
-            message.channel.send({ embed: ownercmds })
+            message.channel.send({ embeds: [ownercmds] })
         }
     }
     else if (command === "setgame") {
@@ -182,8 +200,8 @@ client.on('message', async message => {
             let user = message.author;
             var serverNameStr = client.guilds.cache.map(e => e.toString()).join(`, `)
             while (serverNameStr.length > 1990) {
-                    user.send(serverNameStr.substring(0, 1990));
-                    serverNameStr = serverNameStr.replace(serverNameStr.substring(0, 1990), "")
+                user.send(serverNameStr.substring(0, 1990));
+                serverNameStr = serverNameStr.replace(serverNameStr.substring(0, 1990), "")
             }
             user.send(serverNameStr)
 
@@ -204,8 +222,8 @@ client.on('message', async message => {
                 // Now we get into the heavy stuff: first channel in order where the bot can speak
                 // hold on to your hats!
                 return guild.channels.cache
-                    .filter(c => c.type === "text" &&
-                        c.permissionsFor(guild.client.user).has("SEND_MESSAGES"))
+                    .filter(c => c.type === "GUILD_TEXT" &&
+                        c.permissionsFor(guild.client.user).has(Discord.Permissions.FLAGS.SEND_MESSAGES))
                     .sort((a, b) => a.position - b.position ||
                         Long.fromString(a.id).sub(Long.fromString(b.id)).toNumber())
                     .first();
@@ -224,8 +242,8 @@ client.on('message', async message => {
             // Now we get into the heavy stuff: first channel in order where the bot can speak
             // hold on to your hats!
             return guild.channels.cache
-                .filter(c => c.type === "text" &&
-                    c.permissionsFor(guild.client.user).has("SEND_MESSAGES"))
+                .filter(c => c.type === "GUILD_TEXT" &&
+                    c.permissionsFor(guild.client.user).has(Discord.Permissions.FLAGS.SEND_MESSAGES))
                 .sort((a, b) => a.position - b.position ||
                     Long.fromString(a.id).sub(Long.fromString(b.id)).toNumber())
                 .first();
@@ -255,9 +273,9 @@ client.on('message', async message => {
             message.reply(":white_check_mark: Restart should be complete, check -botinfo for confirmation.")
 
             setTimeout(function () {
-                process.abort();
+                process.abort()
             }, 1000);
-        }  else {
+        } else {
             message.channel.send("Insufficant Permissions")
         }
     }
