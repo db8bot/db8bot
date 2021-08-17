@@ -178,7 +178,7 @@ client.on('messageCreate', async message => {
                 .addField(`Get the host machine's IP address ONLY!`, "cmd: -gethostip")
                 .addField(`Send Msg to a server`, `cmd: sendmsgto <server name: exact> <msg>`)
 
-            message.channel.send({ embed: ownercmds })
+            message.channel.send({ embeds: [ownercmds] })
         }
     }
     else if (command === "setgame") {
@@ -222,8 +222,8 @@ client.on('messageCreate', async message => {
                 // Now we get into the heavy stuff: first channel in order where the bot can speak
                 // hold on to your hats!
                 return guild.channels.cache
-                    .filter(c => c.type === "text" &&
-                        c.permissionsFor(guild.client.user).has("SEND_MESSAGES"))
+                    .filter(c => c.type === "GUILD_TEXT" &&
+                        c.permissionsFor(guild.client.user).has(Discord.Permissions.FLAGS.SEND_MESSAGES))
                     .sort((a, b) => a.position - b.position ||
                         Long.fromString(a.id).sub(Long.fromString(b.id)).toNumber())
                     .first();
@@ -242,8 +242,8 @@ client.on('messageCreate', async message => {
             // Now we get into the heavy stuff: first channel in order where the bot can speak
             // hold on to your hats!
             return guild.channels.cache
-                .filter(c => c.type === "text" &&
-                    c.permissionsFor(guild.client.user).has("SEND_MESSAGES"))
+                .filter(c => c.type === "GUILD_TEXT" &&
+                    c.permissionsFor(guild.client.user).has(Discord.Permissions.FLAGS.SEND_MESSAGES))
                 .sort((a, b) => a.position - b.position ||
                     Long.fromString(a.id).sub(Long.fromString(b.id)).toNumber())
                 .first();
@@ -273,7 +273,7 @@ client.on('messageCreate', async message => {
             message.reply(":white_check_mark: Restart should be complete, check -botinfo for confirmation.")
 
             setTimeout(function () {
-                process.abort();
+                process.abort()
             }, 1000);
         } else {
             message.channel.send("Insufficant Permissions")
