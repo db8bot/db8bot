@@ -48,7 +48,7 @@ exports.run = function (client, message, args, args2, cmd) {
             message.reply(`Successfully opted out of ${args[0]}`)
         }
 
-        client.optINOUT.setProp(message.author.id, "value", modArray)
+        client.optINOUT.set(message.author.id, modArray, "value")
     }
     
     // console.log("IN SET" + client.optINOUT.get(message.author.id).value)

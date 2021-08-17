@@ -17,7 +17,7 @@ exports.run = function (client, message, args) {
                     .setTitle(`Quote by Donald Trump`)
                     .setDescription(`"${res.body.message}"\n-Donald Trump`)
                     .setFooter(`Disclaimer: This command is purely for satirical purposes. It does not represent the creator, the owner, or the user's views.`)
-                message.channel.send({ embed: quoteSend })
+                message.channel.send({ embeds: [quoteSend] })
             })
     } else {
         superagent
@@ -31,7 +31,7 @@ exports.run = function (client, message, args) {
                     .setDescription(`"${res.body.value}"\n-Donald Trump`)
                     .addField(`Source`, `[Here](${res.body._embedded.source[0].url})`)
                     .setFooter(`Disclaimer: This command is purely for satirical purposes. It does not represent the creator, the owner, or the user's views.`)
-                message.channel.send({ embed: quoteSend })
+                message.channel.send({ embeds: [quoteSend] })
             })
     }
     client.logger.log('info', `trump command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)

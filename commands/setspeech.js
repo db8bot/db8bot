@@ -34,10 +34,10 @@ exports.run = function (client, message, args) {
     }
 
     if (contains) {
-        client.rounds.setProp(guild.id + args[0], "speech", speechInput)
+        client.rounds.set(guild.id + args[0], speechInput, "speech")
         message.reply(`Supported Speech! :white_check_mark: Speech successfully set to ${speechInput}`)
     } else {
-        client.rounds.setProp(guild.id + args[0], "speech", speechInput)
+        client.rounds.set(guild.id + args[0], speechInput, "speech")
         message.reply(`:warning: Unsupported Speech! :white_check_mark: Speech successfully set to ${speechInput}`)
     }
 
