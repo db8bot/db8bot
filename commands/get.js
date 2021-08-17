@@ -129,7 +129,8 @@ exports.run = async function (client, message, args) {
                 // Calling the end function will send the request
                 // console.log(res.text)
                 try {
-                    var found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
+                    // var found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
+                    var found = res.text.match(/src=\"(.*?)\" id = "pdf"/)
                 } catch {
                     found = null
                 }
@@ -156,7 +157,7 @@ exports.run = async function (client, message, args) {
                                 .set("Host", "sci-hub.se")
                                 // .proxy(config.proxy)
                                 .end((err, res) => {
-                                    found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
+                                    res.text.match(/src=\"(.*?)\"[^]([\s\S])([\s\S])([\s\S])([\s\S])([\s\S])id="pdf"/g)
                                     if (found === null) {
                                         if (res.text.includes('libgen')) { // libgen download
                                             var libgenSection = res.text.substring(res.text.indexOf('<td colspan=2>') + 14, res.text.indexOf('</a></b></td>'))
