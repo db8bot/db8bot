@@ -40,7 +40,7 @@ exports.run = async function (client, message, args) {
             .addField("**Example 2:**", `${config.prefix}get m https://www.bloomberg.com/news/articles/2021-06-13/a-meme-stock-is-born-how-to-spot-the-next-reddit-favorite`)
             .addField("**Expected Result From Example:**", "Bot will search sci-hub for the specified document. If it is found, it will return a PDF to the channel. If PDF is too large, the PDF link will be sent.")
             .addField("**Expected Result From Example 2:**", "Bot will return a PDF file that contians the unlocked content. This feature is in beta & may not always work on all media sites.")
-        message.channel.send({ embed: help })
+        message.channel.send({ embeds: [help] })
         return;
     }
 
@@ -157,7 +157,7 @@ exports.run = async function (client, message, args) {
                                 .set("Host", "sci-hub.se")
                                 // .proxy(config.proxy)
                                 .end((err, res) => {
-                                    res.text.match(/src=\"(.*?)\"[^]([\s\S])([\s\S])([\s\S])([\s\S])([\s\S])id="pdf"/g)
+                                    res.text.match(/src=\"(.*?)\" id = "pdf"/)
                                     if (found === null) {
                                         if (res.text.includes('libgen')) { // libgen download
                                             var libgenSection = res.text.substring(res.text.indexOf('<td colspan=2>') + 14, res.text.indexOf('</a></b></td>'))
