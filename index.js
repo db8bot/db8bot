@@ -41,8 +41,12 @@ if (versionSelector === 'dev') {
 // setup slash commands
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`)
-    if (Object.keys(client.config.serverSpecificCommandsMap).includes(file.replace('.js', ''))) {
-        serverSpecificCommands.push(command.data.toJSON())
+    if (versionSelector === 'dev') {
+        if (Object.keys(client.config.serverSpecificCommandsMap).includes(file.replace('.js', ''))) {
+            serverSpecificCommands.push(command.data.toJSON())
+        } else {
+            commands.push(command.data.toJSON())
+        }
     } else {
         commands.push(command.data.toJSON())
     }

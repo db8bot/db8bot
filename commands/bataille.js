@@ -11,6 +11,7 @@ module.exports = {
         .setName('bataille')
         .setDescription('Quote by Georges Bataille'),
     async execute(interaction) {
+        interaction.client.logger.log('info', `bataille command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
         const num = getRandomIntInclusive(1, quotes.length)
         translate(quotes[num].quote, { to: 'en' }).then(res => {
             const quoteSend = new Discord.MessageEmbed()
@@ -22,7 +23,5 @@ module.exports = {
         }).catch(err => {
             console.error(err)
         })
-
-        interaction.client.logger.log('info', `bataille command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
     }
 }

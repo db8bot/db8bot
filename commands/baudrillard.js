@@ -11,10 +11,11 @@ module.exports = {
         .setName('baudrillard')
         .setDescription('Quote by Jean Baudrillard'),
     async execute(interaction) {
+        interaction.client.logger.log('info', `baudrillard command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
         const num = getRandomIntInclusive(1, quotes.length)
         translate(quotes[num].quote, { to: 'en' }).then(res => {
             const quoteSend = new Discord.MessageEmbed()
-                .setColor('#f9d334')
+                .setColor('#ffff00')
                 .setTitle(`Quote by ${quotes[num].author}`)
                 .setDescription(`"${res.text}"\n-${quotes[num].author}`)
                 .setFooter('Disclaimer: This command is purely for satirical purposes. It does not represent the creator, the owner, or the user\'s views.')
@@ -22,7 +23,5 @@ module.exports = {
         }).catch(err => {
             console.error(err)
         })
-
-        interaction.client.logger.log('info', `baudrillard command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
     }
 }
