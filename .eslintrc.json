@@ -23,7 +23,7 @@
                 "asyncArrow": "always"
             }
         ],
-        "no-var": "warn",
+        "no-var": "off",
         "no-redeclare": "warn",
         "new-cap": "off",
         "no-unused-vars": "off",

@@ -1,0 +1,6 @@
+{"level":"info","message":"startround command used by AirFusion Time: Mon Sep 06 2021 17:37:29 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"startround command used by AirFusion Time: Mon Sep 06 2021 17:49:26 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"startround command used by AirFusion Time: Mon Sep 06 2021 17:49:47 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"debatehelp command used by AirFusion Time: Mon Sep 06 2021 17:50:50 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"startround command used by AirFusion Time: Mon Sep 06 2021 17:50:55 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"startround command used by AirFusion Time: Mon Sep 06 2021 17:51:28 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
