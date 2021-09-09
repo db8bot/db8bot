@@ -40,7 +40,7 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "@types/node": "^16.7.10",
+    "@types/node": "^16.9.0",
     "clockmaker": "^2.0.0",
     "goodreads-quote-scraper": "^1.0.4",
     "jssoup": "0.0.12"
