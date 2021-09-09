@@ -43,3 +43,8 @@
 {"level":"info","message":"invite command used by AirFusion Time: Wed Sep 08 2021 11:41:53 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
 {"level":"info","message":"invite command used by AirFusion Time: Wed Sep 08 2021 11:42:32 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
 {"level":"info","message":"jpow command used by AirFusion Time: Wed Sep 08 2021 13:12:10 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"judgeinfo command used by AirFusion Time: Thu Sep 09 2021 11:18:10 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"judgeinfo command used by AirFusion Time: Thu Sep 09 2021 11:24:30 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"judgeinfo command used by AirFusion Time: Thu Sep 09 2021 11:27:59 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"judgeinfo command used by AirFusion Time: Thu Sep 09 2021 11:30:20 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"bataille command used by AirFusion Time: Thu Sep 09 2021 12:09:05 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
