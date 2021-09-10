@@ -49,8 +49,8 @@ module.exports = {
         const database = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true })
         const guild = interaction.guild
         database.connect(async (err, dbClient) => {
-            const collection = dbClient.db('db8bot').collection('debateTracking')
             if (err) console.error(err)
+            const collection = dbClient.db('db8bot').collection('debateTracking')
             var collectionFind = await collection.find({ debateId: interaction.guildId + interaction.options.getString('name', true) }).toArray()
             console.log(collectionFind[0])
             if (collectionFind[0] !== undefined) {
