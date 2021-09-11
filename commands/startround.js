@@ -52,7 +52,6 @@ module.exports = {
             if (err) console.error(err)
             const collection = dbClient.db('db8bot').collection('debateTracking')
             var collectionFind = await collection.find({ debateId: interaction.guildId + interaction.options.getString('name', true) }).toArray()
-            console.log(collectionFind[0])
             if (collectionFind[0] !== undefined) {
                 interaction.reply('Choose a different name! Round name already exists.')
             } else {
@@ -69,7 +68,8 @@ module.exports = {
                         debater4: interaction.options.getUser('debater4', false),
                         judge: interaction.options.getUser('judge', true),
                         event: interaction.options.getString('event', true).trim(),
-                        name: interaction.options.getString('name', true).trim()
+                        name: interaction.options.getString('name', true).trim(),
+                        speech: ''
                     }
                     if (!debateConfig.debater3 || !debateConfig.debater4) { // ld
                         calculatedAff = [debateConfig.debater1]

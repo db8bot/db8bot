@@ -58,3 +58,13 @@
 {"level":"info","message":"startround command used by AirFusion Time: Fri Sep 10 2021 15:08:47 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
 {"level":"info","message":"roundstatus command used by AirFusion Time: Fri Sep 10 2021 15:08:51 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
 {"level":"info","message":"speeches command used by AirFusion Time: Fri Sep 10 2021 15:21:23 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Sat Sep 11 2021 00:48:41 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Sat Sep 11 2021 00:49:23 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Sat Sep 11 2021 00:49:27 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"setspeech command used by AirFusion Time: Sat Sep 11 2021 00:57:28 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"setspeech command used by AirFusion Time: Sat Sep 11 2021 01:20:40 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"roundstatus command used by AirFusion Time: Sat Sep 11 2021 01:21:26 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"setspeech command used by AirFusion Time: Sat Sep 11 2021 01:27:25 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"roundstatus command used by AirFusion Time: Sat Sep 11 2021 01:27:30 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"setspeech command used by AirFusion Time: Sat Sep 11 2021 01:27:42 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"roundstatus command used by AirFusion Time: Sat Sep 11 2021 01:27:47 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
