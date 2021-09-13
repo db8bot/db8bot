@@ -69,7 +69,8 @@ module.exports = {
                         judge: interaction.options.getUser('judge', true),
                         event: interaction.options.getString('event', true).trim(),
                         name: interaction.options.getString('name', true).trim(),
-                        speech: ''
+                        speech: '',
+                        decision: ''
                     }
                     if (!debateConfig.debater3 || !debateConfig.debater4) { // ld
                         calculatedAff = [debateConfig.debater1]

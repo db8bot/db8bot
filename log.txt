@@ -68,3 +68,5 @@
 {"level":"info","message":"roundstatus command used by AirFusion Time: Sat Sep 11 2021 01:27:30 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
 {"level":"info","message":"setspeech command used by AirFusion Time: Sat Sep 11 2021 01:27:42 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
 {"level":"info","message":"roundstatus command used by AirFusion Time: Sat Sep 11 2021 01:27:47 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"roundstatus command used by AirFusion Time: Sat Sep 11 2021 11:26:56 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"endround command used by AirFusion Time: Sat Sep 11 2021 11:27:14 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
