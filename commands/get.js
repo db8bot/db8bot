@@ -4,10 +4,14 @@ const cheerio = require('cheerio')
 // var scholar = require('google-scholar-link')
 const Discord = require('discord.js')
 const psl = require('psl')
-const fs = require('fs').promises
+const util = require('util'),
+    request = util.promisify(require('request')),
+    fs = require('fs'),
+    fsp = fs.promises;
+const IPFS = require('ipfs')
 // eslint-disable-next-line camelcase
 const child_process = require('child_process')
-const mediaDomains = require('../getFiles/mediaDomains.json')
+// const mediaDomains = require('../getFiles/mediaDomains.json')
 const mediaProfilesAllowCookies = require('../getFiles/mediaProfilesAllowCookies.json') // dont remove before page load - if not in the remove after page load, the cookie is kept
 const mediaProfilesRemoveCookies = require('../getFiles/mediaProfilesRemoveCookies.json') // remove after page load
 const mediaProfilesRemoveAllExcept = require('../getFiles/mediaProfilesRemoveAllExcept.json')
@@ -22,10 +26,8 @@ var uas = {
     google: 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
     bing: "'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)'"
 }
-function getRandomIntInclusive(min, max) {
-    min = Math.ceil(min)
-    max = Math.floor(max)
-    return Math.floor(Math.random() * (max - min + 1)) + min // The maximum is inclusive and the minimum is inclusive
+function getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min
 }
 module.exports = {
     data: new SlashCommandBuilder()
@@ -184,6 +186,84 @@ module.exports = {
                             interaction.reply($($($($('#download').children('ul')[0]).children('li')[0]).children('a')[0]).attr('href'))
                         })
                 })
+        } else if (flag === 'm') {
+            var url = link
+            var filename = './newsTempOutFiles/' + getRndInteger(999, 999999).toString() + interaction.channelId + 'x' + '.pdf'
+            var urlParsed = psl.parse(url.replace('https://', '').replace('http://', '').split('/')[0])
+            if (googleBotList.some(str => str.includes(urlParsed.domain))) {
+                var ua = uas.google
+            } else if (bingBotList.some(str => str.includes(urlParsed.domain))) {
+                var ua = uas.bing
+            } else {
+                var ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4538.0 Safari/537.36'
+            }
+            var options = { // flags
+                allowCookies: mediaProfilesAllowCookies.some(str => str.includes(urlParsed.domain)),
+                removeCookiesAfterLoad: mediaProfilesRemoveCookies.some(str => str.includes(urlParsed.domain)),
+                removeAllCookiesExcept: mediaProfilesRemoveAllExcept[urlParsed.domain],
+                removeCertainCookies: mediaProfilesRemove[urlParsed.domain],
+                bot: googleBotList.some(str => str.includes(urlParsed.domain)) ? 'google' : bingBotList.some(str => str.includes(urlParsed.domain)) ? 'bing' : '',
+                ua: ua,
+                amp: mediaProfilesAmp[urlParsed.domain],
+                blockedPageReqRegex: blockedPageReqRegexes[urlParsed.domain],
+                disableJS: mediaProfilesDisableJS.some(str => str.includes(urlParsed.domain)),
+                outline: useOutline.some(str => str.includes(urlParsed.domain))
+            }
+            console.log(options)
+            interaction.reply('Give it a second, it might be slow...')
+            // message.channel.send(`OPTIONS:\nallowCookies: ${options.allowCookies}\nremoveCookiesAfterLoad: ${options.removeCookiesAfterLoad}\nremoveAllCookiesExcept: ${options.removeAllCookiesExcept}\nremoveCertainCookies: ${options.removeCertainCookies}\nBot: ${options.bot}\nUseragent UA: ${options.ua}\nAMP?: ${options.amp}\nblockedPageReqRegex: \`${options.blockedPageReqRegex}\`\nGive it a second, it might be slow...`)
+
+            if (options.amp !== undefined && options.amp !== '') {
+                url = url.replace(urlParsed.domain, options.amp).replace('www.', '') // make sure we go to the amp site if it has the amp flag
+            }
+
+            const pdfChildProcess = child_process.fork('./childFiles/getPDFChild.js')
+            // console.log(new RegExp(options.blockedPageReqRegex))
+
+            pdfChildProcess.send({
+                link: url,
+                ua: ua,
+                reg: urlParsed.domain,
+                allowCookies: options.allowCookies,
+                removeCookiesAfterLoad: options.removeCookiesAfterLoad,
+                removeAllCookiesExcept: options.removeAllCookiesExcept,
+                removeCertainCookies: options.removeCertainCookies,
+                disableJS: options.disableJS,
+                filename: filename.toString(),
+                outline: options.outline
+            })
+            if (options.outline) {
+                pdfChildProcess.on('message', (outlineLink) => {
+                    interaction.channel.send(outlineLink)
+                })
+            } else {
+                pdfChildProcess.on('close', async (code) => {
+                    console.log(`exited with code ${code}`)
+                    await interaction.channel.send({ files: [filename] })
+                    // var streamData = []
+
+                    // const createWriteStream = () => {
+                    //     return stream.Writable({
+                    //         write(chunk, enc, next) {
+                    //             streamData.push(chunk)
+                    //             next()
+                    //         }
+                    //     })
+                    // }
+                    // const writeStream = createWriteStream()
+                    var readStream = fs.createReadStream(filename)
+                    const node = await IPFS.create()
+                    const results = node.add(readStream)
+                    for await (const { cid } of results) {
+                        console.log(cid.toString())
+                    }
+                    try {
+                        await fsp.rm(filename)
+                    } catch (e) {
+                        if (e) console.error(e)
+                    }
+                })
+            }
         }
     }
 }

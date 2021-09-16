@@ -82,3 +82,7 @@
 {"level":"info","message":"get command used by AirFusion Time: Tue Sep 14 2021 13:48:23 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
 {"level":"info","message":"get command used by AirFusion Time: Tue Sep 14 2021 13:49:33 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
 {"level":"info","message":"get command used by AirFusion Time: Tue Sep 14 2021 13:49:57 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"get command used by AirFusion Time: Thu Sep 16 2021 14:51:18 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"get command used by AirFusion Time: Thu Sep 16 2021 14:52:28 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"get command used by AirFusion Time: Thu Sep 16 2021 15:24:51 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
+{"level":"info","message":"get command used by AirFusion Time: Thu Sep 16 2021 15:29:29 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
