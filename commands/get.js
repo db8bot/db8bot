@@ -39,16 +39,15 @@ module.exports = {
                 .setRequired(false)
         )
         .addStringOption(option =>
-            option.setName('link')
-                .setDescription('link to the paper or news article')
+            option.setName('source')
+                .setDescription('link to the paper or news article or ISBN/book name to unlock')
                 .setRequired(false)
         ),
     async execute(interaction) {
         interaction.client.logger.log('info', `get command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
         const config = interaction.client.config
-        var scholarLink = ''
         const flag = interaction.options.getString('flags')
-        const link = interaction.options.getString('link')
+        const link = interaction.options.getString('source')
         if (flag !== 'm' && flag !== 'b') {
             superagent
                 .get(`https://sci-hub.se/${link}`)
@@ -141,7 +140,7 @@ module.exports = {
                                                                         .redirects(3)
                                                                         .end((err, resRecursiveScholarSearch) => {
                                                                             if (err) console.error(err)
-                                                                            var $ = cheerio.load(resRecursiveDoiSearch.text)
+                                                                            var $ = cheerio.load(resRecursiveScholarSearch.text)
                                                                             if ($($('#gs_res_ccl').children()[1]).children().length === 1) {
                                                                                 if ($($($('#gs_res_ccl').children()[1]).children('div')[0]).children().length >= 2) { // 2 means there is a pdf. the pdf link element is the 1st div
                                                                                     // var scholarPDFLink = $($($($($('#gs_res_ccl').children()[1]).children('div')[0]) // deployment, use [1] on the last element for dev
@@ -167,6 +166,23 @@ module.exports = {
                                 })
                         }
                     }
+                })
+        } else if (flag === 'b') { // search libgen
+            superagent
+                .get(`https://libgen.is/search.php?req=${encodeURIComponent(link)}&lg_topic=libgen&open=0&view=simple&res=25&phrase=1&column=def`)
+                .redirects(2)
+                .end((err, resLibgen) => {
+                    if (err) console.error(err)
+                    var $ = cheerio.load(resLibgen.text)
+                    var libLolLink = $($($($($('table').children()[2]).children('tr')[1]).children('td')[9]).children('a')[0]).attr('href')
+                    superagent
+                        .get(libLolLink)
+                        .redirects(2)
+                        .end((err, ipfsPortal) => {
+                            if (err) console.error(err)
+                            var $ = cheerio.load(ipfsPortal.text)
+                            interaction.reply($($($($('#download').children('ul')[0]).children('li')[0]).children('a')[0]).attr('href'))
+                        })
                 })
         }
     }
