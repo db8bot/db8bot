@@ -34,7 +34,7 @@
     "puppeteer-extra-plugin-stealth": "^2.7.8",
     "python-shell": "^3.0.0",
     "querystring": "^0.2.1",
-    "string-strip-html": "^8.3.0",
+    "string-strip-html": "^9.0.2",
     "superagent": "^6.1.0",
     "superagent-proxy": "^3.0.0",
     "winston": "^3.3.3"
