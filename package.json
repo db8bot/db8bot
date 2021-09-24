@@ -31,7 +31,7 @@
     "psl": "^1.8.0",
     "puppeteer": "^10.2.0",
     "puppeteer-extra": "^3.1.18",
-    "puppeteer-extra-plugin-stealth": "^2.7.8",
+    "puppeteer-extra-plugin-stealth": "^2.8.1",
     "python-shell": "^3.0.0",
     "querystring": "^0.2.1",
     "string-strip-html": "^8.3.0",
