@@ -8,6 +8,7 @@ module.exports = {
         .addStringOption(option =>
             option.setName('message')
                 .setDescription('Message for db8bot to say')
+                .setRequired(true)
         ),
     async execute(interaction) {
         interaction.client.logger.log('info', `say command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)

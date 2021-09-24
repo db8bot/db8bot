@@ -6,6 +6,9 @@ const { Routes } = require('discord-api-types/v9')
 const winston = require('winston')
 const fs = require('fs')
 const { exec } = require('child_process')
+const superagent = require('superagent')
+const PNG = require('pngjs').PNG
+const stream = require('stream')
 
 // Client Setup & Defaults Initialization
 const client = new Client({
@@ -147,14 +150,81 @@ client.on('messageCreate', message => {
     }
 
     // command & args
+    const prefix = message.content.split('')[0]
     const args = message.content.slice(config.prefix.length).trim().split(/ +/g)
     const command = args.shift().toLowerCase()
 
-    if (!message.content.startsWith(config.prefix) || message.author.bot) return
-    if (message.content.indexOf(config.prefix) !== 0) return
+    if ((!message.content.startsWith(config.prefix) && !message.content.startsWith('/')) || message.author.bot) return
+    if (message.content.indexOf(config.prefix) !== 0 && message.content.indexOf('/') !== 0) return
     // message.guild.commands.set([]) // reset server slash commands
-    if (command === 'pingsock') {
-        message.channel.send('pongSock')
+    if (prefix === '/') {
+        // if (command === 'pingsock') {
+        //     message.channel.send('pongSock')
+        // }
+        if (command === 'clean') {
+            client.logger.log('info', `clean command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
+            message.channel.messages.fetch({ limit: 1 }).then(chanmsg => {
+                if (chanmsg.last().content === `${client.config.prefix}clean` && chanmsg.last().attachments.first() === undefined) { // no image in current msg
+                    message.channel.messages.fetch({ limit: 2 }).then(chanmsg2 => { // check last message
+                        if (chanmsg2.last().attachments.first() !== undefined) {
+                            superagent.get(chanmsg2.last().attachments.first().url).pipe(
+                                new PNG({
+                                    colorType: 2,
+                                    bgColor: {
+                                        red: 255,
+                                        green: 255,
+                                        blue: 255
+                                    }
+                                })
+                            ).on('parsed', async function () {
+                                var sendDataArr = []
+                                const createWriteStream = () => {
+                                    return stream.Writable({
+                                        write(chunk, enc, next) {
+                                            sendDataArr.push(chunk)
+                                            next()
+                                        }
+                                    })
+                                }
+                                const writeStream = createWriteStream()
+                                this.pack().pipe(writeStream)
+                                writeStream.on('finish', () => {
+                                    message.channel.send({ files: [Buffer.concat(sendDataArr)] })
+                                })
+                            })
+                        }
+                    })
+                } else if (chanmsg.first().attachments.first() !== undefined) {
+                    superagent.get(chanmsg.first().attachments.first().url).pipe(
+                        new PNG({
+                            colorType: 2,
+                            bgColor: {
+                                red: 255,
+                                green: 255,
+                                blue: 255
+                            }
+                        })
+                    ).on('parsed', async function () {
+                        var sendDataArr = []
+                        const createWriteStream = () => {
+                            return stream.Writable({
+                                write(chunk, enc, next) {
+                                    sendDataArr.push(chunk)
+                                    next()
+                                }
+                            })
+                        }
+                        const writeStream = createWriteStream()
+                        this.pack().pipe(writeStream)
+                        writeStream.on('finish', () => {
+                            message.channel.send({ files: [Buffer.concat(sendDataArr)] })
+                        })
+                    })
+                }
+            })
+        }
+    } else if (prefix === '-') {
+        message.channel.send('use slash commands msg.')
     }
 })
 
