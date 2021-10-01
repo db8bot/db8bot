@@ -43,7 +43,7 @@
     "@types/node": "^16.7.10",
     "clockmaker": "^2.0.0",
     "goodreads-quote-scraper": "^1.0.4",
-    "jssoup": "0.0.12"
+    "jssoup": "0.0.13"
   },
   "type": "commonjs"
 }
