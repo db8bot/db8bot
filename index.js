@@ -1,5 +1,4 @@
 // Constant Definitions
-require('dotenv').config({ path: './dev.env' })
 const { Client, Intents, Collection, MessageEmbed, Permissions } = require('discord.js')
 const chalk = require('chalk')
 const { REST } = require('@discordjs/rest')
@@ -11,6 +10,8 @@ const superagent = require('superagent')
 const PNG = require('pngjs').PNG
 const stream = require('stream')
 const Long = require('long')
+const MongoClient = require('mongodb').MongoClient
+var serverSpecificSlashGlobal = []
 
 // Client Setup & Defaults Initialization
 const client = new Client({
@@ -26,69 +27,166 @@ const client = new Client({
         'CHANNEL'
     ]
 })
+
+var config = require('./configDev.json')
+client.config = require('./configDev.json')
+
 const commands = []
 const serverSpecificCommands = []
 client.commands = new Collection()
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
 
-const versionSelector = 'dev'
+// execution/launch settings
+const versionSelector = 'prod'
 const testServerGuildID = '689368206904655878'
-if (versionSelector === 'dev') {
-    // eslint-disable-next-line no-var
-    var config = require('./configDev.json')
-    client.config = require('./configDev.json')
-} else {
-    // eslint-disable-next-line no-var
-    var config = require('./config.json')
-    client.config = require('./config.json')
+
+if (versionSelector === 'prod') {
+    require('dotenv').config({ path: './prod.env' })
+
+    const database = new MongoClient(process.env.MONGOURI, { useNewUrlParser: true, useUnifiedTopology: true })
+    database.connect(async (err, dbClient) => {
+        if (err) console.error(err)
+        // const collection = dbClient.db('db8bot').collection('prodCommandConfig')
+
+        var serverSpecificSlashGlobal = await dbClient.db('db8bot').collection('prodCommandConfig').find().toArray()
+        serverSpecificSlashGlobal = serverSpecificSlashGlobal[0]
+        delete serverSpecificSlashGlobal._id
+        console.log(serverSpecificSlashGlobal)
+
+        // serverSpecificSlashGlobal.push(serverSpecificSlash)
+
+        for (const file of commandFiles) {
+            const command = require(`./commands/${file}`)
+            commands.push(command.data.toJSON())
+            if (Object.keys(serverSpecificSlashGlobal).includes(file.replace('.js', ''))) {
+                serverSpecificCommands.push(command.data.toJSON())
+            } else {
+                commands.push(command.data.toJSON())
+            }
+            client.commands.set(command.data.name, command)
+        }
+
+        const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
+        (async () => {
+            try {
+                console.log('Started refreshing application (/) commands.')
+
+
+                // for (var i = 0; i < serverSpecificCommands.length; i++) {
+                //     console.log(client.config.serverSpecificCommandsMap[serverSpecificCommands[i].name].length)
+                //     for (var j = 0; j < client.config.serverSpecificCommandsMap[serverSpecificCommands[i].name].length; j++) {
+                //         await rest.put(
+                //             Routes.applicationGuildCommands(process.env.BOTID, process.env.serverSpecificCommandsMap[serverSpecificCommands[i].name][j]),
+                //             { body: [serverSpecificCommands[i]] }
+                //         )
+                //     }
+                // }
+
+                for (var i = 0; i < serverSpecificCommands.length; i++) {
+                    for (var j = 0; j < serverSpecificSlashGlobal[Object.keys(serverSpecificSlashGlobal)[i]].length; j++) {
+                        await rest.put(
+                            Routes.applicationGuildCommands(process.env.BOTID, serverSpecificSlashGlobal[Object.keys(serverSpecificSlashGlobal)[i]][j]),
+                            { body: [serverSpecificCommands[i]] }
+                        )
+                    }
+                }
+
+                await rest.put(
+                    Routes.applicationCommands(process.env.BOTID),
+                    { body: commands }
+                )
+
+                console.log('Successfully reloaded application (/) commands.')
+            } catch (error) {
+                console.error(error)
+            }
+        })()
+    })
+} else if (versionSelector === 'dev') {
+    require('dotenv').config({ path: './dev.env' })
+    for (const file of commandFiles) {
+        const command = require(`./commands/${file}`)
+        commands.push(command.data.toJSON())
+        client.commands.set(command.data.name, command)
+    }
+
+    const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
+
+    (async () => {
+        try {
+            console.log('Started refreshing application (/) commands.')
+
+            await rest.put(
+                Routes.applicationGuildCommands(process.env.BOTID, testServerGuildID),
+                { body: commands }
+            )
+
+            console.log('Successfully reloaded application (/) commands.')
+        } catch (error) {
+            console.error(error)
+        }
+    })()
 }
+
+// serverSpecificSlashGlobal = serverSpecificSlashGlobal[0]
 
 // setup slash commands
-for (const file of commandFiles) {
-    const command = require(`./commands/${file}`)
-    if (versionSelector === 'dev') {
-        if (Object.keys(client.config.serverSpecificCommandsMap).includes(file.replace('.js', ''))) {
-            serverSpecificCommands.push(command.data.toJSON())
-        } else {
-            commands.push(command.data.toJSON())
-        }
-    } else {
-        commands.push(command.data.toJSON())
-    }
-    client.commands.set(command.data.name, command)
-}
+// for (const file of commandFiles) {
+//     const command = require(`./commands/${file}`)
+//     if (versionSelector === 'dev') {
 
-const rest = new REST({ version: '9' }).setToken(config.token);
+//         // add connection to dev config db if needed
+//     } else {
+//         if (Object.keys(serverSpecificSlashGlobal).includes(file.replace('.js', ''))) {
+//             serverSpecificCommands.push(command.data.toJSON())
+//         } else {
+//             commands.push(command.data.toJSON())
+//         }
+//     }
+//     client.commands.set(command.data.name, command)
+// }
 
-(async () => {
-    try {
-        console.log('Started refreshing application (/) commands.')
+// const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
 
-        if (versionSelector === 'dev') { // if dev use the test server id
-            await rest.put(
-                Routes.applicationGuildCommands(client.config.botid, testServerGuildID),
-                { body: commands }
-            )
-        } else {
-            for (var i = 0; i < serverSpecificCommands.length; i++) {
-                console.log(client.config.serverSpecificCommandsMap[serverSpecificCommands[i].name].length)
-                for (var j = 0; j < client.config.serverSpecificCommandsMap[serverSpecificCommands[i].name].length; j++) {
-                    await rest.put(
-                        Routes.applicationGuildCommands(client.config.botid, client.config.serverSpecificCommandsMap[serverSpecificCommands[i].name][j]),
-                        { body: [serverSpecificCommands[i]] }
-                    )
-                }
-            }
-            await rest.put(
-                Routes.applicationCommands(client.config.botid),
-                { body: commands }
-            )
-        }
-        console.log('Successfully reloaded application (/) commands.')
-    } catch (error) {
-        console.error(error)
-    }
-})()
+// (async () => {
+//     try {
+//         console.log('Started refreshing application (/) commands.')
+
+//         if (versionSelector === 'dev') { // if dev use the test server id
+//             await rest.put(
+//                 Routes.applicationGuildCommands(process.env.BOTID, testServerGuildID),
+//                 { body: commands }
+//             )
+//         } else {
+//             // for (var i = 0; i < serverSpecificCommands.length; i++) {
+//             //     console.log(client.config.serverSpecificCommandsMap[serverSpecificCommands[i].name].length)
+//             //     for (var j = 0; j < client.config.serverSpecificCommandsMap[serverSpecificCommands[i].name].length; j++) {
+//             //         await rest.put(
+//             //             Routes.applicationGuildCommands(process.env.BOTID, process.env.serverSpecificCommandsMap[serverSpecificCommands[i].name][j]),
+//             //             { body: [serverSpecificCommands[i]] }
+//             //         )
+//             //     }
+//             // }
+
+//             for (var i = 0; i < serverSpecificCommands.length; i++) {
+//                 for (var j = 0; j < serverSpecificSlashGlobal[Object.keys(serverSpecificSlashGlobal)[i]].length; j++) {
+//                     await rest.put(
+//                         Routes.applicationGuildCommands(process.env.BOTID, serverSpecificSlashGlobal[Object.keys(serverSpecificSlashGlobal)[i]][j]),
+//                         { body: [serverSpecificCommands[i]] }
+//                     )
+//                 }
+//             }
+
+//             await rest.put(
+//                 Routes.applicationCommands(process.env.BOTID),
+//                 { body: commands }
+//             )
+//         }
+//         console.log('Successfully reloaded application (/) commands.')
+//     } catch (error) {
+//         console.error(error)
+//     }
+// })()
 
 // setup logger
 client.logger = new winston.createLogger({
@@ -158,12 +256,12 @@ client.on('messageCreate', message => {
         var command = args.shift().toLowerCase()
     } else {
         var prefix = message.content.split('')[0]
-        var args = message.content.slice(config.prefix.length).trim().split(/ +/g)
+        var args = message.content.slice(process.env.PREFIX.length).trim().split(/ +/g)
         var command = args.shift().toLowerCase()
     }
 
-    if ((!message.content.startsWith(config.prefix) && !message.content.startsWith('/') && !message.content.startsWith(`<@!${client.config.botid}`)) || message.author.bot) return
-    if (message.content.indexOf(config.prefix) !== 0 && message.content.indexOf('/') !== 0 && message.content.indexOf(`<@!${client.config.botid}`) !== 0) return
+    if ((!message.content.startsWith(process.env.PREFIX) && !message.content.startsWith('/') && !message.content.startsWith(`<@!${process.env.BOTID}`)) || message.author.bot) return
+    if (message.content.indexOf(process.env.PREFIX) !== 0 && message.content.indexOf('/') !== 0 && message.content.indexOf(`<@!${process.env.BOTID}`) !== 0) return
 
     // message.guild.commands.set([]) // reset server slash commands
 

@@ -1,0 +1,1 @@
+{"level":"info","message":"ping command used by AirFusion Time: Tue Oct 19 2021 23:32:59 GMT-0700 (Pacific Daylight Time) Guild: db8bottest"}
