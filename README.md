@@ -54,7 +54,7 @@ Instead of self-hosting your own DB8Bot, you can invite the version hosted by *A
 
 **You must have the *Manage Server* or be the owner of the server in order to invite the bot.**
 
-[Invite DB8Bot](https://discordapp.com/oauth2/authorize?client_id=689368779305779204&scope=bot&permissions=2146958847)
+[Invite DB8Bot](https://discord.com/api/oauth2/authorize?client_id=689368779305779204&permissions=310647056497&scope=bot%20applications.commands)
 
 **Please do not modify any of the pre-selected permissions provided in the above link.**
 
