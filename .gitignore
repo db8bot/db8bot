@@ -3,37 +3,7 @@ node_modules/
 
 config.json
 
-Friedrich-Engels.json
-
-Karl-Marx.json
-
-Mao-Zedong.json
-
-scrape.js
-
-data/
-
-quotes copy.json
-
-quotes.json
-
-lib/
-
-Adam-Smith.json
-
-John-Maynard Keynes.json
-
-Mao-Tse-Tung.json
-
-Milton-Friedman.json
-
-Vladimir-Lenin.json
-
 breakbotIMG/
-
-Giorgio-Agamben.json
-
-Michel-Foucault.json
 
 imgCleanTempFiles/
 
@@ -44,4 +14,7 @@ commands/benmoshe_3.js
 bfg-1.14.0.jar
 
 configDev.json
+
 getFiles/
+
+*.env

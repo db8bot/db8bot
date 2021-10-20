@@ -1,4 +1,5 @@
 // Constant Definitions
+require('dotenv').config({ path: './dev.env' })
 const { Client, Intents, Collection, MessageEmbed, Permissions } = require('discord.js')
 const chalk = require('chalk')
 const { REST } = require('@discordjs/rest')

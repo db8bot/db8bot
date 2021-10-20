@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const superagent = require('superagent')
 const cheerio = require('cheerio')
-// var scholar = require('google-scholar-link')
 const Discord = require('discord.js')
 const psl = require('psl')
 const util = require('util')
