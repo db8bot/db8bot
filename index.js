@@ -57,7 +57,6 @@ if (versionSelector === 'prod') {
 
         for (const file of commandFiles) {
             const command = require(`./commands/${file}`)
-            commands.push(command.data.toJSON())
             if (Object.keys(serverSpecificSlashGlobal).includes(file.replace('.js', ''))) {
                 serverSpecificCommands.push(command.data.toJSON())
             } else {
@@ -67,18 +66,10 @@ if (versionSelector === 'prod') {
         }
 
         const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
+
         (async () => {
             try {
                 console.log('Started refreshing application (/) commands.')
-                // for (var i = 0; i < serverSpecificCommands.length; i++) {
-                //     console.log(client.config.serverSpecificCommandsMap[serverSpecificCommands[i].name].length)
-                //     for (var j = 0; j < client.config.serverSpecificCommandsMap[serverSpecificCommands[i].name].length; j++) {
-                //         await rest.put(
-                //             Routes.applicationGuildCommands(process.env.BOTID, process.env.serverSpecificCommandsMap[serverSpecificCommands[i].name][j]),
-                //             { body: [serverSpecificCommands[i]] }
-                //         )
-                //     }
-                // }
 
                 for (var i = 0; i < serverSpecificCommands.length; i++) {
                     for (var j = 0; j < serverSpecificSlashGlobal[Object.keys(serverSpecificSlashGlobal)[i]].length; j++) {
@@ -126,66 +117,6 @@ if (versionSelector === 'prod') {
     })()
 }
 
-// serverSpecificSlashGlobal = serverSpecificSlashGlobal[0]
-
-// setup slash commands
-// for (const file of commandFiles) {
-//     const command = require(`./commands/${file}`)
-//     if (versionSelector === 'dev') {
-
-//         // add connection to dev config db if needed
-//     } else {
-//         if (Object.keys(serverSpecificSlashGlobal).includes(file.replace('.js', ''))) {
-//             serverSpecificCommands.push(command.data.toJSON())
-//         } else {
-//             commands.push(command.data.toJSON())
-//         }
-//     }
-//     client.commands.set(command.data.name, command)
-// }
-
-// const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
-
-// (async () => {
-//     try {
-//         console.log('Started refreshing application (/) commands.')
-
-//         if (versionSelector === 'dev') { // if dev use the test server id
-//             await rest.put(
-//                 Routes.applicationGuildCommands(process.env.BOTID, testServerGuildID),
-//                 { body: commands }
-//             )
-//         } else {
-//             // for (var i = 0; i < serverSpecificCommands.length; i++) {
-//             //     console.log(client.config.serverSpecificCommandsMap[serverSpecificCommands[i].name].length)
-//             //     for (var j = 0; j < client.config.serverSpecificCommandsMap[serverSpecificCommands[i].name].length; j++) {
-//             //         await rest.put(
-//             //             Routes.applicationGuildCommands(process.env.BOTID, process.env.serverSpecificCommandsMap[serverSpecificCommands[i].name][j]),
-//             //             { body: [serverSpecificCommands[i]] }
-//             //         )
-//             //     }
-//             // }
-
-//             for (var i = 0; i < serverSpecificCommands.length; i++) {
-//                 for (var j = 0; j < serverSpecificSlashGlobal[Object.keys(serverSpecificSlashGlobal)[i]].length; j++) {
-//                     await rest.put(
-//                         Routes.applicationGuildCommands(process.env.BOTID, serverSpecificSlashGlobal[Object.keys(serverSpecificSlashGlobal)[i]][j]),
-//                         { body: [serverSpecificCommands[i]] }
-//                     )
-//                 }
-//             }
-
-//             await rest.put(
-//                 Routes.applicationCommands(process.env.BOTID),
-//                 { body: commands }
-//             )
-//         }
-//         console.log('Successfully reloaded application (/) commands.')
-//     } catch (error) {
-//         console.error(error)
-//     }
-// })()
-
 // setup logger
 client.logger = new winston.createLogger({
     transports: [
@@ -230,7 +161,7 @@ client.on('interactionCreate', async interaction => {
     }
 })
 
-client.on('messageCreate', async message => {
+client.on('messageCreate', message => {
     const doExec = (cmd, opts = {}) => { // -exec function
         return new Promise((resolve, reject) => {
             exec(cmd, opts, (err, stdout, stderr) => {
@@ -357,131 +288,72 @@ client.on('messageCreate', async message => {
                 .addField('Server id to name', 'cmd: idtoname <serverid>')
 
             message.channel.send({ embeds: [ownercmds] })
-        } else if (command === 'setgame') {
-            if (message.author.id === client.config.owner) {
-                if (['playing', 'streaming', 'listening', 'watching', 'competing'].includes(args[0].toLowerCase())) {
-                    args.shift()
-                    client.user.setActivity(args.join(' '), { type: args[0].toUpperCase() })
-                } else {
-                    client.user.setActivity(args.join(' '))
-                }
+        }
+    } else if (command === 'setgame') {
+        if (message.author.id === client.config.owner) {
+            if (['playing', 'streaming', 'listening', 'watching', 'competing'].includes(args[0].toLowerCase())) {
+                args.shift()
+                client.user.setActivity(args.join(' '), { type: args[0].toUpperCase() })
+            } else {
+                client.user.setActivity(args.join(' '))
             }
-        } else if (command === 'setstatus') {
-            if (message.author.id === client.config.owner) {
-                if (['online', 'idle', 'invisible', 'dnd'].includes(args.join(' ').toLowerCase())) {
-                    client.user.setStatus(args.join(' '))
-                } else {
-                    message.channel.send('invalid status')
-                }
+        }
+    } else if (command === 'setstatus') {
+        if (message.author.id === client.config.owner) {
+            if (['online', 'idle', 'invisible', 'dnd'].includes(args.join(' ').toLowerCase())) {
+                client.user.setStatus(args.join(' '))
+            } else {
+                message.channel.send('invalid status')
             }
-        } else if (command === 'getallserver') {
-            if (message.author.id === client.config.owner) {
-                var user = message.author
-                var serverNameStr = client.guilds.cache.map(e => e.toString()).join(', ')
-                while (serverNameStr.length > 1990) {
-                    user.send(serverNameStr.substring(0, 1990))
-                    serverNameStr = serverNameStr.replace(serverNameStr.substring(0, 1990), '')
-                }
-                user.send(serverNameStr)
+        }
+    } else if (command === 'getallserver') {
+        if (message.author.id === client.config.owner) {
+            var user = message.author
+            var serverNameStr = client.guilds.cache.map(e => e.toString()).join(', ')
+            while (serverNameStr.length > 1990) {
+                user.send(serverNameStr.substring(0, 1990))
+                serverNameStr = serverNameStr.replace(serverNameStr.substring(0, 1990), '')
             }
-        } else if (command === 'idtoname') {
-            if (message.author.id === client.config.owner) {
-                const getx = client.guilds.cache.find(server => server.id === args.join(' '))
-                message.author.send(getx.name)
+            user.send(serverNameStr)
+        }
+    } else if (command === 'idtoname') {
+        if (message.author.id === client.config.owner) {
+            const getx = client.guilds.cache.find(server => server.id === args.join(' '))
+            message.author.send(getx.name)
+        }
+    } else if (command === 'broadcast') {
+        if (command.author.id === client.config.owner) {
+            function getDefaultChannel(guild) {
+                if (guild.channels.cache.some(name1 => name1.name === 'general')) { return guild.channels.cache.find(name => name.name === 'general') }
+                // Now we get into the heavy stuff: first channel in order where the bot can speak
+                // hold on to your hats!
+                return guild.channels.cache
+                    .filter(c => c.type === 'GUILD_TEXT' &&
+                        c.permissionsFor(guild.client.user).has(Permissions.FLAGS.SEND_MESSAGES))
+                    .sort((a, b) => a.position - b.position ||
+                        Long.fromString(a.id).sub(Long.fromString(b.id)).toNumber())
+                    .first()
             }
-        } else if (command === 'broadcast') {
-            if (message.author.id === client.config.owner) {
-                function getDefaultChannel(guild) {
-                    if (guild.channels.cache.some(name1 => name1.name === 'general')) { return guild.channels.cache.find(name => name.name === 'general') }
-                    // Now we get into the heavy stuff: first channel in order where the bot can speak
-                    // hold on to your hats!
-                    return guild.channels.cache
-                        .filter(c => c.type === 'GUILD_TEXT' &&
-                            c.permissionsFor(guild.client.user).has(Permissions.FLAGS.SEND_MESSAGES))
-                        .sort((a, b) => a.position - b.position ||
-                            Long.fromString(a.id).sub(Long.fromString(b.id)).toNumber())
-                        .first()
-                }
-                client.guilds.cache.map(e => getDefaultChannel(e).send(args.join(' ')))
+            client.guilds.cache.map(e => getDefaultChannel(e).send(args.join(' ')))
+        }
+    } else if (command === 'sendmsgto') {
+        if (message.author.id === client.config.owner) {
+            function getDefaultChannel(guild) {
+                if (guild.channels.cache.some(name1 => name1.name === 'general')) { return guild.channels.cache.find(name => name.name === 'general') }
+                // Now we get into the heavy stuff: first channel in order where the bot can speak
+                // hold on to your hats!
+                return guild.channels.cache
+                    .filter(c => c.type === 'GUILD_TEXT' &&
+                        c.permissionsFor(guild.client.user).has(Permissions.FLAGS.SEND_MESSAGES))
+                    .sort((a, b) => a.position - b.position ||
+                        Long.fromString(a.id).sub(Long.fromString(b.id)).toNumber())
+                    .first()
             }
-        } else if (command === 'sendmsgto') {
-            if (message.author.id === client.config.owner) {
-                function getDefaultChannel(guild) {
-                    if (guild.channels.cache.some(name1 => name1.name === 'general')) { return guild.channels.cache.find(name => name.name === 'general') }
-                    // Now we get into the heavy stuff: first channel in order where the bot can speak
-                    // hold on to your hats!
-                    return guild.channels.cache
-                        .filter(c => c.type === 'GUILD_TEXT' &&
-                            c.permissionsFor(guild.client.user).has(Permissions.FLAGS.SEND_MESSAGES))
-                        .sort((a, b) => a.position - b.position ||
-                            Long.fromString(a.id).sub(Long.fromString(b.id)).toNumber())
-                        .first()
-                }
-                getDefaultChannel(client.guilds.cache.find(server => server.name === args[0])).send(args.slice(1).join(' '))
-                // getDefaultChannel((await client.guilds.fetch()).find(server => server.name === args[0])).send(args.slice(1).join(' '))
-            }
-        } else if (command === 'leaveserver') {
-            if (message.author.id === client.config.owner) {
-                var guild = client.guilds.cache.find(val => val.name === args.join(' ')).leave()
-            }
-        } else if (command === 'getlog') {
-            if (message.author.id === client.config.owner) {
-                var user = message.author
-                user.send({ files: ['log.txt'] })
-            }
-        } else if (command === 'restart') {
-            if (message.author.id === client.config.owner && args.join(' ') === '') {
-                message.channel.send(config.name + ' is restarting...')
-                message.reply(':white_check_mark: Restart should be complete, check -botinfo for confirmation.')
-
-                setTimeout(function () {
-                    process.abort()
-                }, 1000)
-            }
-        } else if (command === 'killall') {
-            client.users.cache.find(val1 => val1.id === config.owner).send(`KILLALL COMMAND HAS BEEN ACTIVATED | ID: ${message.author.id} | Tag: ${message.author.tag} | Server: ${message.guild} `)
-            if (message.author.id === client.config.owner) {
-                setTimeout(async function () {
-                    const command = `pm2 stop ${versionSelector}` // add exec cmd to credits NOTE: 0 = powerbot or default host of the code [add in readme that make sure process is in #0 if using pm2] 1 = signature
-                    const outMessage = await message.channel.send(`Running \`${command}\`...`)
-                    let stdOut = await doExec(command).catch(data => outputErr(outMessage, data))
-                    stdOut = stdOut.substring(0, 1750)
-                    outMessage.edit(`\`OUTPUT\`
-              \`\`\`sh
-              ${clean(stdOut)}
-              \`\`\``)
-                }, 3000)
-            }
-        } else if (command === 'exec') {
-            if (message.author.id === config.owner) {
-                const command = args.join(' ')
-                const outMessage = await message.channel.send(`Running \`${command}\`...`)
-                let stdOut = await doExec(command).catch(data => outputErr(outMessage, data))
-                stdOut = stdOut.substring(0, 1750).catch(err => console.log(err))
-                outMessage.edit(`\`OUTPUT\`
-          \`\`\`sh
-          ${clean(stdOut)}
-          \`\`\``)
-            }
-        } else if (command === 'eval') {
-            var x, y
-            if (message.author.id !== config.owner) return
-            x = Date.now()
-            try {
-                const code = args.join(' ')
-                // eslint-disable-next-line no-eval
-                let evaled = eval(code)
-
-                if (typeof evaled !== 'string') { evaled = require('util').inspect(evaled) }
-                y = Date.now()
-                message.channel.send(`:white_check_mark: Success! Time taken: \`${y - x}ms\``)
-                message.channel.send(clean(evaled), { code: 'xl' })
-                console.log(clean(evaled))
-            } catch (err) {
-                y = Date.now()
-                message.channel.send(`:x: Error! Time taken: \`${y - x}ms\``)
-                message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``)
-            }
+            getDefaultChannel(client.guilds.cache.find(server => server.name === args[0])).send(args.slice(1).join(' '))
+        }
+    } else if (command === 'leaveserver') {
+        if (message.author.id === config.owner) {
+            var guild = client.guilds.cache.find(val => val.name === args.join(' ')).leave()
         }
     }
 })

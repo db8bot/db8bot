@@ -18,3 +18,5 @@ configDev.json
 getFiles/
 
 *.env
+
+.DS_Store
