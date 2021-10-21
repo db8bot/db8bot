@@ -16,7 +16,7 @@ const client = new Discord.Client({
         'CHANNEL'
     ]
 });
-const versionSelector = 'prod'
+const versionSelector = 'dev'
 if (versionSelector == 'dev') {
     var config = require("./configDev.json");
     client.config = require("./configDev.json");
@@ -51,6 +51,7 @@ client.indexLogger = winston.createLogger({
 
 client.rounds = new Enmap({ name: "rounds" });
 client.optINOUT = new Enmap({ name: "optINOUT" });
+client.scopeUpdate = new Enmap({name: 'scopeUpdate'})
 
 client.on('error', console.error);
 

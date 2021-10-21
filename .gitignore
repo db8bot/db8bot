@@ -45,3 +45,5 @@ bfg-1.14.0.jar
 
 configDev.json
 getFiles/
+
+*.env
