@@ -16,7 +16,7 @@ const client = new Discord.Client({
         'CHANNEL'
     ]
 });
-const versionSelector = 'dev'
+const versionSelector = 'prod'
 if (versionSelector == 'dev') {
     var config = require("./configDev.json");
     client.config = require("./configDev.json");
