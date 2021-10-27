@@ -20,3 +20,5 @@ getFiles/
 *.env
 
 .DS_Store
+
+data/
