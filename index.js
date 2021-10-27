@@ -11,7 +11,6 @@ const PNG = require('pngjs').PNG
 const stream = require('stream')
 const Long = require('long')
 const MongoClient = require('mongodb').MongoClient
-var serverSpecificSlashGlobal = []
 
 // Client Setup & Defaults Initialization
 const client = new Client({
@@ -28,20 +27,22 @@ const client = new Client({
     ]
 })
 
-var config = require('./configDev.json')
-client.config = require('./configDev.json')
-
 const commands = []
 const serverSpecificCommands = []
 client.commands = new Collection()
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
 
 // execution/launch settings
-const versionSelector = 'prod'
+const versionSelector = 'dev'
 const testServerGuildID = '689368206904655878'
 
 if (versionSelector === 'prod') {
-    require('dotenv').config({ path: './prod.env' })
+    var config = require('dotenv').config({ path: './prod.env' })
+    if (config.error) {
+        process.exit(1)
+    }
+
+    client.config = config.parsed
 
     const database = new MongoClient(process.env.MONGOURI, { useNewUrlParser: true, useUnifiedTopology: true })
     database.connect(async (err, dbClient) => {
@@ -92,7 +93,12 @@ if (versionSelector === 'prod') {
         })()
     })
 } else if (versionSelector === 'dev') {
-    require('dotenv').config({ path: './dev.env' })
+    var config = require('dotenv').config({ path: './dev.env' })
+    if (config.error) {
+        process.exit(1)
+    }
+    client.config = config.parsed
+
     for (const file of commandFiles) {
         const command = require(`./commands/${file}`)
         commands.push(command.data.toJSON())
@@ -352,7 +358,7 @@ client.on('messageCreate', message => {
             getDefaultChannel(client.guilds.cache.find(server => server.name === args[0])).send(args.slice(1).join(' '))
         }
     } else if (command === 'leaveserver') {
-        if (message.author.id === config.owner) {
+        if (message.author.id === client.config.owner) {
             var guild = client.guilds.cache.find(val => val.name === args.join(' ')).leave()
         }
     }
@@ -368,4 +374,4 @@ client.on('warn', error => {
 client.on('error', (error) => {
     console.error(chalk.red(error.replace(token, 'HIDDEN')))
 })
-client.login(config.token)
+client.login(client.config.TOKEN)
