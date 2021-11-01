@@ -4,11 +4,12 @@ FROM node:16.13.0-alpine3.14
 
 ENV NODE_ENV=production
 
-WORKDIR /app
+WORKDIR /db8bot
 
-COPY ["package.json", "package-lock.json*", "./"]
+COPY package*.json ./
 
 RUN npm install --production
 
-CMD ["npm", "start"]
+COPY . .
 
+CMD ["npm", "start"]
