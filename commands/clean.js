@@ -75,7 +75,7 @@ exports.run = function (client, message, args) {
                     message.channel.send({ files: [Buffer.concat(sendDataArr)] })
                 })
             })
-        } else if (args[0].includes("https://cdn.discordapp.com/attachments") || args[0].includes("https://cdn.discord.com/attachments")) {
+        } else if (args[0].includes("https://cdn.discordapp.com/attachments") || args[0].includes("https://cdn.discord.com/attachments") || args[0].includes("https://media.discordapp.net/attachments")) {
 
             superagent.get(args[0]).pipe(
                 new PNG({
