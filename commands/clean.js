@@ -73,7 +73,7 @@ module.exports = {
                         interaction.reply({ files: [Buffer.concat(sendDataArr)] })
                     })
                 })
-            } else if (args.includes('https://cdn.discordapp.com/attachments') || args.includes('https://cdn.discord.com/attachments')) {
+            } else if (args.includes('https://cdn.discordapp.com/attachments') || args.includes('https://cdn.discord.com/attachments') || args.includes('https://media.discordapp.net/attachments')) {
                 superagent.get(args).pipe(
                     new PNG({
                         colorType: 2,
