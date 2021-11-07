@@ -16,9 +16,9 @@ module.exports = {
         const args = interaction.options.getString('message')
 
         interaction.client.options.disableMentions = 'all'
-        if (interaction.user.id !== config.owner) {
+        if (interaction.user.id !== config.OWNER) {
             interaction.reply(filter.clean(args) + `\n-${interaction.user.tag}`)
-        } else if (interaction.user.id === config.owner) {
+        } else if (interaction.user.id === config.OWNER) {
             interaction.client.options.disableMentions = 'none'
             interaction.reply(args)
         }

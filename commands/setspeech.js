@@ -19,7 +19,7 @@ module.exports = {
         interaction.client.logger.log('info', `setspeech command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
 
         const config = interaction.client.config
-        const uri = `mongodb+srv://${config.mongoUser}:${config.mongoPass}@db8botcluster.q3bif.mongodb.net/23bot?retryWrites=true&w=majority`
+        const uri = `mongodb+srv://${config.MONGOUSER}:${config.MONGOPASS}@db8botcluster.q3bif.mongodb.net/23bot?retryWrites=true&w=majority`
         const database = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true })
         database.connect(async (err, dbClient) => {
             if (err) console.error(err)

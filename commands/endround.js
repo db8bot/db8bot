@@ -19,7 +19,7 @@ module.exports = {
     async execute(interaction) {
         interaction.client.logger.log('info', `endround command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
         const config = interaction.client.config
-        const uri = `mongodb+srv://${config.mongoUser}:${config.mongoPass}@db8botcluster.q3bif.mongodb.net/23bot?retryWrites=true&w=majority`
+        const uri = `mongodb+srv://${config.MONGOUSER}:${config.MONGOPASS}@db8botcluster.q3bif.mongodb.net/23bot?retryWrites=true&w=majority`
         const database = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true })
         database.connect(async (err, dbClient) => {
             if (err) console.error(err)
@@ -38,7 +38,7 @@ module.exports = {
                     .addField('Aff', collectionFind[0].aff.map(user => `<@!${user.id}>`).join(' '))
                     .addField('Neg', collectionFind[0].neg.map(user => `<@!${user.id}>`).join(' '))
                     .addField('Decision', interaction.options.getString('decision'))
-                    .setFooter(config.name)
+                    .setFooter(config.NAME)
                     .setTimestamp()
                 interaction.reply({ embeds: [results] })
                 collectionFind[0].decision = interaction.options.getString('decision')

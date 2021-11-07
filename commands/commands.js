@@ -10,10 +10,10 @@ module.exports = {
         const embedNew = new Discord.MessageEmbed()
             .setColor('36393E') // change the color!
             .setTitle('DB8Bot Commands\n\n')
-            .setDescription(`**Prefix:** **${config.prefix}**`)
-            .setFooter(`${config.name} Commands`)
+            .setDescription(`**Prefix:** **${config.PREFIX}**`)
+            .setFooter(`${config.NAME} Commands`)
             .setTimestamp()
-            .setTitle(`Please use the prefix "${config.prefix}" in front of all commands!`)
+            .setTitle(`Please use the prefix "${config.PREFIX}" in front of all commands!`)
             .addField(':tools: **General**', 'commands, help, feedback, invite, ping, say, serverinv, clean', true)
             .addField(':hammer: **Moderation**', 'lockdown (lockdown unlock), mute & unmute(mute role required), purge', true)
             .addField(':information_source: **Information**', 'botinfo, serverinfo', true)

@@ -12,6 +12,6 @@ module.exports = {
         interaction.client.logger.log('info', `feedback command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
         const config = interaction.client.config
         interaction.reply({ content: 'Feedback received from Discord Chatbox! Thank you for your feedback!', ephemeral: true })
-        interaction.client.users.cache.find(val1 => val1.id === config.owner).send(`New feedback from ${interaction.user.tag} from server: ${interaction.guild.name}. Message/Feedback: ${interaction.options.getString('feedback')}`)
+        interaction.client.users.cache.find(val1 => val1.id === config.OWNER).send(`New feedback from ${interaction.user.tag} from server: ${interaction.guild.name}. Message/Feedback: ${interaction.options.getString('feedback')}`)
     }
 }

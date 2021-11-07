@@ -41,7 +41,7 @@ module.exports = {
             interaction.channel.permissionOverwrites.create(interaction.guild.id, {
                 SEND_MESSAGES: false
             }).then(() => {
-                interaction.channel.permissionOverwrites.create(client.config.botid, {
+                interaction.channel.permissionOverwrites.create(client.config.BOTID, {
                     SEND_MESSAGES: true
                 }).then(() => {
                     interaction.reply(`Channel locked down for ${ms(ms(time), { long: true })}`).then(() => {

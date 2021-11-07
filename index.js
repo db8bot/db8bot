@@ -203,7 +203,7 @@ client.on('messageCreate', async message => {
         if (command === 'clean') {
             client.logger.log('info', `clean command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
             message.channel.messages.fetch({ limit: 1 }).then(chanmsg => {
-                if (chanmsg.last().content === `${client.config.prefix}clean` && chanmsg.last().attachments.first() === undefined) { // no image in current msg
+                if (chanmsg.last().content === `${client.config.PREFIX}clean` && chanmsg.last().attachments.first() === undefined) { // no image in current msg
                     message.channel.messages.fetch({ limit: 2 }).then(chanmsg2 => { // check last message
                         if (chanmsg2.last().attachments.first() !== undefined) {
                             superagent.get(chanmsg2.last().attachments.first().url).pipe(
@@ -294,7 +294,7 @@ client.on('messageCreate', async message => {
 
             message.channel.send({ embeds: [ownercmds] })
         } else if (command === 'setgame') {
-            if (message.author.id === client.config.owner) {
+            if (message.author.id === client.config.OWNER) {
                 if (['playing', 'streaming', 'listening', 'watching', 'competing'].includes(args[0].toLowerCase())) {
                     args.shift()
                     client.user.setActivity(args.join(' '), { type: args[0].toUpperCase() })
@@ -303,7 +303,7 @@ client.on('messageCreate', async message => {
                 }
             }
         } else if (command === 'setstatus') {
-            if (message.author.id === client.config.owner) {
+            if (message.author.id === client.config.OWNER) {
                 if (['online', 'idle', 'invisible', 'dnd'].includes(args.join(' ').toLowerCase())) {
                     client.user.setStatus(args.join(' '))
                 } else {
@@ -321,12 +321,12 @@ client.on('messageCreate', async message => {
                 user.send(serverNameStr)
             }
         } else if (command === 'idtoname') {
-            if (message.author.id === client.config.owner) {
+            if (message.author.id === client.config.OWNER) {
                 const getx = client.guilds.cache.find(server => server.id === args.join(' '))
                 message.author.send(getx.name)
             }
         } else if (command === 'broadcast') {
-            if (command.author.id === client.config.owner) {
+            if (command.author.id === client.config.OWNER) {
                 function getDefaultChannel(guild) {
                     if (guild.channels.cache.some(name1 => name1.name === 'general')) { return guild.channels.cache.find(name => name.name === 'general') }
                     // Now we get into the heavy stuff: first channel in order where the bot can speak
@@ -341,7 +341,7 @@ client.on('messageCreate', async message => {
                 client.guilds.cache.map(e => getDefaultChannel(e).send(args.join(' ')))
             }
         } else if (command === 'sendmsgto') {
-            if (message.author.id === client.config.owner) {
+            if (message.author.id === client.config.OWNER) {
                 function getDefaultChannel(guild) {
                     if (guild.channels.cache.some(name1 => name1.name === 'general')) { return guild.channels.cache.find(name => name.name === 'general') }
                     // Now we get into the heavy stuff: first channel in order where the bot can speak
@@ -356,15 +356,15 @@ client.on('messageCreate', async message => {
                 getDefaultChannel(client.guilds.cache.find(server => server.name === args[0])).send(args.slice(1).join(' '))
             }
         } else if (command === 'leaveserver') {
-            if (message.author.id === client.config.owner) {
+            if (message.author.id === client.config.OWNER) {
                 var guild = client.guilds.cache.find(val => val.name === args.join(' ')).leave()
             }
         } else if (command === 'getlog') {
-            if (message.author.id === client.config.owner) {
+            if (message.author.id === client.config.OWNER) {
                 message.author.send({ files: ['log.txt'] })
             }
         } else if (command === 'killall') {
-            if (message.author.id === client.config.owner) {
+            if (message.author.id === client.config.OWNER) {
                 setTimeout(async function () {
                     const command = `pm2 stop ${versionSelector}` // add exec cmd to credits NOTE: 0 = powerbot or default host of the code [add in readme that make sure process is in #0 if using pm2] 1 = signature
                     const outMessage = await message.channel.send(`Running \`${command}\`...`)
@@ -377,7 +377,7 @@ client.on('messageCreate', async message => {
                 }, 3000)
             }
         } else if (command === 'restart') {
-            if (message.author.id === client.config.owner) {
+            if (message.author.id === client.config.OWNER) {
                 if (args.join(' ') === 'f') {
                     process.abort()
                 } else {
@@ -385,7 +385,7 @@ client.on('messageCreate', async message => {
                 }
             }
         } else if (command === 'exec') {
-            if (message.author.id === client.config.owner) {
+            if (message.author.id === client.config.OWNER) {
                 const command = args.join(' ')
                 const outMessage = await message.channel.send(`Running \`${command}\`...`)
                 let stdOut = await doExec(command).catch(data => outputErr(outMessage, data))
@@ -396,9 +396,9 @@ client.on('messageCreate', async message => {
               \`\`\``)
             }
         } else if (command === 'eval') {
-            if (message.author.id === client.config.owner) {
+            if (message.author.id === client.config.OWNER) {
                 var x, y
-                if (message.author.id !== config.owner) return
+                if (message.author.id !== client.config.OWNER) return
                 x = Date.now()
                 try {
                     const code = args.join(' ')
@@ -417,7 +417,7 @@ client.on('messageCreate', async message => {
                 }
             }
         } else if (command === 'spyon') {
-            if (message.author.id === client.config.owner) {
+            if (message.author.id === client.config.OWNER) {
                 function getDefaultChannel(guild) {
                     if (guild.channels.cache.some(name1 => name1.name === 'general')) { return guild.channels.cache.find(name => name.name === 'general') }
                     // Now we get into the heavy stuff: first channel in order where the bot can speak

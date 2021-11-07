@@ -10,8 +10,8 @@ module.exports = {
         const embed = new Discord.MessageEmbed()
             .setColor('#00ffff')
             .setTimestamp()
-            .setFooter(`Invite Link for ${interaction.client.config.name}`)
-            .addField('Invite link:', `[Here](${interaction.client.config.invLink}) | Thanks for inviting ${interaction.client.config.name}!`)
+            .setFooter(`Invite Link for ${interaction.client.config.NAME}`)
+            .addField('Invite link:', `[Here](${interaction.client.config.INVLINK}) | Thanks for inviting ${interaction.client.config.NAME}!`)
         interaction.reply({ embeds: [embed] })
     }
 }

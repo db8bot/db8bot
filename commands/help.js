@@ -26,7 +26,7 @@ module.exports = {
             .addField('Bot Status', 'The bot has a status page [here](https://airfusion.statuspage.io/). Please check this page first if a function isn\'t working. We might already be patching it!')
             .addField('Support Server:', 'Come [here](https://discord.gg/rEQc7C7) to get help or just hang out.')
             .addField('Bot Invite Link', 'Use `/invite` for the bot\'s invite link, or click [here](https://discordapp.com/oauth2/authorize?client_id=689368779305779204&scope=bot&permissions=2146958847)')
-            .setFooter(`Made by ${config.ownerTag}`)
+            .setFooter(`Made by ${config.OWNERTAG}`)
             .setTimestamp()
 
         interaction.reply({ embeds: [embed] })

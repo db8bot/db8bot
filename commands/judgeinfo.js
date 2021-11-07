@@ -18,7 +18,7 @@ module.exports = {
         superagent
             .post('https://debateapis.wm.r.appspot.com/paradigm')
             .set('Content-Type', 'application/x-www-form-urlencoded')
-            .send(JSON.parse(`{"apiauth": "${config.tabAPIKey}", "type":"name", "first":"${args[0]}", "last":"${args[1]}", "short":"${true}"}`))
+            .send(JSON.parse(`{"apiauth": "${config.TABAPIKEY}", "type":"name", "first":"${args[0]}", "last":"${args[1]}", "short":"${true}"}`))
             .end((err, res) => {
                 if (err) console.error(err)
                 if (res.statusCode === 204) {
