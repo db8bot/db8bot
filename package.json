@@ -44,6 +44,8 @@
     "psl": "^1.8.0",
     "puppeteer": "^10.2.0",
     "superagent": "^6.1.0",
+    "universal-analytics": "^0.4.23",
+    "uuid": "^3.4.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {

@@ -11,6 +11,7 @@ const PNG = require('pngjs').PNG
 const stream = require('stream')
 const Long = require('long')
 const MongoClient = require('mongodb').MongoClient
+// const ua = require('universal-analytics')
 
 // Client Setup & Defaults Initialization
 const client = new Client({
@@ -137,6 +138,9 @@ client.indexLogger = winston.createLogger({
     ]
 })
 
+// new logger
+// client.logger = ua('UA-212467928-1', { http: true })
+
 // helper functions
 function clean(text) {
     if (typeof (text) === 'string') { return text.replace(/`/g, '`' + String.fromCharCode(8203)).replace(/@/g, '@' + String.fromCharCode(8203)) } else { return text }
@@ -201,7 +205,6 @@ client.on('messageCreate', async message => {
 
     if (prefix === '/') {
         if (command === 'clean') {
-            client.logger.log('info', `clean command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
             message.channel.messages.fetch({ limit: 1 }).then(chanmsg => {
                 if (chanmsg.last().content === `${client.config.PREFIX}clean` && chanmsg.last().attachments.first() === undefined) { // no image in current msg
                     message.channel.messages.fetch({ limit: 2 }).then(chanmsg2 => { // check last message

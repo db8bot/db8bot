@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
+const { v4: uuidv4 } = require('uuid')
 
 module.exports = {
     data: new SlashCommandBuilder()
