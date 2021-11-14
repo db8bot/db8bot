@@ -11,7 +11,7 @@ const PNG = require('pngjs').PNG
 const stream = require('stream')
 const Long = require('long')
 const MongoClient = require('mongodb').MongoClient
-// const ua = require('universal-analytics')
+const ua = require('universal-analytics')
 
 // Client Setup & Defaults Initialization
 const client = new Client({
@@ -140,6 +140,7 @@ client.indexLogger = winston.createLogger({
 
 // new logger
 // client.logger = ua('UA-212467928-1', { http: true })
+var visitor = ua('UA-212467928-1', { http: true })
 
 // helper functions
 function clean(text) {
@@ -274,6 +275,14 @@ client.on('messageCreate', async message => {
     } else if (prefix === `<@!${client.config.BOTID}>`) {
         if (command === 'test') {
             message.channel.send('ping')
+            visitor.pageview({
+                v: '4',
+                uid: 'AirFusion', // user of cmd
+                dp: '/ping',
+                dt: 'ping',
+                ds: 'testserver'
+            }).send()
+            // visitor.pageview('/ping').send()
         } else if (command === 'ownerhelp') {
             const ownercmds = new MessageEmbed()
                 .setColor('#ffd700')
