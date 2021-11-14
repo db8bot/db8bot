@@ -64,7 +64,7 @@ db8bot depends on several custom 3rd party solutions. Therefore we do not recomm
 
   5. `npm install`
 
-  6. `docker build / -t db8bot`
+  6. `docker build . -t db8bot`
 
 ## Contributors
 
