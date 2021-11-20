@@ -138,9 +138,9 @@ client.indexLogger = winston.createLogger({
     ]
 })
 
-// new logger
+// setup telemetry
 client.telemetry = ua('UA-212467928-1', { strictCidFormat: false })
-// var visitor = ua('UA-212467928-1', { http: true })
+client.pkg = require('./package.json')
 
 // helper functions
 function clean(text) {
