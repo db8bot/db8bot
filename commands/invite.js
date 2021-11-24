@@ -6,7 +6,7 @@ module.exports = {
         .setName('invite')
         .setDescription('Invite Link for db8bot'),
     async execute(interaction) {
-        interaction.client.logger.log('info', `invite command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
+        require('../telemetry').telemetry(__filename, interaction)
         const embed = new Discord.MessageEmbed()
             .setColor('#00ffff')
             .setTimestamp()

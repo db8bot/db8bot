@@ -15,7 +15,7 @@ module.exports = {
                 .setRequired(true)
         ),
     async execute(interaction) {
-        interaction.client.logger.log('info', `mute command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
+        require('../telemetry').telemetry(__filename, interaction)
         var user = interaction.options.getUser('user')
         var reason = interaction.options.getString('reason')
         const muteRole = interaction.guild.roles.cache.find(val => val.name === 'Mute')

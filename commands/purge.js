@@ -10,7 +10,7 @@ module.exports = {
                 .setRequired(true)
         ),
     async execute(interaction) {
-        interaction.client.logger.log('info', `purge command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
+        require('../telemetry').telemetry(__filename, interaction)
         const config = interaction.client.config
         const args = interaction.options.getInteger('messages')
         if (interaction.guild.members.cache.get(interaction.user.id).permissions.has(Discord.Permissions.FLAGS.MANAGE_MESSAGES) || interaction.guild.members.cache.get(interaction.user.id).permissions.has(Discord.Permissions.FLAGS.ADMINISTRATOR) || interaction.user.id === config.OWNER || interaction.user.id === '688926801824841783') {

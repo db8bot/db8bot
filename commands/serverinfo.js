@@ -5,7 +5,7 @@ module.exports = {
         .setName('serverinfo')
         .setDescription('information about the current server'),
     async execute(interaction) {
-        interaction.client.logger.log('info', `serverinfo command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
+        require('../telemetry').telemetry(__filename, interaction)
         const embed = new Discord.MessageEmbed()
             .setColor('36393E')
             .setTitle(interaction.guild.name + ' Server Stats')

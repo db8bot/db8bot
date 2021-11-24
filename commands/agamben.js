@@ -11,14 +11,7 @@ module.exports = {
         .setName('agamben')
         .setDescription('Quote by Giorgio Agamben'),
     async execute(interaction) {
-        interaction.client.logger.log('info', `agamben command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
-        interaction.client.telemetry.pageview({
-            v: interaction.client.pkg.version.replace(/\./g, '').trim(),
-            uid: interaction.user.username,
-            dp: `/${require('path').basename(__filename, '.js')}`,
-            dt: require('path').basename(__filename, '.js'),
-            dr: `https://${interaction.guild.name}`
-        }).send()
+        require('../telemetry').telemetry(__filename, interaction)
         const num = getRandomIntInclusive(1, quotes.length)
         translate(quotes[num].quote, { to: 'en' }).then(res => {
             const quoteSend = new Discord.MessageEmbed()

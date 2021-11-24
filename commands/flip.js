@@ -5,7 +5,7 @@ module.exports = {
         .setName('flip')
         .setDescription('Flip a Coin - Useful for PF'),
     async execute(interaction) {
-        interaction.client.logger.log('info', `flip command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
+        require('../telemetry').telemetry(__filename, interaction)
         interaction.reply((Math.floor(Math.random() * 2) === 0) ? 'heads' : 'tails')
     }
 }

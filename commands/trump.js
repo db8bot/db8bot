@@ -9,7 +9,7 @@ module.exports = {
         .setName('trump')
         .setDescription('Quote by Donald Trump'),
     async execute(interaction) {
-        interaction.client.logger.log('info', `trump command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
+        require('../telemetry').telemetry(__filename, interaction)
         if (getRandomIntInclusive(0, 1) === 1) {
             superagent
                 .get('https://api.whatdoestrumpthink.com/api/v1/quotes/random')

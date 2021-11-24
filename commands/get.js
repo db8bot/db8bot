@@ -45,7 +45,7 @@ module.exports = {
                 .setRequired(false)
         ),
     async execute(interaction) {
-        interaction.client.logger.log('info', `get command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
+        require('../telemetry').telemetry(__filename, interaction)
         const config = interaction.client.config
         const uri = `mongodb+srv://${config.MONGOUSER}:${config.MONGOPASS}@db8botcluster.q3bif.mongodb.net/23bot?retryWrites=true&w=majority`
         const database = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true })

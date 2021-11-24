@@ -11,7 +11,7 @@ module.exports = {
         .setName('foucault')
         .setDescription('Quote by Michel Foucault'),
     async execute(interaction) {
-        interaction.client.logger.log('info', `agamben command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
+        require('../telemetry').telemetry(__filename, interaction)
         const num = getRandomIntInclusive(1, quotes.length)
         translate(quotes[num].quote, { to: 'en' }).then(res => {
             const quoteSend = new Discord.MessageEmbed()

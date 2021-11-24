@@ -1,4 +1,4 @@
-const chalk = require('chalk');
+const chalk = require('chalk')
 module.exports = () => {
-    console.log(chalk.bold("You have been disconnected @ " + Date()));
+    console.log(chalk.bold('You have been disconnected @ ' + Date()))
 }

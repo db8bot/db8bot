@@ -9,7 +9,7 @@ module.exports = {
         .setName('help')
         .setDescription('Displays Bot Help Page'),
     async execute(interaction) {
-        interaction.client.logger.log('info', `help command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
+        require('../telemetry').telemetry(__filename, interaction)
         const config = interaction.client.config
         var select = getRandomIntInclusive(1, 3)
         const embed = new Discord.MessageEmbed()

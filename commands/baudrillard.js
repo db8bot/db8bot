@@ -11,7 +11,7 @@ module.exports = {
         .setName('baudrillard')
         .setDescription('Quote by Jean Baudrillard'),
     async execute(interaction) {
-        interaction.client.logger.log('info', `baudrillard command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
+        require('../telemetry').telemetry(__filename, interaction)
         const num = getRandomIntInclusive(1, quotes.length)
         translate(quotes[num].quote, { to: 'en' }).then(res => {
             const quoteSend = new Discord.MessageEmbed()

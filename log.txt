@@ -41,3 +41,27 @@
 {"level":"info","message":"ping command used by AirFusion Time: Tue Nov 23 2021 12:17:19 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
 {"level":"info","message":"ping command used by AirFusion Time: Tue Nov 23 2021 12:37:16 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
 {"level":"info","message":"ping command used by AirFusion Time: Tue Nov 23 2021 13:05:25 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Tue Nov 23 2021 18:08:11 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Tue Nov 23 2021 18:16:21 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Tue Nov 23 2021 18:17:05 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Tue Nov 23 2021 18:17:37 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Tue Nov 23 2021 18:17:59 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Tue Nov 23 2021 19:47:48 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Tue Nov 23 2021 19:55:07 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"telemetry command used by AirFusion Time: Tue Nov 23 2021 19:59:28 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Tue Nov 23 2021 20:00:02 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Tue Nov 23 2021 20:02:04 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by AirFusion Time: Tue Nov 23 2021 20:57:17 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"Left/Kicked from guild db8bottest Size: 6 Date: Tue Nov 23 2021 21:13:16 GMT-0800 (Pacific Standard Time)"}
+{"level":"info","message":"Joined guild db8bottest Size: 6 Date: Tue Nov 23 2021 21:18:05 GMT-0800 (Pacific Standard Time)"}
+{"level":"info","message":"Left/Kicked from guild db8bottest Size: 6 Date: Tue Nov 23 2021 21:21:20 GMT-0800 (Pacific Standard Time)"}
+{"level":"info","message":"Joined guild db8bottest Size: 6 Date: Tue Nov 23 2021 21:21:46 GMT-0800 (Pacific Standard Time)"}
+{"level":"info","message":"Left/Kicked from guild db8bottest Size: 6 Date: Tue Nov 23 2021 21:57:40 GMT-0800 (Pacific Standard Time)"}
+{"level":"info","message":"Joined guild db8bottest Size: 6 Date: Tue Nov 23 2021 21:57:58 GMT-0800 (Pacific Standard Time)"}
+{"level":"info","message":"Left/Kicked from guild db8bottest2slash Size: 3 Date: Tue Nov 23 2021 22:17:25 GMT-0800 (Pacific Standard Time)"}
+{"level":"info","message":"Joined guild db8bottest2slash Size: 3 Date: Tue Nov 23 2021 22:17:50 GMT-0800 (Pacific Standard Time)"}
+{"level":"info","message":"Left/Kicked from guild db8bottest2slash1 Size: 3 Date: Tue Nov 23 2021 22:23:31 GMT-0800 (Pacific Standard Time)"}
+{"level":"info","message":"Joined guild db8bottest2slash1 Size: 3 Date: Tue Nov 23 2021 22:23:48 GMT-0800 (Pacific Standard Time)"}
+{"level":"info","message":"Left/Kicked from guild db8bottest2slash1 Size: 3 Date: Tue Nov 23 2021 22:24:11 GMT-0800 (Pacific Standard Time)"}
+{"level":"info","message":"Joined guild db8bottest2slash1 Size: 3 Date: Tue Nov 23 2021 22:24:27 GMT-0800 (Pacific Standard Time)"}
+{"level":"info","message":"Left/Kicked from guild db8bottest2slash1 Size: 3 Date: Tue Nov 23 2021 22:35:24 GMT-0800 (Pacific Standard Time)"}

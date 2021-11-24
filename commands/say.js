@@ -11,7 +11,7 @@ module.exports = {
                 .setRequired(true)
         ),
     async execute(interaction) {
-        interaction.client.logger.log('info', `say command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
+        require('../telemetry').telemetry(__filename, interaction)
         const config = interaction.client.config
         const args = interaction.options.getString('message')
 
