@@ -32,3 +32,12 @@
 {"level":"info","message":"ping command used by AirFusion Time: Thu Nov 18 2021 11:47:45 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
 {"level":"info","message":"ping command used by AirFusion Time: Thu Nov 18 2021 12:47:17 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
 {"level":"info","message":"ping command used by AirFusion Time: Thu Nov 18 2021 15:31:57 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Mon Nov 22 2021 15:03:26 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Mon Nov 22 2021 15:04:43 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Mon Nov 22 2021 15:06:02 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Mon Nov 22 2021 15:07:36 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Tue Nov 23 2021 08:02:42 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Tue Nov 23 2021 08:10:22 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Tue Nov 23 2021 12:17:19 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Tue Nov 23 2021 12:37:16 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"ping command used by AirFusion Time: Tue Nov 23 2021 13:05:25 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
