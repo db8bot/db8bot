@@ -31,10 +31,10 @@ function getRndInteger(min, max) {
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('get')
-        .setDescription('unlock research & news paywalls')
+        .setDescription('unlock research, news & book paywalls')
         .addStringOption(option =>
             option.setName('flags')
-                .setDescription('optional flags for the command. use m for news/media paywalls')
+                .setDescription('optional flags for the command. use m for news/media paywalls, use b for books')
                 .addChoice('media', 'm')
                 .addChoice('book', 'b')
                 .setRequired(false)
@@ -47,11 +47,10 @@ module.exports = {
     async execute(interaction) {
         require('../telemetry').telemetry(__filename, interaction)
         const config = interaction.client.config
-        const uri = `mongodb+srv://${config.MONGOUSER}:${config.MONGOPASS}@db8botcluster.q3bif.mongodb.net/23bot?retryWrites=true&w=majority`
-        const database = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+        const database = new MongoClient(config.MONGOURI, { useNewUrlParser: true, useUnifiedTopology: true })
         const flag = interaction.options.getString('flags')
         const link = interaction.options.getString('source')
-        if (flag !== 'm' && flag !== 'b') {
+        if (flag !== 'm' && flag !== 'b') { // not media or books - regular get for papers
             superagent
                 .get(`https://sci-hub.se/${link}`)
                 // .get(`https://sci-hub.se/https://www.doi.org/10.2307/1342499/`)
@@ -70,7 +69,7 @@ module.exports = {
                     } catch (err) {
                         foundSciHubLink = null
                     }
-                    if (foundSciHubLink != null) {
+                    if (foundSciHubLink != null) { // there is a scihub pdf - send it!
                         if (foundSciHubLink[1].indexOf('https') === -1) {
                             foundSciHubLink[1] = 'https:' + foundSciHubLink[1]
                         }
@@ -82,7 +81,7 @@ module.exports = {
                         } catch (e) {
                             console.error(e)
                         }
-                    } else {
+                    } else { // if scihub pdf doesnt exist
                         // check if scihub is libgen page
                         if (res.text.includes('libgen')) { // libgen page
                             var libgenSection = res.text.substring(res.text.indexOf('<td colspan=2>') + 14, res.text.indexOf('</a></b></td>'))
@@ -170,7 +169,7 @@ module.exports = {
                         }
                     }
                 })
-        } else if (flag === 'b') { // search libgen
+        } else if (flag === 'b' || /^(?:ISBN(?:-1[03])?:?●)?(?=[0-9X]{10}$|(?=(?:[0-9]+[-●]){3})[-●0-9X]{13}$|97[89][0-9]{10}$|(?=(?:[0-9]+[-●]){4})[-●0-9]{17}$)(?:97[89][-●]?)?[0-9]{1,5}[-●]?[0-9]+[-●]?[0-9]+[-●]?[0-9X]$/gm.test(link)) { // search libgen (triggered by b flag or ISBN regex test)
             superagent
                 .get(`https://libgen.is/search.php?req=${encodeURIComponent(link)}&lg_topic=libgen&open=0&view=simple&res=25&phrase=1&column=def`)
                 .redirects(2)

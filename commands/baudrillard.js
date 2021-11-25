@@ -1,7 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const quotes = require('../quoteFiles/quotesBaudrillard.json')
-// const translate = require('@vitalets/google-translate-api') - remove from other quote files, install as dev dep
-// const Discord = require('discord.js')
 
 module.exports = {
     data: new SlashCommandBuilder()

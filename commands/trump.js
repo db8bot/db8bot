@@ -10,6 +10,7 @@ module.exports = {
         .setDescription('Quote by Donald Trump'),
     async execute(interaction) {
         require('../telemetry').telemetry(__filename, interaction)
+        console.time('trump')
         if (getRandomIntInclusive(0, 1) === 1) {
             superagent
                 .get('https://api.whatdoestrumpthink.com/api/v1/quotes/random')

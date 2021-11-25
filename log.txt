@@ -149,3 +149,8 @@
 {"level":"info","message":"foucault command used by AirFusion Time: Thu Nov 25 2021 01:56:56 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
 {"level":"info","message":"foucault command used by AirFusion Time: Thu Nov 25 2021 01:57:00 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
 {"level":"info","message":"foucault command used by AirFusion Time: Thu Nov 25 2021 01:57:03 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"trump command used by AirFusion Time: Thu Nov 25 2021 11:23:44 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"trump command used by AirFusion Time: Thu Nov 25 2021 11:23:47 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"trump command used by AirFusion Time: Thu Nov 25 2021 11:24:15 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"trump command used by AirFusion Time: Thu Nov 25 2021 11:24:18 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"trump command used by AirFusion Time: Thu Nov 25 2021 11:24:22 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}

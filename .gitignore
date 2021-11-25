@@ -25,3 +25,5 @@ prod.env
 .DS_Store
 
 data/
+
+modules/mediaExt/bypass-paywalls-chrome-master/
