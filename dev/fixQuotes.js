@@ -1,4 +1,5 @@
-const quoteFilePath = '../quoteFiles/agambenQuotes.json'
+// fix quote file translation
+const quoteFilePath = '../quoteFiles/foucaultQuote.json'
 const quoteFile = require(quoteFilePath)
 const translate = require('@vitalets/google-translate-api')
 const fs = require('fs')

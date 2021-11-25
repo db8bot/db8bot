@@ -20,7 +20,7 @@ module.exports = {
                         .setTitle('Quote by Donald Trump')
                         .setDescription(`"${res.body.message}"\n-Donald Trump`)
                         .setFooter('Disclaimer: This command is purely for satirical purposes. It does not represent the creator, the owner, or the user\'s views.')
-                    interaction.reply({ embed: quoteSend })
+                    interaction.reply({ embeds: [quoteSend] })
                 })
         } else {
             superagent
@@ -34,7 +34,7 @@ module.exports = {
                         .setDescription(`"${res.body.value}"\n-Donald Trump`)
                         .addField('Source', `[Here](${res.body._embedded.source[0].url})`)
                         .setFooter('Disclaimer: This command is purely for satirical purposes. It does not represent the creator, the owner, or the user\'s views.')
-                    interaction.reply({ embed: quoteSend })
+                    interaction.reply({ embeds: [quoteSend] })
                 })
         }
     }

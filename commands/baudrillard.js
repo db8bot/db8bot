@@ -10,6 +10,6 @@ module.exports = {
     async execute(interaction) {
         require('../telemetry').telemetry(__filename, interaction)
 
-        require('../modules/quote').sendQuote(quotes, interaction)
+        require('../modules/quote').sendQuote(quotes, interaction, '#ffff00')
     }
 }
