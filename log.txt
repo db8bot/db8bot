@@ -65,3 +65,41 @@
 {"level":"info","message":"Left/Kicked from guild db8bottest2slash1 Size: 3 Date: Tue Nov 23 2021 22:24:11 GMT-0800 (Pacific Standard Time)"}
 {"level":"info","message":"Joined guild db8bottest2slash1 Size: 3 Date: Tue Nov 23 2021 22:24:27 GMT-0800 (Pacific Standard Time)"}
 {"level":"info","message":"Left/Kicked from guild db8bottest2slash1 Size: 3 Date: Tue Nov 23 2021 22:35:24 GMT-0800 (Pacific Standard Time)"}
+{"level":"info","message":"baudrillard command used by AirFusion Time: Wed Nov 24 2021 13:03:51 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by sw3.amazaws.co Time: Wed Nov 24 2021 13:14:33 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by sw3.amazaws.co Time: Wed Nov 24 2021 13:15:28 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by sw3.amazaws.co Time: Wed Nov 24 2021 13:16:04 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by sw3.amazaws.co Time: Wed Nov 24 2021 13:16:08 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by sw3.amazaws.co Time: Wed Nov 24 2021 13:16:10 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by sw3.amazaws.co Time: Wed Nov 24 2021 13:16:12 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by sw3.amazaws.co Time: Wed Nov 24 2021 13:16:37 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by sw3.amazaws.co Time: Wed Nov 24 2021 13:16:39 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by sw3.amazaws.co Time: Wed Nov 24 2021 13:16:42 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by sw3.amazaws.co Time: Wed Nov 24 2021 13:16:43 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by AirFusion Time: Wed Nov 24 2021 13:21:18 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by AirFusion Time: Wed Nov 24 2021 13:29:31 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by AirFusion Time: Wed Nov 24 2021 13:29:46 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by AirFusion Time: Wed Nov 24 2021 13:30:11 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by AirFusion Time: Wed Nov 24 2021 13:30:23 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by AirFusion Time: Wed Nov 24 2021 13:32:55 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by AirFusion Time: Wed Nov 24 2021 13:33:34 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by sw3.amazaws.co Time: Wed Nov 24 2021 14:31:30 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by sw3.amazaws.co Time: Wed Nov 24 2021 14:31:40 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"trump command used by sw3.amazaws.co Time: Wed Nov 24 2021 14:31:59 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by sw3.amazaws.co Time: Wed Nov 24 2021 14:35:11 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by sw3.amazaws.co Time: Wed Nov 24 2021 14:35:16 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by sw3.amazaws.co Time: Wed Nov 24 2021 14:37:57 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"trump command used by AirFusion Time: Wed Nov 24 2021 14:42:24 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by AirFusion Time: Wed Nov 24 2021 19:52:17 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by AirFusion Time: Wed Nov 24 2021 19:52:40 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by AirFusion Time: Wed Nov 24 2021 19:52:42 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"baudrillard command used by AirFusion Time: Wed Nov 24 2021 19:52:45 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"commands command used by AirFusion Time: Wed Nov 24 2021 19:53:18 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"agamben command used by AirFusion Time: Wed Nov 24 2021 20:13:55 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"agamben command used by AirFusion Time: Wed Nov 24 2021 20:14:33 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"agamben command used by AirFusion Time: Wed Nov 24 2021 20:14:35 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"agamben command used by AirFusion Time: Wed Nov 24 2021 20:14:39 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"agamben command used by AirFusion Time: Wed Nov 24 2021 20:14:41 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"agamben command used by AirFusion Time: Wed Nov 24 2021 20:14:44 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"agamben command used by AirFusion Time: Wed Nov 24 2021 20:14:46 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"commands command used by AirFusion Time: Wed Nov 24 2021 20:15:13 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}

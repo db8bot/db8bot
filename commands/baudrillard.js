@@ -1,10 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const quotes = require('../quoteFiles/amashQuotes.json')
-const translate = require('@vitalets/google-translate-api')
-const Discord = require('discord.js')
-function getRandomIntInclusive(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min
-}
+const quotes = require('../quoteFiles/quotesBaudrillard.json')
+// const translate = require('@vitalets/google-translate-api') - remove from other quote files, install as dev dep
+// const Discord = require('discord.js')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,16 +9,7 @@ module.exports = {
         .setDescription('Quote by Jean Baudrillard'),
     async execute(interaction) {
         require('../telemetry').telemetry(__filename, interaction)
-        const num = getRandomIntInclusive(1, quotes.length)
-        translate(quotes[num].quote, { to: 'en' }).then(res => {
-            const quoteSend = new Discord.MessageEmbed()
-                .setColor('#ffff00')
-                .setTitle(`Quote by ${quotes[num].author}`)
-                .setDescription(`"${res.text}"\n-${quotes[num].author}`)
-                .setFooter('Disclaimer: This command is purely for satirical purposes. It does not represent the creator, the owner, or the user\'s views.')
-            interaction.reply({ embeds: [quoteSend] })
-        }).catch(err => {
-            console.error(err)
-        })
+
+        require('../modules/quote').sendQuote(quotes, interaction)
     }
 }
