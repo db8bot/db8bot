@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer')
-const fs = require('fs').promises
+// const fs = require('fs').promises
 const extPath = `${process.cwd()}/modules/mediaExt/bypass-paywalls-chrome-master`
 // const extPath = `${process.cwd()}/mediaExt/bypass-paywalls-chrome-master` // use if in child-process mode
 
@@ -9,11 +9,10 @@ process.on('message', async (msg) => {
         console.log('spawned')
         console.log(msg.link)
         process.send(mhtml)
+        console.log('sent')
         // const pdf = await toPDF(msg.filename)
         // console.log("FILENAME" + msg.filename)
         // await fs.writeFile(msg.filename + "p.pdf", pdf)
-
-        process.exit(0)
     } catch (err) {
         if (err) console.error(err)
         process.exit(1)
@@ -40,7 +39,7 @@ async function toMhtml(link, ua) {
     })
     const page = await browser.newPage()
 
-    await page.waitForTimeout(600)
+    await page.waitForTimeout(800) // ext loading time
 
     page.bringToFront()
     await page.evaluateOnNewDocument(() => {

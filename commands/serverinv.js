@@ -6,7 +6,7 @@ module.exports = {
         .setName('serverinv')
         .setDescription('Generate an invite link for this server'),
     async execute(interaction) {
-        require('../telemetry').telemetry(__filename, interaction)
+        require('../modules/telemetry').telemetry(__filename, interaction)
         function getDefaultChannel(guild) {
             if (guild.channels.cache.some(name1 => name1.name === 'general')) { return guild.channels.cache.find(name => name.name === 'general') }
             // Now we get into the heavy stuff: first channel in order where the bot can speak

@@ -11,7 +11,7 @@ module.exports = {
                 .setRequired(true)
         ),
     async execute(interaction) {
-        require('../telemetry').telemetry(__filename, interaction)
+        require('../modules/telemetry').telemetry(__filename, interaction)
         const config = interaction.client.config
         const args = interaction.options.getString('message')
 

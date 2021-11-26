@@ -12,6 +12,7 @@ const stream = require('stream')
 const Long = require('long')
 const MongoClient = require('mongodb').MongoClient
 const ua = require('universal-analytics')
+const Enmap = require('enmap')
 
 // Client Setup & Defaults Initialization
 const client = new Client({
@@ -169,6 +170,20 @@ client.on('interactionCreate', async interaction => {
         console.error(error)
         return interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true })
     }
+})
+
+client.legacyCommands = new Enmap()
+
+fs.readdir('./legacyCommands/', (err, files) => {
+    if (err) return console.error(err)
+    console.log(chalk.green('|--------------------(Loading Commands)------------------------|'))
+    files.forEach(file => {
+        if (!file.endsWith('.js')) return
+        const props = require(`./legacyCommands/${file}`)
+        const commandName = file.split('.')[0]
+        console.log(chalk.green(`Loading command ${commandName}`))
+        client.legacyCommands.set(commandName, props)
+    })
 })
 
 client.on('messageCreate', async message => {

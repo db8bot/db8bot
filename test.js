@@ -20,7 +20,7 @@ function getRndInteger(min, max) {
 }
 
 // var url = 'https://www.bloomberg.com/news/articles/2021-06-13/a-meme-stock-is-born-how-to-spot-the-next-reddit-favorite'
-var url = 'https://www.nytimes.com/2021/11/25/business/retail-vaccine-mandates.html'
+// var url = 'https://www.nytimes.com/2021/11/25/business/retail-vaccine-mandates.html'
 // var url = 'https://www.wsj.com/articles/what-inflation-small-investors-keep-piling-into-flashy-growth-stocks-11637836200?mod=hp_lead_pos1'
 
 // var filename = './newsTempOutFiles/' + getRndInteger(999, 999999).toString() + 'interaction.channelId' + 'x' + '.pdf'

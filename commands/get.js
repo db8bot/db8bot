@@ -48,7 +48,7 @@ module.exports = {
                 .setRequired(false)
         ),
     async execute(interaction) {
-        require('../telemetry').telemetry(__filename, interaction)
+        require('../modules/telemetry').telemetry(__filename, interaction)
         const config = interaction.client.config
         const database = new MongoClient(config.MONGOURI, { useNewUrlParser: true, useUnifiedTopology: true })
         const flag = interaction.options.getString('flags')
@@ -227,6 +227,8 @@ module.exports = {
 
                     pdfChildProcess.on('message', async (mhtml) => {
                         // console.log(`exited with code ${code}`)
+                        console.log('received')
+                        pdfChildProcess.disconnect()
                         const htmldoc = await mhtml2html.convert(mhtml, { parseDOM: (html) => new JSDOM(html) })
                         await fsp.writeFile(filename.toString(), htmldoc.serialize())
                         await interaction.channel.send({ files: [filename] })

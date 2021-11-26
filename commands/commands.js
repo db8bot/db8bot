@@ -5,7 +5,7 @@ module.exports = {
         .setName('commands')
         .setDescription('Show Bot\'s Available Commands!'),
     async execute(interaction) {
-        require('../telemetry').telemetry(__filename, interaction)
+        require('../modules/telemetry').telemetry(__filename, interaction)
         const config = interaction.client.config
         const embedNew = new Discord.MessageEmbed()
             .setColor('36393E') // change the color!

@@ -6,7 +6,7 @@ module.exports = {
         .setName('invite')
         .setDescription('Invite Link for db8bot'),
     async execute(interaction) {
-        require('../telemetry').telemetry(__filename, interaction)
+        require('../modules/telemetry').telemetry(__filename, interaction)
         const embed = new Discord.MessageEmbed()
             .setColor('#00ffff')
             .setTimestamp()

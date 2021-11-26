@@ -11,7 +11,7 @@ module.exports = {
                 .setRequired(true)
         ),
     async execute(interaction) {
-        require('../telemetry').telemetry(__filename, interaction)
+        require('../modules/telemetry').telemetry(__filename, interaction)
         var user = interaction.options.getUser('user')
         const muteRole = interaction.guild.roles.cache.find(val => val.name === 'Mute')
         if (!muteRole) return interaction.reply('Mute Role required')

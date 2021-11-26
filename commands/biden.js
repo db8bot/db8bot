@@ -6,7 +6,7 @@ module.exports = {
         .setName('biden')
         .setDescription('Quote by Joe Biden'),
     async execute(interaction) {
-        require('../telemetry').telemetry(__filename, interaction)
+        require('../modules/telemetry').telemetry(__filename, interaction)
 
         require('../modules/quote').sendQuote(quotes, interaction, '#0c2458')
     }

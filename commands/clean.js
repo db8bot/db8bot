@@ -12,7 +12,7 @@ module.exports = {
                 .setRequired(false)
         ),
     async execute(interaction) {
-        require('../telemetry').telemetry(__filename, interaction)
+        require('../modules/telemetry').telemetry(__filename, interaction)
         const args = interaction.options.getString('link')
         interaction.channel.messages.fetch({ limit: 1 }).then(chanmsg => {
             if (chanmsg.last().content === `${interaction.client.config.PREFIX}clean` && chanmsg.last().attachments.first() === undefined) { // no image in current msg

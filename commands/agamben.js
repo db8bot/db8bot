@@ -6,7 +6,7 @@ module.exports = {
         .setName('agamben')
         .setDescription('Quote by Giorgio Agamben'),
     async execute(interaction) {
-        require('../telemetry').telemetry(__filename, interaction)
+        require('../modules/telemetry').telemetry(__filename, interaction)
 
         require('../modules/quote').sendQuote(quotes, interaction, '#add8e6')
     }

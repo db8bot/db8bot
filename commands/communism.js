@@ -6,7 +6,7 @@ module.exports = {
         .setName('communism')
         .setDescription('Communism Related Quote'),
     async execute(interaction) {
-        require('../telemetry').telemetry(__filename, interaction)
+        require('../modules/telemetry').telemetry(__filename, interaction)
 
         require('../modules/quote').sendQuote(quotes, interaction, '#dd0200')
     }

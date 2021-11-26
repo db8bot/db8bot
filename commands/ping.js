@@ -5,7 +5,7 @@ module.exports = {
         .setName('ping')
         .setDescription('Replies with Pong!'),
     async execute(interaction) {
-        require('../telemetry').telemetry(__filename, interaction)
+        require('../modules/telemetry').telemetry(__filename, interaction)
 
         await interaction.reply(':ping_pong: Pinging...')
         interaction.fetchReply()

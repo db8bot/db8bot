@@ -42,7 +42,7 @@ module.exports = {
             // .setRequired(true)
         ),
     async execute(interaction) {
-        require('../telemetry').telemetry(__filename, interaction)
+        require('../modules/telemetry').telemetry(__filename, interaction)
         if (!interaction.guild) return (interaction.reply('Command not available in DMs.'))
         const config = interaction.client.config
         const uri = `mongodb+srv://${config.MONGOUSER}:${config.MONGOPASS}@db8botcluster.q3bif.mongodb.net/23bot?retryWrites=true&w=majority`

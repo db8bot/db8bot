@@ -9,7 +9,7 @@ module.exports = {
         .setName('trump')
         .setDescription('Quote by Donald Trump'),
     async execute(interaction) {
-        require('../telemetry').telemetry(__filename, interaction)
+        require('../modules/telemetry').telemetry(__filename, interaction)
         console.time('trump')
         if (getRandomIntInclusive(0, 1) === 1) {
             superagent

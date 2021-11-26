@@ -8,7 +8,7 @@ module.exports = {
         .setName('debatehelp')
         .setDescription('Show Help for Debate Commands'),
     async execute(interaction) {
-        require('../telemetry').telemetry(__filename, interaction)
+        require('../modules/telemetry').telemetry(__filename, interaction)
         const select = getRandomIntInclusive(1, 3)
         const embed = new Discord.MessageEmbed()
             .setColor(select === 1 ? '#ccff00' : select === 2 ? '#0072bb' : select === 3 ? '#ff4f00' : '#ccff00')

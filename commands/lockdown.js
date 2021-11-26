@@ -11,7 +11,7 @@ module.exports = {
                 .setRequired(true)
         ),
     async execute(interaction) {
-        require('../telemetry').telemetry(__filename, interaction)
+        require('../modules/telemetry').telemetry(__filename, interaction)
         const client = interaction.client
         const args = interaction.options.getString('argument')
         if (!interaction.guild.members.cache.get(interaction.user.id).permissions.has(Discord.Permissions.FLAGS.MANAGE_CHANNELS)) return interaction.reply('Insufficant Permissions').catch(console.error)

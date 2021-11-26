@@ -6,7 +6,7 @@ module.exports = {
         .setName('foucault')
         .setDescription('Quote by Michel Foucault'),
     async execute(interaction) {
-        require('../telemetry').telemetry(__filename, interaction)
+        require('../modules/telemetry').telemetry(__filename, interaction)
 
         require('../modules/quote').sendQuote(quotes, interaction, '#f5f5f5')
     }
