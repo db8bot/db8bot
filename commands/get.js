@@ -20,7 +20,10 @@ const bingBotList = require('../getFiles/bingBot.json')
 const mediaProfilesAmp = require('../getFiles/mediaProfilesAMP.json')
 const blockedPageReqRegexes = require('../getFiles/mediaProfilesBlockedPageReqRegex')
 const mediaProfilesDisableJS = require('../getFiles/mediaProfilesDisableJS.json')
-const useOutline = require('../getFiles/useOutline.json')
+const mhtml2html = require('mhtml2html')
+const { JSDOM } = require('jsdom')
+// const useOutline = require('../getFiles/useOutline.json')
+// http://www.smartjava.org/content/using-puppeteer-in-docker-copy-2/
 var uas = {
     google: 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
     bing: "'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)'"
@@ -197,8 +200,9 @@ module.exports = {
                     database.close()
                 } else { // open child process to generate pdf
                     database.close()
-                    var filename = './newsTempOutFiles/' + getRndInteger(999, 999999).toString() + interaction.channelId + 'x' + '.pdf'
+                    var filename = './newsTempOutFiles/' + getRndInteger(999, 999999).toString() + interaction.channelId + 'x' + '.mhtml'
                     var urlParsed = psl.parse(url.replace('https://', '').replace('http://', '').split('/')[0])
+
                     if (googleBotList.some(str => str.includes(urlParsed.domain))) {
                         var ua = uas.google
                     } else if (bingBotList.some(str => str.includes(urlParsed.domain))) {
@@ -206,72 +210,45 @@ module.exports = {
                     } else {
                         var ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4538.0 Safari/537.36'
                     }
-                    var options = { // flags
-                        allowCookies: mediaProfilesAllowCookies.some(str => str.includes(urlParsed.domain)),
-                        removeCookiesAfterLoad: mediaProfilesRemoveCookies.some(str => str.includes(urlParsed.domain)),
-                        removeAllCookiesExcept: mediaProfilesRemoveAllExcept[urlParsed.domain],
-                        removeCertainCookies: mediaProfilesRemove[urlParsed.domain],
-                        bot: googleBotList.some(str => str.includes(urlParsed.domain)) ? 'google' : bingBotList.some(str => str.includes(urlParsed.domain)) ? 'bing' : '',
-                        ua: ua,
-                        amp: mediaProfilesAmp[urlParsed.domain],
-                        blockedPageReqRegex: blockedPageReqRegexes[urlParsed.domain],
-                        disableJS: mediaProfilesDisableJS.some(str => str.includes(urlParsed.domain)),
-                        outline: useOutline.some(str => str.includes(urlParsed.domain))
-                    }
-                    console.log(options)
-                    interaction.reply('Give it a second, it might be slow...')
-                    // message.channel.send(`OPTIONS:\nallowCookies: ${options.allowCookies}\nremoveCookiesAfterLoad: ${options.removeCookiesAfterLoad}\nremoveAllCookiesExcept: ${options.removeAllCookiesExcept}\nremoveCertainCookies: ${options.removeCertainCookies}\nBot: ${options.bot}\nUseragent UA: ${options.ua}\nAMP?: ${options.amp}\nblockedPageReqRegex: \`${options.blockedPageReqRegex}\`\nGive it a second, it might be slow...`)
 
-                    if (options.amp !== undefined && options.amp !== '') {
-                        url = url.replace(urlParsed.domain, options.amp).replace('www.', '') // make sure we go to the amp site if it has the amp flag
+                    if (mediaProfilesAmp[urlParsed.domain] !== undefined && mediaProfilesAmp[urlParsed.domain] !== '') {
+                        url = url.replace(urlParsed.domain, mediaProfilesAmp[urlParsed.domain]).replace('www.', '') // make sure we go to the amp site if it has the amp flag
                     }
 
-                    const pdfChildProcess = child_process.fork('./childFiles/getPDFChild.js')
-                    // console.log(new RegExp(options.blockedPageReqRegex))
+                    const pdfChildProcess = child_process.fork('./modules/getPDFChild.js')
 
                     pdfChildProcess.send({
                         link: url,
                         ua: ua,
-                        reg: urlParsed.domain,
-                        allowCookies: options.allowCookies,
-                        removeCookiesAfterLoad: options.removeCookiesAfterLoad,
-                        removeAllCookiesExcept: options.removeAllCookiesExcept,
-                        removeCertainCookies: options.removeCertainCookies,
-                        disableJS: options.disableJS,
-                        filename: filename.toString(),
-                        outline: options.outline
+                        filename: filename.toString()
                     })
-                    if (options.outline) {
-                        pdfChildProcess.on('message', (outlineLink) => {
-                            interaction.channel.send(outlineLink)
-                        })
-                    } else {
-                        pdfChildProcess.on('close', async (code) => {
-                            console.log(`exited with code ${code}`)
-                            await interaction.channel.send({ files: [filename] })
-                            var readStream = fs.createReadStream(filename)
-                            const ipfsNode = await IPFS.create()
-                            const results = await ipfsNode.add(readStream)
-                            // write key to mongo
-                            database.connect(async (err, dbClient) => {
+
+                    pdfChildProcess.on('close', async (code) => {
+                        console.log(`exited with code ${code}`)
+
+                        await interaction.channel.send({ files: [filename] })
+                        var readStream = fs.createReadStream(filename)
+                        const ipfsNode = await IPFS.create()
+                        const results = await ipfsNode.add(readStream)
+                        // write key to mongo
+                        database.connect(async (err, dbClient) => {
+                            if (err) console.error(err)
+                            const collection = dbClient.db('db8bot').collection('ipfsKeys')
+                            collection.insertOne({
+                                link: link,
+                                path: results.path
+                            }, function (err, res) {
                                 if (err) console.error(err)
-                                const collection = dbClient.db('db8bot').collection('ipfsKeys')
-                                collection.insertOne({
-                                    link: link,
-                                    path: results.path
-                                }, function (err, res) {
-                                    if (err) console.error(err)
-                                    database.close()
-                                })
-                                console.log('inserted')
+                                database.close()
                             })
-                            try {
-                                await fsp.rm(filename)
-                            } catch (e) {
-                                if (e) console.error(e)
-                            }
+                            console.log('inserted')
                         })
-                    }
+                        try {
+                            await fsp.rm(filename)
+                        } catch (e) {
+                            if (e) console.error(e)
+                        }
+                    })
                 }
             })
         }
