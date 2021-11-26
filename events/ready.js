@@ -6,6 +6,6 @@ module.exports = (client) => {
     console.log(chalk.green(`Owner: ${process.env.OWNERTAG}`))
     console.log(chalk.green(`Logged in as: ${process.env.NAME} `))
     console.log(chalk.green(`Prefix: ${process.env.PREFIX}`))
-    client.user.setActivity(`-help | DB8Bot | Version: ${require('../package.json').version}`)
+    client.user.setActivity(`-help | DB8Bot | Version: ${require('../package.json').version} ${process.env.BUILD}`)
     // client.application.commands.set([]) // reset client application slash commands
 }

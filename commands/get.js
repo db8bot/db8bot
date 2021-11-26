@@ -1,9 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const superagent = require('superagent')
 const cheerio = require('cheerio')
-const Discord = require('discord.js')
 const psl = require('psl')
-const util = require('util')
 const fs = require('fs')
 const fsp = fs.promises
 const IPFS = require('ipfs')
@@ -11,18 +9,11 @@ const MongoClient = require('mongodb').MongoClient
 // eslint-disable-next-line camelcase
 const child_process = require('child_process')
 // const mediaDomains = require('../getFiles/mediaDomains.json')
-const mediaProfilesAllowCookies = require('../getFiles/mediaProfilesAllowCookies.json') // dont remove before page load - if not in the remove after page load, the cookie is kept
-const mediaProfilesRemoveCookies = require('../getFiles/mediaProfilesRemoveCookies.json') // remove after page load
-const mediaProfilesRemoveAllExcept = require('../getFiles/mediaProfilesRemoveAllExcept.json')
-const mediaProfilesRemove = require('../getFiles/mediaProfilesRemove.json')
 const googleBotList = require('../getFiles/googleBot.json')
 const bingBotList = require('../getFiles/bingBot.json')
 const mediaProfilesAmp = require('../getFiles/mediaProfilesAMP.json')
-const blockedPageReqRegexes = require('../getFiles/mediaProfilesBlockedPageReqRegex')
-const mediaProfilesDisableJS = require('../getFiles/mediaProfilesDisableJS.json')
 const mhtml2html = require('mhtml2html')
 const { JSDOM } = require('jsdom')
-// const useOutline = require('../getFiles/useOutline.json')
 // http://www.smartjava.org/content/using-puppeteer-in-docker-copy-2/
 var uas = {
     google: 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
@@ -36,15 +27,15 @@ module.exports = {
         .setName('get')
         .setDescription('unlock research, news & book paywalls')
         .addStringOption(option =>
+            option.setName('source')
+                .setDescription('link to the paper or news article or ISBN/book name to unlock')
+                .setRequired(true)
+        )
+        .addStringOption(option =>
             option.setName('flags')
                 .setDescription('optional flags for the command. use m for news/media paywalls, use b for books')
                 .addChoice('media', 'm')
                 .addChoice('book', 'b')
-                .setRequired(false)
-        )
-        .addStringOption(option =>
-            option.setName('source')
-                .setDescription('link to the paper or news article or ISBN/book name to unlock')
                 .setRequired(false)
         ),
     async execute(interaction) {
@@ -53,6 +44,7 @@ module.exports = {
         const database = new MongoClient(config.MONGOURI, { useNewUrlParser: true, useUnifiedTopology: true })
         const flag = interaction.options.getString('flags')
         const link = interaction.options.getString('source')
+        if (link === null) interaction.reply('Not Found')
         if (flag !== 'm' && flag !== 'b') { // not media or books - regular get for papers
             superagent
                 .get(`https://sci-hub.se/${link}`)

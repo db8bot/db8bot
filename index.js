@@ -173,7 +173,7 @@ client.on('interactionCreate', async interaction => {
 })
 
 client.legacyCommands = new Enmap()
-
+var legacyCommandNames = []
 fs.readdir('./legacyCommands/', (err, files) => {
     if (err) return console.error(err)
     console.log(chalk.green('|--------------------(Loading Commands)------------------------|'))
@@ -183,6 +183,7 @@ fs.readdir('./legacyCommands/', (err, files) => {
         const commandName = file.split('.')[0]
         console.log(chalk.green(`Loading command ${commandName}`))
         client.legacyCommands.set(commandName, props)
+        legacyCommandNames.push(commandName)
     })
 })
 
@@ -285,21 +286,11 @@ client.on('messageCreate', async message => {
                 message.reply({ content: 'wHy r u rEaDINg bEn mOSHe', files: ['./assets/benmoshe.png'] })
             }
         }
-    } else if (prefix === '-' && command !== '') {
-        message.channel.send('use slash commands msg.')
+    } else if (prefix === '-' && legacyCommandNames.includes(command)) {
+        message.channel.send(`:warning: ${client.config.NAME} has migrated to Discord Slash Commands in preparation for Discord's mandatory transition in April 2022. Some commands are still accessible using the ${client.config.PREFIX} prefix to aid with the transition to Slash Commands. However, these legacy commands will have fewer features & degraded performance and will be removed in the next major update. Please use / to access the bot's commands in the future. **If none of the Slash Commands work, you need to ask someone with MANAGE_SERVER permissions to reauthorize the bot using this link: https://discord.com/api/oauth2/authorize?client_id=689368779305779204&permissions=310647056497&scope=bot%20applications.commands** Thanks for your understanding!`)
     } else if (prefix === `<@!${client.config.BOTID}>`) {
         if (command === 'test') {
-            message.channel.send('ping')
-            // visitor.pageview({
-            //     v: '4',
-            //     // uid: 'AirFusion', // user of cmd
-            //     cid: 'AirFusion', // user of cmd
-            //     dp: '/test',
-            //     dt: 'test',
-            //     dr: 'https://discord.com/server/testserver'
-            // }).send()
-
-            // visitor.pageview('/ping').send()
+            message.channel.send('test')
         } else if (command === 'ownerhelp') {
             const ownercmds = new MessageEmbed()
                 .setColor('#ffd700')

@@ -1,2 +1,0 @@
-{"level":"info","message":"ping command used by AirFusion Time: Fri Nov 26 2021 02:22:38 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
-{"level":"info","message":"get command used by AirFusion Time: Fri Nov 26 2021 02:31:20 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
