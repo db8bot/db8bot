@@ -8,8 +8,7 @@ process.on('message', async (msg) => {
         const mhtml = await toMhtml(msg.link, msg.ua)
         console.log('spawned')
         console.log(msg.link)
-        await fs.writeFile(msg.filename, mhtml)
-
+        process.send(mhtml)
         // const pdf = await toPDF(msg.filename)
         // console.log("FILENAME" + msg.filename)
         // await fs.writeFile(msg.filename + "p.pdf", pdf)

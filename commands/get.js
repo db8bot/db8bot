@@ -200,7 +200,9 @@ module.exports = {
                     database.close()
                 } else { // open child process to generate pdf
                     database.close()
-                    var filename = './newsTempOutFiles/' + getRndInteger(999, 999999).toString() + interaction.channelId + 'x' + '.mhtml'
+                    interaction.reply('Job added to paywall unlock queue. This may take a few minutes. It will return an HTML file. Download using the button on the bottom right & open in any major browser.')
+                    // var filename = './newsTempOutFiles/' + getRndInteger(999, 999999).toString() + interaction.channelId + 'x' + '.mhtml'
+                    var filename = './newsTempOutFiles/' + getRndInteger(999, 999999).toString() + interaction.channelId + 'x' + '.html'
                     var urlParsed = psl.parse(url.replace('https://', '').replace('http://', '').split('/')[0])
 
                     if (googleBotList.some(str => str.includes(urlParsed.domain))) {
@@ -223,13 +225,15 @@ module.exports = {
                         filename: filename.toString()
                     })
 
-                    pdfChildProcess.on('close', async (code) => {
-                        console.log(`exited with code ${code}`)
-
+                    pdfChildProcess.on('message', async (mhtml) => {
+                        // console.log(`exited with code ${code}`)
+                        const htmldoc = await mhtml2html.convert(mhtml, { parseDOM: (html) => new JSDOM(html) })
+                        await fsp.writeFile(filename.toString(), htmldoc.serialize())
                         await interaction.channel.send({ files: [filename] })
                         var readStream = fs.createReadStream(filename)
                         const ipfsNode = await IPFS.create()
                         const results = await ipfsNode.add(readStream)
+
                         // write key to mongo
                         database.connect(async (err, dbClient) => {
                             if (err) console.error(err)
