@@ -35,7 +35,7 @@ client.commands = new Collection()
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
 
 // execution/launch settings
-const versionSelector = 'dev'
+const versionSelector = 'prod'
 const testServerGuildID = '689368206904655878'
 
 if (versionSelector === 'prod') {
@@ -295,7 +295,7 @@ client.on('messageCreate', async message => {
             const ownercmds = new MessageEmbed()
                 .setColor('#ffd700')
                 .setDescription('If you are not the owner, this list is just to make you jealous... Hehe - Owner superpowers :p')
-                .addField('Set bot game', 'cmd: setgame <args>')
+                .addField('Set bot game', 'cmd: setgame <args[may include: playing, streaming, listening, watching, competing]>')
                 .addField('Set bot status', 'cmd: setstatus <args>')
                 .addField('Get all of the servers bot is in', 'cmd: getallserver')
                 .addField('leaves the inputed server. Server name has to be exact.', 'cmd: leaveserver <args>')

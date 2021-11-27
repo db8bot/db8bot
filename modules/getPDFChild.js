@@ -13,6 +13,7 @@ process.on('message', async (msg) => {
         // const pdf = await toPDF(msg.filename)
         // console.log("FILENAME" + msg.filename)
         // await fs.writeFile(msg.filename + "p.pdf", pdf)
+        // process exits automatically after disconnecting from main process
     } catch (err) {
         if (err) console.error(err)
         process.exit(1)
@@ -32,7 +33,8 @@ async function toMhtml(link, ua) {
             '--disable-features=ImprovedCookieControls',
             `--disable-extensions-except=${extPath}`,
             `--load-extension=${extPath}`,
-            '--no-zygote'
+            '--no-zygote',
+            '--disable-dev-shm-usage'
         ],
         headless: false,
         defaultViewport: null,

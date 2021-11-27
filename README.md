@@ -56,6 +56,7 @@ db8bot depends on several custom 3rd party solutions. Therefore we do not recomm
   MONGOUSER=<MONGODB USERNAME>
   MONGOPASS=<MONGODB PASSWORD>
   TELEMETRYKEY=<GOOGLE ANALYTICS UA TRACKING CODE>
+  IPINFOTOKEN=<TOKEN FROM ipinfo.io>
   ```
   2. Go to the unofficial tabroomAPI [here](https://github.com/AirFusion45/tabroomAPI). Download the main branch, fill out the `apiKeysExample.json` & rename it to `apiKeys.json`. Deploy this Express.js API on any VPS of your choice. The api key goes in the TABAPIKEY. The ip of the API goes in the `judgeinfo.js` file.
 
