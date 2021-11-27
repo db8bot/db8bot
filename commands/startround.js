@@ -48,6 +48,10 @@ module.exports = {
         const uri = `mongodb+srv://${config.MONGOUSER}:${config.MONGOPASS}@db8botcluster.q3bif.mongodb.net/23bot?retryWrites=true&w=majority`
         const database = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true })
         const guild = interaction.guild
+        if (interaction.options.getString('name') === null) {
+            interaction.reply('Missing fields! Check all fields are filled!')
+            return
+        }
         database.connect(async (err, dbClient) => {
             if (err) console.error(err)
             const collection = dbClient.db('db8bot').collection('debateTracking')
@@ -103,21 +107,23 @@ module.exports = {
                     try {
                         for (var user of debateConfig.aff) {
                             guild.members.fetch(user.id).then(member => {
-                                member.roles.add(guild.roles.cache.find(role => role.name === 'Currently Debating'))
+                                member.roles.add(guild.roles.cache.find(role => role.name === 'Currently Debating')).catch(err => console.error(err))
                             })
                         }
                         for (var user of debateConfig.neg) {
                             guild.members.fetch(user.id).then(member => {
-                                member.roles.add(guild.roles.cache.find(role => role.name === 'Currently Debating'))
+                                member.roles.add(guild.roles.cache.find(role => role.name === 'Currently Debating')).catch(err => console.error(err))
                             })
                         }
                         guild.members.fetch(debateConfig.judge.id).then(member => {
-                            member.roles.add(guild.roles.cache.find(role => role.name === 'Currently Judging'))
+                            member.roles.add(guild.roles.cache.find(role => role.name === 'Currently Judging')).catch(err => console.error(err))
                         })
                     } catch (e) {
+                        console.error(e)
                         interaction.channel.send('Error! Please check that the "Currently Debating" & "Currently Judging" roles have been created.')
                     }
                 } catch (err) {
+                    console.error(err)
                     const help = new Discord.MessageEmbed()
                         .setColor('#f0ffff')
                         .setDescription('**Command: **' + '/startround')

@@ -31,7 +31,8 @@ async function toMhtml(link, ua) {
             `--user-agent=${ua}`,
             '--disable-features=ImprovedCookieControls',
             `--disable-extensions-except=${extPath}`,
-            `--load-extension=${extPath}`
+            `--load-extension=${extPath}`,
+            '--no-zygote'
         ],
         headless: false,
         defaultViewport: null,

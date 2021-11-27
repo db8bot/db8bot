@@ -44,7 +44,10 @@ module.exports = {
         const database = new MongoClient(config.MONGOURI, { useNewUrlParser: true, useUnifiedTopology: true })
         const flag = interaction.options.getString('flags')
         const link = interaction.options.getString('source')
-        if (link === null) interaction.reply('Not Found')
+        if (link === null) {
+            interaction.reply('Not Found')
+            return
+        }
         if (flag !== 'm' && flag !== 'b') { // not media or books - regular get for papers
             superagent
                 .get(`https://sci-hub.se/${link}`)
@@ -224,27 +227,32 @@ module.exports = {
                         const htmldoc = await mhtml2html.convert(mhtml, { parseDOM: (html) => new JSDOM(html) })
                         await fsp.writeFile(filename.toString(), htmldoc.serialize())
                         await interaction.channel.send({ files: [filename] })
-                        var readStream = fs.createReadStream(filename)
-                        const ipfsNode = await IPFS.create()
-                        const results = await ipfsNode.add(readStream)
-
-                        // write key to mongo
-                        database.connect(async (err, dbClient) => {
-                            if (err) console.error(err)
-                            const collection = dbClient.db('db8bot').collection('ipfsKeys')
-                            collection.insertOne({
-                                link: link,
-                                path: results.path
-                            }, function (err, res) {
-                                if (err) console.error(err)
-                                database.close()
-                            })
-                            console.log('inserted')
-                        })
                         try {
-                            await fsp.rm(filename)
-                        } catch (e) {
-                            if (e) console.error(e)
+                            var readStream = fs.createReadStream(filename)
+                            const ipfsNode = await IPFS.create()
+                            const results = await ipfsNode.add(readStream)
+
+                            // write key to mongo
+                            database.connect(async (err, dbClient) => {
+                                if (err) console.error(err)
+                                const collection = dbClient.db('db8bot').collection('ipfsKeys')
+                                collection.insertOne({
+                                    link: link,
+                                    path: results.path
+                                }, async function (err, res) {
+                                    if (err) console.error(err)
+                                    database.close()
+                                    try {
+                                        await fsp.rm(filename)
+                                    } catch (e) {
+                                        if (e) console.error(e)
+                                    }
+                                    console.log('inserted')
+                                })
+                            })
+                        } catch (err) {
+                            console.error(err)
+                            console.log('ipfs failed')
                         }
                     })
                 }

@@ -8,7 +8,7 @@ module.exports = {
         .setDescription('add a white background to an image')
         .addStringOption(option =>
             option.setName('link')
-                .setDescription('link to the image (cdn.discordapp.com)')
+                .setDescription('link to the image (ex: cdn.discordapp.com)')
                 .setRequired(false)
         ),
     async execute(interaction) {
@@ -73,7 +73,7 @@ module.exports = {
                         interaction.reply({ files: [Buffer.concat(sendDataArr)] })
                     })
                 })
-            } else if (args.includes('https://cdn.discordapp.com/attachments') || args.includes('https://cdn.discord.com/attachments') || args.includes('https://media.discordapp.net/attachments')) {
+            } else if (args != null && (args.includes('https://cdn.discordapp.com/attachments') || args.includes('https://cdn.discord.com/attachments') || args.includes('https://media.discordapp.net/attachments'))) {
                 superagent.get(args).pipe(
                     new PNG({
                         colorType: 2,
@@ -99,6 +99,8 @@ module.exports = {
                         interaction.reply({ files: [Buffer.concat(sendDataArr)] })
                     })
                 })
+            } else {
+                interaction.reply('Please specify a link or make sure the message above the command message is an image')
             }
         })
     }

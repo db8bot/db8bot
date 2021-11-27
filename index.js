@@ -218,7 +218,7 @@ client.on('messageCreate', async message => {
     if ((!message.content.startsWith(process.env.PREFIX) && !message.content.startsWith('/') && !message.content.startsWith(`<@!${process.env.BOTID}`)) || message.author.bot) return
     if (message.content.indexOf(process.env.PREFIX) !== 0 && message.content.indexOf('/') !== 0 && message.content.indexOf(`<@!${process.env.BOTID}`) !== 0) return
 
-    // message.guild.commands.set([]) // reset server slash commands
+    // message.guild.commands.set([]) // clear reset server slash commands
 
     if (prefix === '/') {
         if (command === 'clean') {
