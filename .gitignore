@@ -11,6 +11,10 @@ commands/benmoshe<3.js
 
 commands/benmoshe_3.js
 
+legacyCommands/benmoshe_3.js
+
+legacyCommands/benmoshe<3.js
+
 bfg-1.14.0.jar
 
 configDev.json
