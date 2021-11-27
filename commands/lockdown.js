@@ -1,69 +1,67 @@
-const ms = require('ms');
-exports.run = function (client, message, args) {
-    let guild = message.guild;
-    client.logger.log('info', `lockdown command used by ${message.author.username} Time: ${Date()} Guild: ${guild}`)
-    const Discord = require('discord.js');
-    let member = message.author;
-    const config = client.config
-    if (client.optINOUT.get(message.author.id) != undefined) {
-        if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
-    } const embed1 = new Discord.MessageEmbed()
-        .setColor("#f0ffff")
-        .setDescription("r**Command: **" + `${config.prefix}lockdown`)
-        .addField("**Usage:**", `${config.prefix}lockdown <time for ex: 1m, 1h etc>`)
-        .addField("**Example:**", `${config.prefix}lockdown 1m`)
-        .addField("**Expected Result From Example:**", "All Channels should enter a lockdown mode, all moderators and above should not be affected.")
-    if (args.join(' ') == "") return message.channel.send({ embeds: [embed1] })
+const { SlashCommandBuilder } = require('@discordjs/builders')
+const Discord = require('discord.js')
+const ms = require('ms')
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName('lockdown')
+        .setDescription('lockdown/unlock the channel')
+        .addStringOption(option =>
+            option.setName('argument')
+                .setDescription('amount of time to lockdown for (1m, 20s, etc) OR unlock')
+                .setRequired(true)
+        ),
+    async execute(interaction) {
+        require('../modules/telemetry').telemetry(__filename, interaction)
+        const client = interaction.client
+        const args = interaction.options.getString('argument')
+        if (!interaction.guild.members.cache.get(interaction.user.id).permissions.has(Discord.Permissions.FLAGS.MANAGE_CHANNELS)) return interaction.reply('Insufficant Permissions').catch(console.error)
+        if (!client.lockit) client.lockit = []
+        const time = args
+        const validUnlocks = ['release', 'unlock']
+        if (!time.includes('unlock') && !(/\d/.test(time))) return interaction.reply('You must set a duration for the lockdown in either hours, minutes or seconds or enter unlock/release.')
+        const embed = new Discord.MessageEmbed()
+            .setColor('#cb4154')
+            .setTimestamp()
+            .setThumbnail(interaction.user.avataURL)
+            .addField('Action:', 'Lockdown')
+            .addField('Duration/Time:', time)
+            .addField('Moderator:', interaction.user.username + '#' + interaction.user.discriminator)
 
-    if (!message.guild.members.cache.get(message.author.id).permissions.has(Discord.Permissions.FLAGS.MANAGE_CHANNELS)) return message.reply('Insufficant Permissions').catch(console.error)
-    if (!client.lockit) client.lockit = [];
-    let time = args.join(' ');
-    let validUnlocks = ['release', 'unlock'];
-    if (!time) return message.reply('You must set a duration for the lockdown in either hours, minutes or seconds');
-    const embed = new Discord.MessageEmbed()
-        .setColor('#cb4154')
-        .setTimestamp()
-        .setThumbnail(message.author.avataURL)
-        .addField('Action:', "Lockdown")
-        .addField('Duration/Time:', time)
-        .addField("Moderator:", message.author.username + "#" + message.author.discriminator)
-
-    if (validUnlocks.includes(time)) {
-        message.channel.permissionOverwrites.create(message.guild.id, {
-            SEND_MESSAGES: null
-        }).then(() => {
-            message.channel.send('Lockdown lifted.');
-            clearTimeout(client.lockit[message.channel.id]);
-            delete client.lockit[message.channel.id];
-        }).catch(error => {
-            console.log(error);
-        });
-    } else {
-        message.channel.permissionOverwrites.create(message.guild.id, {
-            SEND_MESSAGES: false
-        }).then(() => {
-            message.channel.permissionOverwrites.create(config.botid, {
-                SEND_MESSAGES: true
+        if (validUnlocks.includes(time)) {
+            interaction.channel.permissionOverwrites.create(interaction.guild.id, {
+                SEND_MESSAGES: null
             }).then(() => {
-                message.channel.send(`Channel locked down for ${ms(ms(time), { long: true })}`).then(() => {
-
-                    client.lockit[message.channel.id] = setTimeout(() => {
-                        message.channel.permissionOverwrites.create(message.guild.id, {
-                            SEND_MESSAGES: null
-                        }).then(message.channel.send('Lockdown lifted.')).catch(console.error);
-                        delete client.lockit[message.channel.id];
-                    }, ms(time));
-
-                }).catch(error => {
-                    console.log(error);
-                });
+                interaction.reply('Lockdown lifted.')
+                clearTimeout(client.lockit[interaction.channel.id])
+                delete client.lockit[interaction.channel.id]
+            }).catch(error => {
+                console.error(error)
             })
-        });
-    }
+        } else {
+            interaction.channel.permissionOverwrites.create(interaction.guild.id, {
+                SEND_MESSAGES: false
+            }).then(() => {
+                interaction.channel.permissionOverwrites.create(client.config.BOTID, {
+                    SEND_MESSAGES: true
+                }).then(() => {
+                    interaction.reply(`Channel locked down for ${ms(ms(time), { long: true })}`).then(() => {
+                        client.lockit[interaction.channel.id] = setTimeout(() => {
+                            interaction.channel.permissionOverwrites.create(interaction.guild.id, {
+                                SEND_MESSAGES: null
+                            }).then(interaction.channel.send('Lockdown lifted.')).catch(console.error)
+                            delete client.lockit[interaction.channel.id]
+                        }, ms(time))
+                    }).catch(error => {
+                        console.log(error)
+                    })
+                })
+            })
+        }
 
-    try {
-        guild.channels.cache.find(val => val.name === "modlog").send({ embeds: [embed] }).catch(err => console.error(err));
-    } catch (err) {
-        message.channel.send(`No modlog`)
+        try {
+            interaction.guild.channels.cache.find(val => val.name === 'modlog').send({ embeds: [embed] }).catch(err => console.error(err))
+        } catch (err) {
+            interaction.channel.send('No modlog')
+        }
     }
-};
+}

@@ -1,271 +1,266 @@
-exports.run = async function (client, message, args) {
-    const superagent = require('superagent');
-    // require('superagent-proxy')(superagent);
-    const querystring = require('querystring');
-    var scholar = require('google-scholar-link')
-    const Discord = require('discord.js');
-    const { http, https } = require('follow-redirects');
-    const config = client.config
-    const child_process = require('child_process')
-    const mediaDomains = require('../mediaDomains.json');
-    const mediaProfilesAllowCookies = require('../mediaProfilesAllowCookies.json') // dont remove before page load - if not in the remove after page load, the cookie is kept
-    const mediaProfilesRemoveCookies = require('../mediaProfilesRemoveCookies.json') // remove after page load
-    const mediaProfilesRemoveAllExcept = require('../mediaProfilesRemoveAllExcept.json')
-    const mediaProfilesRemove = require('../mediaProfilesRemove.json')
-    const googleBotList = require('../googleBot.json')
-    const bingBotList = require('../bingBot.json')
-    const mediaProfilesAmp = require('../mediaProfilesAMP.json')
-    const blockedPageReqRegexes = require('../mediaProfilesBlockedPageReqRegex')
-    const mediaProfilesDisableJS = require('../mediaProfilesDisableJS.json')
-    const useOutline = require('../useOutline.json')
-    var uas = {
-        "google": 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
-        "bing": "'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)'"
-    }
-    const psl = require('psl');
-    const fs = require('fs').promises
-    function getRndInteger(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-    var scholarLink = ""
-    if (client.optINOUT.get(message.author.id) != undefined) {
-        if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
-    } if (args.join(' ') === "" || args.join(' ').indexOf("http") === -1) {
-        const help = new Discord.MessageEmbed()
-            .setColor("#f0ffff")
-            .setDescription("**Command: **" + `${config.prefix}get`)
-            .addField("**Usage:**", `${config.prefix}get <research report link/doi link>`)
-            .addField("**Usage 2:**", `${config.prefix}get m <media link, ex: nytimes.com>`)
-            .addField("**Example:**", `${config.prefix}get https://www.doi.org/10.2307/1342499/`)
-            .addField("**Example 2:**", `${config.prefix}get m https://www.bloomberg.com/news/articles/2021-06-13/a-meme-stock-is-born-how-to-spot-the-next-reddit-favorite`)
-            .addField("**Expected Result From Example:**", "Bot will search sci-hub for the specified document. If it is found, it will return a PDF to the channel. If PDF is too large, the PDF link will be sent.")
-            .addField("**Expected Result From Example 2:**", "Bot will return a PDF file that contians the unlocked content. This feature is in beta & may not always work on all media sites.")
-        message.channel.send({ embeds: [help] })
-        return;
-    }
-
-
-
-    if ((args[0].toLowerCase() != 'r') && (args[0].toLowerCase() === 'm' || (mediaDomains.some(v => args[args.length - 1].includes(v))))) {
-        var url = args.pop()
-        var filename = "./newsTempOutFiles/" + getRndInteger(999, 999999).toString() + message.channel.id + "x" + ".pdf"
-        var urlParsed = psl.parse(url.replace('https://', "").replace('http://', "").split('/')[0])
-        if (googleBotList.some(str => str.includes(urlParsed.domain))) {
-            var ua = uas['google']
-        } else if (bingBotList.some(str => str.includes(urlParsed.domain))) {
-            var ua = uas['bing']
-        } else {
-            var ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4538.0 Safari/537.36"
+const { SlashCommandBuilder } = require('@discordjs/builders')
+const superagent = require('superagent')
+const cheerio = require('cheerio')
+const psl = require('psl')
+const fs = require('fs')
+const fsp = fs.promises
+const IPFS = require('ipfs')
+const MongoClient = require('mongodb').MongoClient
+// eslint-disable-next-line camelcase
+const child_process = require('child_process')
+// const mediaDomains = require('../getFiles/mediaDomains.json')
+const googleBotList = require('../getFiles/googleBot.json')
+const bingBotList = require('../getFiles/bingBot.json')
+const mediaProfilesAmp = require('../getFiles/mediaProfilesAMP.json')
+const mhtml2html = require('mhtml2html')
+const { JSDOM } = require('jsdom')
+// http://www.smartjava.org/content/using-puppeteer-in-docker-copy-2/
+var uas = {
+    google: 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+    bing: "'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)'"
+}
+function getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min
+}
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName('get')
+        .setDescription('unlock research, news & book paywalls')
+        .addStringOption(option =>
+            option.setName('source')
+                .setDescription('link to the paper or news article or ISBN/book name to unlock')
+                .setRequired(true)
+        )
+        .addStringOption(option =>
+            option.setName('flags')
+                .setDescription('optional flags for the command. use m for news/media paywalls, use b for books')
+                .addChoice('media', 'm')
+                .addChoice('book', 'b')
+                .setRequired(false)
+        ),
+    async execute(interaction) {
+        require('../modules/telemetry').telemetry(__filename, interaction)
+        const config = interaction.client.config
+        const database = new MongoClient(config.MONGOURI, { useNewUrlParser: true, useUnifiedTopology: true })
+        const flag = interaction.options.getString('flags')
+        const link = interaction.options.getString('source')
+        if (link === null) {
+            interaction.reply('Not Found')
+            return
         }
-        var options = { // flags
-            "allowCookies": mediaProfilesAllowCookies.some(str => str.includes(urlParsed.domain)),
-            "removeCookiesAfterLoad": mediaProfilesRemoveCookies.some(str => str.includes(urlParsed.domain)),
-            "removeAllCookiesExcept": mediaProfilesRemoveAllExcept[urlParsed.domain],
-            "removeCertainCookies": mediaProfilesRemove[urlParsed.domain],
-            "bot": googleBotList.some(str => str.includes(urlParsed.domain)) ? 'google' : bingBotList.some(str => str.includes(urlParsed.domain)) ? 'bing' : "",
-            "ua": ua,
-            "amp": mediaProfilesAmp[urlParsed.domain],
-            "blockedPageReqRegex": blockedPageReqRegexes[urlParsed.domain],
-            "disableJS": mediaProfilesDisableJS.some(str => str.includes(urlParsed.domain)),
-            "outline": useOutline.some(str => str.includes(urlParsed.domain))
-        }
-        console.log(options)
-        message.channel.send('Give it a second, it might be slow...')
-        // message.channel.send(`OPTIONS:\nallowCookies: ${options.allowCookies}\nremoveCookiesAfterLoad: ${options.removeCookiesAfterLoad}\nremoveAllCookiesExcept: ${options.removeAllCookiesExcept}\nremoveCertainCookies: ${options.removeCertainCookies}\nBot: ${options.bot}\nUseragent UA: ${options.ua}\nAMP?: ${options.amp}\nblockedPageReqRegex: \`${options.blockedPageReqRegex}\`\nGive it a second, it might be slow...`)
+        if (flag !== 'm' && flag !== 'b') { // not media or books - regular get for papers
+            superagent
+                .get(`https://sci-hub.se/${link}`)
+                // .get(`https://sci-hub.se/https://www.doi.org/10.2307/1342499/`)
+                .set('Cache-Control', 'no-cache')
+                .set('User-Agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36')
+                .set('Accept', '*/*')
+                .set('Accept-Encoding', 'gzip, deflate, br')
+                .set('Connection', 'keep-alive')
+                .set('Host', 'sci-hub.se')
+                .redirects(2)
+                .end((err, res) => {
+                    var foundSciHubLink
+                    if (err) foundSciHubLink = null
+                    try {
+                        foundSciHubLink = res.text.match(/src="(.*?)" id = "pdf"/)
+                    } catch (err) {
+                        foundSciHubLink = null
+                    }
+                    if (foundSciHubLink != null) { // there is a scihub pdf - send it!
+                        if (foundSciHubLink[1].indexOf('https') === -1) {
+                            foundSciHubLink[1] = 'https:' + foundSciHubLink[1]
+                        }
+                        try {
+                            interaction.reply(foundSciHubLink[1])
+                            interaction.channel.send({
+                                files: [foundSciHubLink[1] + '.pdf']
+                            })
+                        } catch (e) {
+                            console.error(e)
+                        }
+                    } else { // if scihub pdf doesnt exist
+                        // check if scihub is libgen page
+                        if (res.text.includes('libgen')) { // libgen page
+                            var libgenSection = res.text.substring(res.text.indexOf('<td colspan=2>') + 14, res.text.indexOf('</a></b></td>'))
+                            libgenSection = libgenSection.substring(libgenSection.indexOf('<b><a href=\'') + 12, libgenSection.indexOf('\'>'))
+                            interaction.reply(`Document on libgen - Mirror selection page: ${res.request.url}\nWorking Download Mirror Link: ${libgenSection}`)
+                        } else {
+                            // check for google scholar
+                            superagent
+                                .get(`https://scholar.google.com/scholar?hl=en&q=${encodeURIComponent(link)}`)
+                                .redirects(3)
+                                .end((err, resScholar) => {
+                                    if (err) console.error(err)
+                                    var $ = cheerio.load(resScholar.text)
+                                    if ($($('#gs_res_ccl').children()[1]).children().length === 1) { // there is only 1 google scholar entry - see if that has a pdf.
+                                        if ($($($('#gs_res_ccl').children()[1]).children('div')[0]).children().length >= 2) { // 2 means there is a pdf. the pdf link element is the 1st div
+                                            // var scholarPDFLink = $($($($($('#gs_res_ccl').children()[1]).children('div')[0]) // deployment, use [1] on the last element for dev
+                                            var scholarPDFLink = $($($($($($('#gs_res_ccl').children()[1]).children('div')[0]).children()[0]).children()[0]).children()[0]).children('a').attr('href')
+                                            interaction.reply(scholarPDFLink)
+                                        } else { // no pdf found on google scholar. checking page's html & filtering doi & trying scihub on that.
+                                            if (!link.includes('doi.org')) {
+                                                superagent
+                                                    .get(link)
+                                                    .redirect(3)
+                                                    .end((err, res) => {
+                                                        if (err) console.error(err)
+                                                        var foundDoi = res.text.match(/doi.org\/\b(10[.][0-9]{4,}(?:[.][0-9]+)*\/(?:(?!["&'<>])\S)+)\b/gm) // find doi in page, and search for that doi
+                                                        superagent
+                                                            .get(`https://sci-hub.se/${foundDoi}`)
+                                                            .set('Cache-Control', 'no-cache')
+                                                            .set('User-Agent', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36')
+                                                            .set('Accept', '*/*')
+                                                            .set('Accept-Encoding', 'gzip, deflate, br')
+                                                            .set('Connection', 'keep-alive')
+                                                            .set('Host', 'sci-hub.se')
+                                                            .redirects(2)
+                                                            .end((err, resRecursiveDoiSearch) => {
+                                                                if (err) console.err(err)
+                                                                try {
+                                                                    foundSciHubLink = resRecursiveDoiSearch.text.match(/src="(.*?)" id = "pdf"/)
+                                                                } catch (err) {
+                                                                    foundSciHubLink = null
+                                                                }
+                                                                if (foundSciHubLink != null) {
+                                                                    if (foundSciHubLink[1].indexOf('https') === -1) {
+                                                                        foundSciHubLink[1] = 'https:' + foundSciHubLink[1]
+                                                                    }
+                                                                    try {
+                                                                        interaction.reply(foundSciHubLink[1])
+                                                                        interaction.channel.send({
+                                                                            files: [foundSciHubLink[1] + '.pdf']
+                                                                        })
+                                                                    } catch (e) {
+                                                                        console.error(e)
+                                                                    }
+                                                                } else {
+                                                                    superagent
+                                                                        .get(`https://scholar.google.com/scholar?hl=en&q=${encodeURIComponent(link)}`)
+                                                                        .redirects(3)
+                                                                        .end((err, resRecursiveScholarSearch) => {
+                                                                            if (err) console.error(err)
+                                                                            var $ = cheerio.load(resRecursiveScholarSearch.text)
+                                                                            if ($($('#gs_res_ccl').children()[1]).children().length === 1) {
+                                                                                if ($($($('#gs_res_ccl').children()[1]).children('div')[0]).children().length >= 2) { // 2 means there is a pdf. the pdf link element is the 1st div
+                                                                                    // var scholarPDFLink = $($($($($('#gs_res_ccl').children()[1]).children('div')[0]) // deployment, use [1] on the last element for dev
+                                                                                    var scholarPDFLink = $($($($($($('#gs_res_ccl').children()[1]).children('div')[0]).children()[0]).children()[0]).children()[0]).children('a').attr('href')
+                                                                                    interaction.reply(scholarPDFLink)
+                                                                                } else {
+                                                                                    interaction.reply('Not found')
+                                                                                }
+                                                                            } else if ($($('#gs_res_ccl').children()[1]).children().length < 1) {
+                                                                                interaction.reply('Not found')
+                                                                            } else {
+                                                                                interaction.reply(`Multiple google scholar entries. See this link: https://scholar.google.com/scholar?hl=en&q=${encodeURIComponent(link)}`)
+                                                                            }
+                                                                        })
+                                                                }
+                                                            })
+                                                    })
+                                            } else {
+                                                interaction.reply('Not found')
+                                            }
+                                        }
+                                    } else if ($($('#gs_res_ccl').children()[1]).children().length < 1) {
+                                        interaction.reply('Not found')
+                                    } else {
+                                        interaction.reply(`Multiple google scholar entries. See this link: https://scholar.google.com/scholar?hl=en&q=${encodeURIComponent(link)}`)
+                                    }
+                                })
+                        }
+                    }
+                })
+        } else if (flag === 'b' || /^(?:ISBN(?:-1[03])?:?●)?(?=[0-9X]{10}$|(?=(?:[0-9]+[-●]){3})[-●0-9X]{13}$|97[89][0-9]{10}$|(?=(?:[0-9]+[-●]){4})[-●0-9]{17}$)(?:97[89][-●]?)?[0-9]{1,5}[-●]?[0-9]+[-●]?[0-9]+[-●]?[0-9X]$/gm.test(link)) { // search libgen (triggered by b flag or ISBN regex test)
+            superagent
+                .get(`https://libgen.is/search.php?req=${encodeURIComponent(link)}&lg_topic=libgen&open=0&view=simple&res=25&phrase=1&column=def`)
+                .redirects(2)
+                .end((err, resLibgen) => {
+                    if (err) console.error(err)
+                    var $ = cheerio.load(resLibgen.text)
+                    var libLolLink = $($($($($('table').children()[2]).children('tr')[1]).children('td')[9]).children('a')[0]).attr('href')
+                    superagent
+                        .get(libLolLink)
+                        .redirects(2)
+                        .end((err, ipfsPortal) => {
+                            if (err) console.error(err)
+                            var $ = cheerio.load(ipfsPortal.text)
+                            interaction.reply($($($($('#download').children('ul')[0]).children('li')[0]).children('a')[0]).attr('href'))
+                        })
+                })
+        } else if (flag === 'm') {
+            var url = link
+            database.connect(async (err, dbClient) => {
+                if (err) console.error(err)
+                const collection = dbClient.db('db8bot').collection('ipfsKeys')
+                var dbResults = await collection.find({ link: link }).toArray()
+                if (dbResults[0] !== undefined) { // there is a result from mongo! send ipfs link instead of forking
+                    interaction.reply(`https://cloudflare-ipfs.com/ipfs/${dbResults[0].path}`)
+                    database.close()
+                } else { // open child process to generate pdf
+                    database.close()
+                    interaction.reply('Job added to paywall unlock queue. This may take a few minutes. It will return an HTML file. Download using the button on the bottom right & open in any major browser.')
+                    // var filename = './newsTempOutFiles/' + getRndInteger(999, 999999).toString() + interaction.channelId + 'x' + '.mhtml'
+                    var filename = './newsTempOutFiles/' + getRndInteger(999, 999999).toString() + interaction.channelId + 'x' + '.html'
+                    var urlParsed = psl.parse(url.replace('https://', '').replace('http://', '').split('/')[0])
 
-        if (options.amp != undefined && options.amp != "") {
-            url = url.replace(urlParsed.domain, options.amp).replace('www.', "") // make sure we go to the amp site if it has the amp flag
-        }
+                    if (googleBotList.some(str => str.includes(urlParsed.domain))) {
+                        var ua = uas.google
+                    } else if (bingBotList.some(str => str.includes(urlParsed.domain))) {
+                        var ua = uas.bing
+                    } else {
+                        var ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4538.0 Safari/537.36'
+                    }
 
+                    if (mediaProfilesAmp[urlParsed.domain] !== undefined && mediaProfilesAmp[urlParsed.domain] !== '') {
+                        url = url.replace(urlParsed.domain, mediaProfilesAmp[urlParsed.domain]).replace('www.', '') // make sure we go to the amp site if it has the amp flag
+                    }
 
-        const pdfChildProcess = child_process.fork('./commands/getPDFChild.js')
-        // console.log(new RegExp(options.blockedPageReqRegex))
+                    const pdfChildProcess = child_process.fork('./modules/getPDFChild.js')
 
-        pdfChildProcess.send({
-            link: url,
-            ua: ua,
-            reg: urlParsed.domain,
-            allowCookies: options.allowCookies,
-            removeCookiesAfterLoad: options.removeCookiesAfterLoad,
-            removeAllCookiesExcept: options.removeAllCookiesExcept,
-            removeCertainCookies: options.removeCertainCookies,
-            disableJS: options.disableJS,
-            filename: filename.toString(),
-            outline: options.outline
-        })
-        if (options.outline) {
-            pdfChildProcess.on('message', (outlineLink) => {
-                message.channel.send(outlineLink)
-            })
-        } else {
-            pdfChildProcess.on('close', async (code) => {
-                console.log(`exited with code ${code}`)
-                await message.channel.send({ files: [filename] })
-                if (message.guild != null) {
-                    message.channel.guild.members.fetch(client.user).then(user => {
-                        var joinDate = new Date(user.joinedTimestamp)
-                        if ((joinDate > 1616457600000 && joinDate < 1634860800000) && !(client.scopeUpdate.get(message.guild.id))) {
-                            const scopeUpdateMsg = new Discord.MessageEmbed()
-                                .setColor('#ff0000')
-                                .setTitle('db8bot Needs to be Reauthorized! - One Time Action')
-                                .setDescription('You only need to click the authorization link ONCE. It is included in multiple places to make it easier to find. For questions, contact AirFusion#1706 on Discord')
-                                .addField('TL;DR', 'db8bot needs to reauthorized as soon as possible by a member with **Manage Guild/Manage Server** permissions using [this link](https://discord.com/api/oauth2/authorize?client_id=689368779305779204&permissions=310647056497&scope=bot%20applications.commands) because Discord is enforcing slash commands in April 2022.')
-                                .addField('Why?', 'Discord will be enforcing bots to use Slash commands (instead of commands with a prefix) starting April 2022. In order for that to work, **bots invited after March 2021 need to be reauthorized using [this](https://discord.com/api/oauth2/authorize?client_id=689368779305779204&permissions=310647056497&scope=bot%20applications.commands) link. (If you are getting this message, it means you invited db8bot after March 2021)** See Discord\'s announcement [here](https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Access-Deprecation-for-Verified-Bots). db8bot will transition to slash commands in less than 2 months so we can fix bugs before the mandatory transition.')
-                                .addField('How?', 'Reauthorize db8bot using [this](https://discord.com/api/oauth2/authorize?client_id=689368779305779204&permissions=310647056497&scope=bot%20applications.commands) link. It needs to be done by members with the __**manage server**__ permission. You **do not need to kick db8bot.** Just click on the link and "re-add" the bot to your server.')
-                                .addField('What if I don\'t reauthorize?', 'db8bot will stop functioning in your server beginning April 2022. You can reauthorize anytime to restore functionality.')
-                                .addField('Stop this message', 'To stop receiving this message, ask a member with the `Manage Server` permission to execute `-stopnotice`.')
+                    pdfChildProcess.send({
+                        link: url,
+                        ua: ua,
+                        filename: filename.toString()
+                    })
 
-                            message.channel.send({ embeds: [scopeUpdateMsg] })
+                    pdfChildProcess.on('message', async (mhtml) => {
+                        // console.log(`exited with code ${code}`)
+                        console.log('received')
+                        pdfChildProcess.disconnect()
+                        const htmldoc = await mhtml2html.convert(mhtml, { parseDOM: (html) => new JSDOM(html) })
+                        await fsp.writeFile(filename.toString(), htmldoc.serialize())
+                        await interaction.channel.send({ files: [filename] })
+                        try {
+                            var readStream = fs.createReadStream(filename)
+                            const ipfsNode = await IPFS.create()
+                            const results = await ipfsNode.add(readStream)
+
+                            // write key to mongo
+                            database.connect(async (err, dbClient) => {
+                                if (err) console.error(err)
+                                const collection = dbClient.db('db8bot').collection('ipfsKeys')
+                                collection.insertOne({
+                                    link: link,
+                                    path: results.path
+                                }, async function (err, res) {
+                                    if (err) console.error(err)
+                                    database.close()
+                                    try {
+                                        await fsp.rm(filename)
+                                    } catch (e) {
+                                        if (e) console.error(e)
+                                    }
+                                    console.log('inserted')
+                                })
+                            })
+                        } catch (err) {
+                            console.error(err)
+                            console.log('ipfs failed')
                         }
                     })
                 }
-                try {
-                    await fs.rm(filename)
-                } catch (e) {
-                    if (e) console.error(e)
-                }
             })
         }
-
-    }
-    // sci hub section below
-    else if (args[0].toLowerCase() === 'r' || !mediaDomains.some(v => args[args.length - 1].includes(v))) {
-
-        superagent
-            .get(`https://sci-hub.se/${args.join(' ')}`)
-            // .get(`https://sci-hub.se/https://www.doi.org/10.2307/1342499/`)
-            .set("Cache-Control", "no-cache")
-            .set('User-Agent', "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36")
-            .set("Accept", "*/*")
-            .set("Accept-Encoding", "gzip, deflate, br")
-            .set("Connection", "keep-alive")
-            .set("Host", "sci-hub.se")
-            .redirects(5)
-            // .proxy(config.proxy)
-            .end((err, res) => {
-                client.logger.log('info', `get command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
-                // Calling the end function will send the request
-                // console.log(res.text)
-                try {
-                    // var found = res.text.match(/<iframe src = \"(.*?)\" id = \"pdf\"><\/iframe>/)
-                    var found = res.text.match(/src=\"(.*?)\" id = "pdf"/)
-                } catch {
-                    found = null
-                }
-                // console.log(found)
-                if (found === null) {
-                    if (res.text.includes('libgen')) { // libgen download
-                        var libgenSection = res.text.substring(res.text.indexOf('<td colspan=2>') + 14, res.text.indexOf('</a></b></td>'))
-                        libgenSection = libgenSection.substring(libgenSection.indexOf(`<b><a href='`) + 12, libgenSection.indexOf(`'>`))
-                        message.channel.send(`Document on libgen - Mirror selection page: ${res.request.url}`)
-                        message.channel.send(`Working Download Mirror Link: ${libgenSection}`)
-                    } else if (args.join(' ').includes('doi.org')) {
-                        const doiRequest = https.request({
-                            host: 'doi.org',
-                            path: args.join(' ').substring(15)
-                        }, response => {
-                            // console.log(response.responseUrl);
-                            superagent
-                                .get(`https://sci-hub.se/${response.responseUrl}`)
-                                .set("Cache-Control", "no-cache")
-                                .set('User-Agent', "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36")
-                                .set("Accept", "*/*")
-                                .set("Accept-Encoding", "gzip, deflate, br")
-                                .set("Connection", "keep-alive")
-                                .set("Host", "sci-hub.se")
-                                // .proxy(config.proxy)
-                                .end((err, res) => {
-                                    res.text.match(/src=\"(.*?)\" id = "pdf"/)
-                                    if (found === null) {
-                                        if (res.text.includes('libgen')) { // libgen download
-                                            var libgenSection = res.text.substring(res.text.indexOf('<td colspan=2>') + 14, res.text.indexOf('</a></b></td>'))
-                                            libgenSection = libgenSection.substring(libgenSection.indexOf(`<b><a href='`) + 12, libgenSection.indexOf(`'>`))
-                                            const request = https.request({
-                                                host: 'sci-hub.se',
-                                                path: args.join(' '),
-                                            }, response => {
-                                                console.log(response.responseUrl);
-                                                message.channel.send(`Document on libgen - Mirror selection page: ${response.responseUrl}`)
-                                            });
-                                            request.end();
-                                            message.channel.send(`Working Download Mirror Link: ${libgenSection}`)
-                                        } else {
-                                            message.reply(`Not found on Sci-Hub! :( Try the following Google Scholar link (Incase they have a free PDF)`)
-                                            scholarLink = scholar(querystring.escape(args.join(' ')))
-                                            scholarLink = scholarLink.substring(0, scholarLink.length - 1)
-                                            scholarLink = scholarLink.substring(0, scholarLink.indexOf('"')) + scholarLink.substring(scholarLink.indexOf('"') + 1)
-                                            message.channel.send(scholarLink)
-                                        }
-                                    } else {
-                                        if (found[1].indexOf("https") === -1) {
-                                            found[1] = "https:" + found[1];
-                                        }
-                                        try {
-                                            message.channel.send(found[1])
-                                            message.channel.send({
-                                                files: [found[1] + ".pdf"]
-                                            }).catch(err => console.log(err))
-                                            message.channel.guild.members.fetch(client.user).then(user => {
-                                                var joinDate = new Date(user.joinedTimestamp)
-                                                if ((joinDate > 1616457600000 && joinDate < 1634860800000) && !(client.scopeUpdate.get(message.guild.id))) {
-                                                    const scopeUpdateMsg = new Discord.MessageEmbed()
-                                                        .setColor('#ff0000')
-                                                        .setTitle('db8bot Needs to be Reauthorized! - One Time Action')
-                                                        .setDescription('You only need to click the authorization link ONCE. It is included in multiple places to make it easier to find. For questions, contact AirFusion#1706 on Discord')
-                                                        .addField('TL;DR', 'db8bot needs to reauthorized as soon as possible by a member with **Manage Guild/Manage Server** permissions using [this link](https://discord.com/api/oauth2/authorize?client_id=689368779305779204&permissions=310647056497&scope=bot%20applications.commands) because Discord is enforcing slash commands in April 2022.')
-                                                        .addField('Why?', 'Discord will be enforcing bots to use Slash commands (instead of commands with a prefix) starting April 2022. In order for that to work, **bots invited after March 2021 need to be reauthorized using [this](https://discord.com/api/oauth2/authorize?client_id=689368779305779204&permissions=310647056497&scope=bot%20applications.commands) link. (If you are getting this message, it means you invited db8bot after March 2021).** See Discord\'s announcement [here](https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Access-Deprecation-for-Verified-Bots). db8bot will transition to slash commands in less than 2 months so we can fix bugs before the mandatory transition.')
-                                                        .addField('How?', 'Reauthorize db8bot using [this](https://discord.com/api/oauth2/authorize?client_id=689368779305779204&permissions=310647056497&scope=bot%20applications.commands) link. It needs to be done by members with the __**manage server**__ permission. You **do not need to kick db8bot.** Just click on the link and "re-add" the bot to your server.')
-                                                        .addField('What if I don\'t reauthorize?', 'db8bot will stop functioning in your server beginning April 2022. You can reauthorize anytime to restore functionality.')
-                                                        .addField('Stop this message', 'To stop receiving this message, ask a member with the `Manage Server` permission to execute `-stopnotice`.')
-
-                                                    message.channel.send({ embeds: [scopeUpdateMsg] })
-                                                }
-                                            })
-                                        } catch (e) {
-                                            console.log(e)
-                                        }
-                                    }
-                                })
-                        });
-                        doiRequest.end();
-                    } else {
-                        message.reply(`Not found on Sci-Hub! :( Try the following Google Scholar link (Incase they have a free PDF)`)
-                        scholarLink = scholar(querystring.escape(args.join(' ')))
-                        scholarLink = scholarLink.substring(0, scholarLink.length - 1)
-                        scholarLink = scholarLink.substring(0, scholarLink.indexOf('"')) + scholarLink.substring(scholarLink.indexOf('"') + 1)
-                        message.channel.send(scholarLink)
-                    }
-
-                } else {
-                    if (found[1].indexOf("https") === -1) {
-                        found[1] = "https:" + found[1];
-                    }
-                    try {
-                        message.channel.send(found[1])
-                        message.channel.send({
-                            files: [found[1] + ".pdf"]
-                        }).catch(err => console.log(err))
-                        message.channel.guild.members.fetch(client.user).then(user => {
-                            var joinDate = new Date(user.joinedTimestamp)
-                            if ((joinDate > 1616457600000 && joinDate < 1634860800000) && !(client.scopeUpdate.get(message.guild.id))) {
-                                const scopeUpdateMsg = new Discord.MessageEmbed()
-                                    .setColor('#ff0000')
-                                    .setTitle('db8bot Needs to be Reauthorized! - One Time Action')
-                                    .setDescription('You only need to click the authorization link ONCE. It is included in multiple places to make it easier to find. For questions, contact AirFusion#1706 on Discord')
-                                    .addField('TL;DR', 'db8bot needs to reauthorized as soon as possible by a member with **Manage Guild/Manage Server** permissions using [this link](https://discord.com/api/oauth2/authorize?client_id=689368779305779204&permissions=310647056497&scope=bot%20applications.commands) because Discord is enforcing slash commands in April 2022.')
-                                    .addField('Why?', 'Discord will be enforcing bots to use Slash commands (instead of commands with a prefix) starting April 2022. In order for that to work, **bots invited after March 2021 need to be reauthorized using [this](https://discord.com/api/oauth2/authorize?client_id=689368779305779204&permissions=310647056497&scope=bot%20applications.commands) link. (If you are getting this message, it means you invited db8bot after March 2021)** See Discord\'s announcement [here](https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Access-Deprecation-for-Verified-Bots). db8bot will transition to slash commands in less than 2 months so we can fix bugs before the mandatory transition.')
-                                    .addField('How?', 'Reauthorize db8bot using [this](https://discord.com/api/oauth2/authorize?client_id=689368779305779204&permissions=310647056497&scope=bot%20applications.commands) link. It needs to be done by members with the __**manage server**__ permission. You **do not need to kick db8bot.** Just click on the link and "re-add" the bot to your server.')
-                                    .addField('What if I don\'t reauthorize?', 'db8bot will stop functioning in your server beginning April 2022. You can reauthorize anytime to restore functionality.')
-                                    .addField('Stop this message', 'To stop receiving this message, ask a member with the `Manage Server` permission to execute `-stopnotice`.')
-
-                                message.channel.send({ embeds: [scopeUpdateMsg] })
-                            }
-                        })
-                    } catch (e) {
-                        console.log(e)
-                    }
-                }
-            })
-
     }
 }

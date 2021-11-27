@@ -1,49 +1,64 @@
 {
   "name": "db8bot",
-  "version": "3.1.0",
-  "description": "",
+  "version": "4.0.4",
+  "description": "db8bot/Debate Bot is a multipurpose high school debate bot - Provides helpful functions for debate such as research tools & debate tracking.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    ".": "npm start"
+    "start": "node index.js",
+    "build": "docker build . -t db8bot-v4.0.4-arctic-tern-prod"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AirFusion45/db8bot.git"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "scihub",
+    "school",
+    "debate",
+    "discord.js",
+    "debate",
+    "debate-tracking"
+  ],
   "author": "AirFusion45",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AirFusion45/db8bot/issues"
+  },
+  "homepage": "https://github.com/AirFusion45/db8bot#readme",
   "dependencies": {
-    "@sentry/node": "^6.12.0",
-    "@vitalets/google-translate-api": "^7.0.0",
-    "base64-url": "^2.3.3",
-    "better-sqlite3": "^7.4.3",
+    "@discordjs/builders": "^0.6.0",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "bad-words": "^3.0.4",
     "chalk": "^4.1.2",
-    "detergent": "^7.1.0",
+    "cheerio": "^1.0.0-rc.10",
+    "discord-api-types": "^0.22.0",
     "discord.js": "^13.1.0",
-    "emoji-unicode": "^2.0.1",
+    "dotenv": "^10.0.0",
     "enmap": "^5.8.7",
-    "follow-redirects": "^1.14.3",
-    "google-scholar-link": "^1.0.1",
-    "ipinfo": "^1.5.1",
-    "leo-profanity": "^1.3.0",
-    "long": "^4.0.0",
-    "moment": "^2.29.1",
+    "ipfs": "^0.58.4",
+    "jsdom": "^18.1.1",
+    "long": "^5.2.0",
+    "mhtml2html": "^3.0.0",
+    "mongodb": "^4.1.1",
     "ms": "^2.1.3",
-    "os": "^0.1.2",
     "pngjs": "^6.0.0",
     "psl": "^1.8.0",
     "puppeteer": "^10.2.0",
-    "puppeteer-extra": "^3.1.18",
-    "puppeteer-extra-plugin-stealth": "^2.7.8",
-    "python-shell": "^3.0.0",
-    "querystring": "^0.2.1",
-    "string-strip-html": "^8.3.0",
     "superagent": "^6.1.0",
-    "superagent-proxy": "^3.0.0",
+    "universal-analytics": "^0.4.23",
+    "uuid": "^3.4.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "@types/node": "^16.7.10",
-    "clockmaker": "^2.0.0",
-    "goodreads-quote-scraper": "^1.0.4",
-    "jssoup": "0.0.12"
-  },
-  "type": "commonjs"
+    "@vitalets/google-translate-api": "^7.0.0",
+    "debug": "^4.3.2",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0"
+  }
 }

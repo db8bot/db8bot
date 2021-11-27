@@ -1,16 +1,17 @@
-exports.run = function (client, message, args) {
+const { SlashCommandBuilder } = require('@discordjs/builders')
+const Discord = require('discord.js')
 
-    const Discord = require('discord.js');
-    const config = client.config;
-    var guild = message.guild;
-    if (client.optINOUT.get(message.author.id) != undefined) {
-        if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
-    } const embed = new Discord.MessageEmbed()
-        .setColor("#00ffff")
-        .setTimestamp()
-        .setFooter("Invite Link for " + config.name)
-        .addField(`Invite link:`, `[Here](${config.invLink}) | Thanks for inviting ${config.name}!`)
-
-    message.channel.send({ embeds: [embed] })
-    client.logger.log('info', `invite command used by ${message.author.username} Time: ${Date.now()} Guild: ${guild}`)
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName('invite')
+        .setDescription('Invite Link for db8bot'),
+    async execute(interaction) {
+        require('../modules/telemetry').telemetry(__filename, interaction)
+        const embed = new Discord.MessageEmbed()
+            .setColor('#00ffff')
+            .setTimestamp()
+            .setFooter(`Invite Link for ${interaction.client.config.NAME}`)
+            .addField('Invite link:', `[Here](${interaction.client.config.INVLINK}) | Thanks for inviting ${interaction.client.config.NAME}!`)
+        interaction.reply({ embeds: [embed] })
+    }
 }

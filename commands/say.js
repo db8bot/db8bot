@@ -1,16 +1,26 @@
-exports.run = function (client, message, args) {
-    var guild = message.guild;
-    const config = client.config;
-    const filter = require('leo-profanity')
-    if (client.optINOUT.get(message.author.id) != undefined) {
-        if (client.optINOUT.get(message.author.id).value.includes(__filename.substring(__filename.lastIndexOf("/") + 1, __filename.indexOf(".js")))) return message.channel.send("You have opted out of this service. Use the `optout` command to remove this optout.")
-    } message.delete()
-    client.options.disableMentions = "all";
-    if (message.author.id != config.owner) {
-        message.channel.send(filter.clean(args.join(' ')) + `\n**-${message.author.tag}**`)
-    } else if (message.author.id === config.owner) {
-        client.options.disableMentions = "none";
-        message.channel.send(args.join(' '))
+const { SlashCommandBuilder } = require('@discordjs/builders')
+const Filter = require('bad-words')
+var filter = new Filter()
+module.exports = {
+    data: new SlashCommandBuilder()
+        .setName('say')
+        .setDescription('Make db8bot say something')
+        .addStringOption(option =>
+            option.setName('message')
+                .setDescription('Message for db8bot to say')
+                .setRequired(true)
+        ),
+    async execute(interaction) {
+        require('../modules/telemetry').telemetry(__filename, interaction)
+        const config = interaction.client.config
+        const args = interaction.options.getString('message')
+
+        interaction.client.options.disableMentions = 'all'
+        if (interaction.user.id !== config.OWNER) {
+            interaction.reply(filter.clean(args) + `\n-${interaction.user.tag}`)
+        } else if (interaction.user.id === config.OWNER) {
+            interaction.client.options.disableMentions = 'none'
+            interaction.reply(args)
+        }
     }
-    client.logger.log('info', `say command used by ${message.author.username} Time: ${Date()} Guild: ${message.guild}`)
 }

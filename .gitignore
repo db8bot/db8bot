@@ -3,37 +3,7 @@ node_modules/
 
 config.json
 
-Friedrich-Engels.json
-
-Karl-Marx.json
-
-Mao-Zedong.json
-
-scrape.js
-
-data/
-
-quotes copy.json
-
-quotes.json
-
-lib/
-
-Adam-Smith.json
-
-John-Maynard Keynes.json
-
-Mao-Tse-Tung.json
-
-Milton-Friedman.json
-
-Vladimir-Lenin.json
-
 breakbotIMG/
-
-Giorgio-Agamben.json
-
-Michel-Foucault.json
 
 imgCleanTempFiles/
 
@@ -41,11 +11,21 @@ commands/benmoshe<3.js
 
 commands/benmoshe_3.js
 
+legacyCommands/benmoshe_3.js
+
+legacyCommands/benmoshe<3.js
+
 bfg-1.14.0.jar
 
 configDev.json
-getFiles/
 
-*.env
+# *.env
+dev.env
 
-commands/.DS_Store
+prod.env
+
+.DS_Store
+
+data/
+
+modules/mediaExt/bypass-paywalls-chrome-master/
