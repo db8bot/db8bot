@@ -4,7 +4,7 @@ function logTelemetry(filename, client, message) {
 
     // local logging
     if (message.guild === null) { // dms
-        client.logger.log('info', `${path.basename(filename, '.js')} command used by ${user.username} Time: ${Date()} Guild: null`)
+        client.logger.log('info', `legacy${path.basename(filename, '.js')} command used by ${user.username} Time: ${Date()} Guild: null`)
 
         // GA logging
         client.telemetry.set('cd1', user.username)
@@ -12,12 +12,12 @@ function logTelemetry(filename, client, message) {
         client.telemetry.pageview({
             v: client.pkg.version.replace(/\./g, '').trim(),
             uid: Buffer.from(user.username).toString('base64'),
-            dp: `/${path.basename(filename, '.js')}`,
-            dt: path.basename(filename, '.js'),
+            dp: `/legacy${path.basename(filename, '.js')}`,
+            dt: 'legacy' + path.basename(filename, '.js'),
             dr: 'https://null'
         }).send()
     } else {
-        client.logger.log('info', `${path.basename(filename, '.js')} command used by ${user.username} Time: ${Date()} Guild: ${message.guild.name}`)
+        client.logger.log('info', `legacy${path.basename(filename, '.js')} command used by ${user.username} Time: ${Date()} Guild: ${message.guild.name}`)
 
         // GA logging
         client.telemetry.set('cd1', user.username)
@@ -25,9 +25,9 @@ function logTelemetry(filename, client, message) {
         client.telemetry.pageview({
             v: client.pkg.version.replace(/\./g, '').trim(),
             uid: Buffer.from(user.username).toString('base64'),
-            dp: `/${path.basename(filename, '.js')}`,
-            dt: path.basename(filename, '.js'),
-            dr: `https://${message.guild.name}`
+            dp: `/legacy${path.basename(filename, '.js')}`,
+            dt: 'legacy' + path.basename(filename, '.js'),
+            dr: `https://${message.guild.name.replace(/ /g, '')}`
         }).send()
     }
 }

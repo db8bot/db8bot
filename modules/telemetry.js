@@ -23,7 +23,7 @@ function logTelemetry(filename, interaction) {
             uid: Buffer.from(interaction.user.username).toString('base64'),
             dp: `/${path.basename(filename, '.js')}`,
             dt: path.basename(filename, '.js'),
-            dr: `https://${interaction.guild.name}`
+            dr: `https://${interaction.guild.name.replace(/ /g, '')}`
         }).send()
     }
 }

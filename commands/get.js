@@ -147,8 +147,10 @@ module.exports = {
                                                                                     var scholarPDFLink = $($($($($($('#gs_res_ccl').children()[1]).children('div')[0]).children()[0]).children()[0]).children()[0]).children('a').attr('href')
                                                                                     interaction.reply(scholarPDFLink)
                                                                                 } else {
-                                                                                    interaction.reply('Not found.')
+                                                                                    interaction.reply('Not found')
                                                                                 }
+                                                                            } else if ($($('#gs_res_ccl').children()[1]).children().length < 1) {
+                                                                                interaction.reply('Not found')
                                                                             } else {
                                                                                 interaction.reply(`Multiple google scholar entries. See this link: https://scholar.google.com/scholar?hl=en&q=${encodeURIComponent(link)}`)
                                                                             }
@@ -160,6 +162,8 @@ module.exports = {
                                                 interaction.reply('Not found')
                                             }
                                         }
+                                    } else if ($($('#gs_res_ccl').children()[1]).children().length < 1) {
+                                        interaction.reply('Not found')
                                     } else {
                                         interaction.reply(`Multiple google scholar entries. See this link: https://scholar.google.com/scholar?hl=en&q=${encodeURIComponent(link)}`)
                                     }

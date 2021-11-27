@@ -5,10 +5,9 @@ exports.run = async function (client, message, args) {
     const Discord = require('discord.js')
     const config = client.config
     const child_process = require('child_process')
-    const mediaDomains = require('../mediaDomains.json')
-    const googleBotList = require('../googleBot.json')
-    const bingBotList = require('../bingBot.json')
-    const mediaProfilesAmp = require('../mediaProfilesAMP.json')
+    const googleBotList = require('../getFiles/googleBot.json')
+    const bingBotList = require('../getFiles/bingBot.json')
+    const mediaProfilesAmp = require('../getFiles/mediaProfilesAMP.json')
     var uas = {
         google: 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
         bing: "'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)'"
@@ -39,7 +38,7 @@ exports.run = async function (client, message, args) {
         return
     }
     require('../modules/legacyTelemetry').telemetry(__filename, client, message)
-    if ((args[0].toLowerCase() != 'r') && (args[0].toLowerCase() === 'm' || (mediaDomains.some(v => args[args.length - 1].includes(v))))) {
+    if ((args[0].toLowerCase() != 'r') && (args[0].toLowerCase() === 'm')) {
         var url = args.pop()
         database.connect(async (err, dbClient) => {
             if (err) console.error(err)
@@ -109,7 +108,7 @@ exports.run = async function (client, message, args) {
         })
     }
     // sci hub section below
-    else if (args[0].toLowerCase() === 'r' || !mediaDomains.some(v => args[args.length - 1].includes(v))) {
+    else {
         var link = args.join(' ')
         superagent
             .get(`https://sci-hub.se/${link}`)
@@ -134,7 +133,7 @@ exports.run = async function (client, message, args) {
                         foundSciHubLink[1] = 'https:' + foundSciHubLink[1]
                     }
                     try {
-                        message.channel.send.reply(foundSciHubLink[1])
+                        message.channel.send(foundSciHubLink[1])
                         message.channel.send({
                             files: [foundSciHubLink[1] + '.pdf']
                         })
@@ -211,6 +210,8 @@ exports.run = async function (client, message, args) {
                                                                             } else {
                                                                                 message.channel.send('Not found.')
                                                                             }
+                                                                        } else if ($($('#gs_res_ccl').children()[1]).children().length < 1) {
+                                                                            message.channel.send('Not found')
                                                                         } else {
                                                                             message.channel.send(`Multiple google scholar entries. See this link: https://scholar.google.com/scholar?hl=en&q=${encodeURIComponent(link)}`)
                                                                         }
@@ -222,6 +223,8 @@ exports.run = async function (client, message, args) {
                                             message.channel.send('Not found')
                                         }
                                     }
+                                } else if ($($('#gs_res_ccl').children()[1]).children().length < 1) { // no google scholar entries
+                                    message.channel.send('Not found')
                                 } else {
                                     message.channel.send(`Multiple google scholar entries. See this link: https://scholar.google.com/scholar?hl=en&q=${encodeURIComponent(link)}`)
                                 }
