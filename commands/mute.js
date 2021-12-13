@@ -19,6 +19,7 @@ module.exports = {
         var user = interaction.options.getUser('user')
         var reason = interaction.options.getString('reason')
         const muteRole = interaction.guild.roles.cache.find(val => val.name === 'Mute')
+         if (interaction.guild.members.cache.get(interaction.user.id).permissions.has(Discord.Permissions.FLAGS.MANAGE_MESSAGES) || interaction.guild.members.cache.get(interaction.user.id).permissions.has(Discord.Permissions.FLAGS.ADMINISTRATOR) || interaction.user.id === config.OWNER){
         if (!muteRole) return interaction.reply('Mute Role required')
         interaction.guild.members.fetch(interaction.client.user.id).then(member => {
             if (!member.permissions.has(Discord.Permissions.FLAGS.MANAGE_ROLES)) return interaction.reply('Bot has insufficant Perms').catch(console.error)
@@ -55,5 +56,6 @@ module.exports = {
         } catch (e) {
             console.error(e)
         }
+      }
     }
 }
