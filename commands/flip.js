@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
+const Discord = require('discord.js')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -6,6 +7,15 @@ module.exports = {
         .setDescription('Flip a Coin - Useful for PF'),
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
-        interaction.reply((Math.floor(Math.random() * 2) === 0) ? 'heads' : 'tails')
+         let coin = [
+            'tails',
+            'heads',
+        ]
+        let index = (Math.floor(Math.random() * Math.floor(coin.length)))
+        const embed = new Discord.MessageEmbed()
+        .setColor('00FFFF')
+        .setTitle(coin[index] )
+        interaction.reply({ embeds: [embed] })
+    
     }
 }
