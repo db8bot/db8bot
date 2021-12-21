@@ -69,7 +69,11 @@ if (versionSelector === 'prod') {
             if (Object.keys(serverSpecificSlashGlobal).includes(file.replace('.js', ''))) {
                 serverSpecificCommands.push(command.data.toJSON())
             } else {
-                commands.push(command.data.toJSON())
+                try {
+                    commands.push(command.data.toJSON())
+                } catch (err) {
+                    console.log(`File failed: ${file}`)
+                }
             }
             client.commands.set(command.data.name, command)
         }
