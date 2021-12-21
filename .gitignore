@@ -29,3 +29,5 @@ prod.env
 data/
 
 modules/mediaExt/bypass-paywalls-chrome-master/
+
+db8bot old sql data/
