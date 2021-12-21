@@ -13,6 +13,8 @@ const Long = require('long')
 const MongoClient = require('mongodb').MongoClient
 const ua = require('universal-analytics')
 const Enmap = require('enmap')
+const Sentry = require('@sentry/node')
+const Tracing = require('@sentry/tracing')
 
 // Client Setup & Defaults Initialization
 const client = new Client({
@@ -40,6 +42,10 @@ const testServerGuildID = '689368206904655878'
 
 if (versionSelector === 'prod') {
     var config = require('dotenv').config({ path: './prod.env' })
+    Sentry.init({
+        dsn: 'https://3a8ab5afe5824525ac1f41ebe688fbd0@o196622.ingest.sentry.io/5188131',
+        tracesSampleRate: 1.0
+    })
     if (config.error) {
         process.exit(1)
     }
