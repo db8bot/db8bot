@@ -1,26 +1,38 @@
+orbs:
+  docker: circleci/docker@1.5.0
+
 # Use the latest 2.1 version of CircleCI pipeline process engine.
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+executors:
+  docker-publisher:
+    # environment:
+    #   IMAGE_NAME: ndukwearm19docker/docker-node-app
+    docker: # Each job requires specifying an executor
+      - image: cimg/node:17.3.0
+
 jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-    docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+  buildDockerImg:
+    executor: docker-publisher
     steps:
       - checkout
+      - setup_remote_docker
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          name: "Build Docker Image for Deployment"
+          command: |
+            npm run build
+            curl https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-367.0.0-linux-x86.tar.gz | tar -xz
+            ./google-cloud-sdk/install.sh
+            ./google-cloud-sdk/bin/gcloud init
+            gcloud auth activate-service-account circleci-docker-build@db8bot.iam.gserviceaccount.com --key-file="$GCLOUD_SERVICE_KEY"
+            gcloud auth configure-docker us-central1-docker.pkg.dev
+            export IMGNAME=$(node -p "require('./package.json').scripts.build.replace('docker build . -t ','')")
+            docker tag "$IMGNAME" us-central1-docker.pkg.dev/db8bot/discord-db8bot/"$IMGNAME"
+            docker push us-central1-docker.pkg.dev/db8bot/discord-db8bot/"$IMGNAME"
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+
 workflows:
-  say-hello-workflow:
+  build-for-deployment:
     jobs:
-      - say-hello
+      - buildDockerImg
