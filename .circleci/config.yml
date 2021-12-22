@@ -22,9 +22,8 @@ jobs:
           name: "Build Docker Image for Deployment"
           command: |
             npm run build
-            curl https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-367.0.0-linux-x86.tar.gz | tar -xz
-            ./google-cloud-sdk/install.sh -q --path-update true
-            ./google-cloud-sdk/bin/gcloud init
+            curl https://sdk.cloud.google.com > install.sh
+            bash install.sh --disable-prompts
             gcloud auth activate-service-account circleci-docker-build@db8bot.iam.gserviceaccount.com --key-file="$GCLOUD_SERVICE_KEY"
             gcloud auth configure-docker us-central1-docker.pkg.dev
             export IMGNAME=$(node -p "require('./package.json').scripts.build.replace('docker build . -t ','')")
