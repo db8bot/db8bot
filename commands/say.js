@@ -12,13 +12,12 @@ module.exports = {
         ),
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
-        const config = interaction.client.config
         const args = interaction.options.getString('message')
 
         interaction.client.options.disableMentions = 'all'
-        if (interaction.user.id !== config.OWNER) {
+        if (interaction.user.id !== process.env.OWNER) {
             interaction.reply(filter.clean(args) + `\n-${interaction.user.tag}`)
-        } else if (interaction.user.id === config.OWNER) {
+        } else if (interaction.user.id === process.env.OWNER) {
             interaction.client.options.disableMentions = 'none'
             interaction.reply(args)
         }

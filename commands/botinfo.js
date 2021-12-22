@@ -42,7 +42,6 @@ module.exports = {
         ),
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
-        const config = interaction.client.config
         const args = interaction.options.getString('flags')
 
         let totalPeople = 0
@@ -53,13 +52,13 @@ module.exports = {
         interaction.client.guilds.cache.map(botPerson => botNumber += botPerson.members.cache.filter(member => member.user.bot).size)
         const embed = new Discord.MessageEmbed()
             .setColor('36393E')
-            .setTitle(interaction.client.user.username + ' V: ' + pkg.version + ' ' + config.BUILD)
+            .setTitle(interaction.client.user.username + ' V: ' + pkg.version + ' ' + process.env.BUILD)
             .setDescription(interaction.client.user.username + ' has been awake for ' + timeCon(process.uptime()))
-            .addField(':construction_worker: Creator', config.OWNERTAG, true)
+            .addField(':construction_worker: Creator', process.env.OWNERTAG, true)
             .addField('🏠 Guilds', '' + interaction.client.guilds.cache.size, true)
             .addField('📄 Channels', '' + interaction.client.channels.cache.size, true)
             .addField('🤵 Total Users', '' + (totalPeople - botNumber), true) // repl with -test cmd contents
-            .addField(':arrow_left: Legacy Prefix', config.PREFIX, true)
+            .addField(':arrow_left: Legacy Prefix', process.env.PREFIX, true)
             .addField(':clipboard: # of Commands - Some not accessable to users', '' + commandsLength, true)
             .addField(':gem: Shards', 'N/A')
             // .addField(`:heart: Upvote ${config.name}`, `[Discord Bot List (discordbots.org)](https://discordbots.org/bot/460610749283172353)\n[Discord Bot List](https://discordbotlist.com/bots/460610749283172353)\n[Bots on Discord](https://bots.ondiscord.xyz/bots/460610749283172353)\n[Bots for Discord](https://botsfordiscord.com/bots/460610749283172353)`, true) // check if this is working with the custom emoji
@@ -78,13 +77,13 @@ module.exports = {
         } else {
             const embednotNerdy = new Discord.MessageEmbed()
                 .setColor('36393E')
-                .setTitle(interaction.client.user.username + ' V: ' + pkg.version + ' ' + config.BUILD)
+                .setTitle(interaction.client.user.username + ' V: ' + pkg.version + ' ' + process.env.BUILD)
                 .setDescription('Awake for ' + timeCon(process.uptime()))
-                .addField(':crown: Developer/Owner', config.OWNERTAG, true)
+                .addField(':crown: Developer/Owner', process.env.OWNERTAG, true)
                 .addField('🏠 Guilds', '' + interaction.client.guilds.cache.size, true)
                 .addField('📄 Channels', '' + interaction.client.channels.cache.size, true)
                 .addField('🤵 Total Users', '' + (totalPeople - botNumber), true)
-                .addField(':arrow_left: Legacy Prefix', config.PREFIX, true)
+                .addField(':arrow_left: Legacy Prefix', process.env.PREFIX, true)
                 .addField(':clipboard: # of Commands - Some not accessable to users', '' + commandsLength, true)
                 .addField(':gem: Shards', 'N/A', true)
             // .addField(`:heart: Upvote ${config.name}`, `[Discord Bot List (discordbots.org)](https://discordbots.org/bot/460610749283172353)\n[Discord Bot List](https://discordbotlist.com/bots/460610749283172353)\n[Bots on Discord](https://bots.ondiscord.xyz/bots/460610749283172353)\n[Bots for Discord](https://botsfordiscord.com/bots/460610749283172353)`, true) // check if this is working with the custom emoji

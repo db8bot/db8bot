@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "build": "docker build . -t db8bot-v4.0.6-arctic-tern-prod"
+    "build": "docker build . -t db8bot-v4.0.6-arctic-tern-prod",
+    "start-dev": "doppler run --command=\"node index.js\""
   },
   "repository": {
     "type": "git",

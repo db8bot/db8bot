@@ -41,8 +41,7 @@ module.exports = {
         ),
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
-        const config = interaction.client.config
-        const database = new MongoClient(config.MONGOURI, { useNewUrlParser: true, useUnifiedTopology: true })
+        const database = new MongoClient(process.env.MONGOURI, { useNewUrlParser: true, useUnifiedTopology: true })
         const flag = interaction.options.getString('flags')
         const link = interaction.options.getString('source')
         if (link === null) {
