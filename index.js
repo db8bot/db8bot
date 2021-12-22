@@ -37,7 +37,7 @@ client.commands = new Collection()
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
 
 // execution/launch settings
-const versionSelector = 'prod'
+const versionSelector = 'dev'
 const testServerGuildID = '689368206904655878'
 
 if (versionSelector === 'prod') {
