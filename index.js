@@ -37,20 +37,20 @@ client.commands = new Collection()
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
 
 // execution/launch settings
-const versionSelector = 'dev'
+const versionSelector = 'prod'
 const testServerGuildID = '689368206904655878'
 
 if (versionSelector === 'prod') {
-    var config = require('dotenv').config({ path: './prod.env' })
+    // var config = require('dotenv').config({ path: './prod.env' })
     Sentry.init({
         dsn: 'https://3a8ab5afe5824525ac1f41ebe688fbd0@o196622.ingest.sentry.io/5188131',
         tracesSampleRate: 1.0
     })
-    if (config.error) {
-        process.exit(1)
-    }
+    // if (config.error) {
+    //     process.exit(1)
+    // }
 
-    process.env = config.parsed
+    // process.env = config.parsed
 
     const database = new MongoClient(process.env.MONGOURI, { useNewUrlParser: true, useUnifiedTopology: true })
     database.connect(async (err, dbClient) => {

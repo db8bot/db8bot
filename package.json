@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
+    "start": "docker run -e DOPPLER_TOKEN=\"$DOPPLER_TOKEN\" --command=\"node index.js\"",
     "build": "docker build . -t db8bot-v4.0.6-arctic-tern-prod",
     "start-dev": "doppler run --command=\"node index.js\""
   },
