@@ -25,8 +25,7 @@ jobs:
             curl https://sdk.cloud.google.com > install.sh
             bash install.sh --disable-prompts
             export PATH=/home/circleci/google-cloud-sdk/bin:$PATH;
-            CREDENTIALS = "${GCLOUD_SERVICE_KEY}"
-            echo ${CREDENTIALS} > ${HOME}/account-auth.json
+            echo ${GCLOUD_SERVICE_KEY} > ${HOME}/account-auth.json
             gcloud auth activate-service-account circleci-docker-build@db8bot.iam.gserviceaccount.com --key-file=${HOME}/account-auth.json
             gcloud auth configure-docker us-central1-docker.pkg.dev
             export IMGNAME=$(node -p "require('./package.json').scripts.build.replace('docker build . -t ','')")
