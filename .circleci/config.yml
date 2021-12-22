@@ -24,8 +24,7 @@ jobs:
             npm run build
             curl https://sdk.cloud.google.com > install.sh
             bash install.sh --disable-prompts
-            source '[/home/circleci/google-cloud-sdk/completion.bash.inc]'
-            source '[/home/circleci/google-cloud-sdk/path.bash.inc]'
+            export PATH=/home/circleci/google-cloud-sdk/bin:$PATH;
             gcloud auth activate-service-account circleci-docker-build@db8bot.iam.gserviceaccount.com --key-file="$GCLOUD_SERVICE_KEY"
             gcloud auth configure-docker us-central1-docker.pkg.dev
             export IMGNAME=$(node -p "require('./package.json').scripts.build.replace('docker build . -t ','')")
