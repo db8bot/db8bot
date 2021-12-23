@@ -1,5 +1,5 @@
 exports.run = function (client, message, args) {
-    const config = client.config
+    const config = process.env
     const Filter = require('bad-words')
     var filter = new Filter()
     message.delete()

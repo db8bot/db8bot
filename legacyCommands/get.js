@@ -3,7 +3,7 @@ exports.run = async function (client, message, args) {
     const cheerio = require('cheerio')
     // require('superagent-proxy')(superagent);
     const Discord = require('discord.js')
-    const config = client.config
+    const config = process.env
     const child_process = require('child_process')
     const googleBotList = require('../getFiles/googleBot.json')
     const bingBotList = require('../getFiles/bingBot.json')

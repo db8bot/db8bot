@@ -1,7 +1,7 @@
 exports.run = function (client, message, args) {
     const superagent = require('superagent')
     const Discord = require('discord.js')
-    const config = client.config
+    const config = process.env
 
     require('../modules/legacyTelemetry').telemetry(__filename, client, message)
     const help = new Discord.MessageEmbed()

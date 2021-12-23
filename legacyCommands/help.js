@@ -5,7 +5,7 @@ function getRandomIntInclusive(min, max) {
 
 exports.run = function (client, message, args) {
     require('../modules/legacyTelemetry').telemetry(__filename, client, message)
-    const config = client.config
+    const config = process.env
     var select = getRandomIntInclusive(1, 3)
     const embed = new Discord.MessageEmbed()
         .setColor(select === 1 ? '#ccff00' : select === 2 ? '#0072bb' : select === 3 ? '#ff4f00' : '#ccff00')

@@ -2,7 +2,7 @@ exports.run = function (client, message, args) {
     const superagent = require('superagent')
     const PNG = require('pngjs').PNG
     const Discord = require('discord.js')
-    const config = client.config
+    const config = process.env
     const stream = require('stream')
     const embed1 = new Discord.MessageEmbed()
         .setColor('#f0ffff')
