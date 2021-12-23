@@ -32,7 +32,7 @@ jobs:
             docker tag "$IMGNAME" us-central1-docker.pkg.dev/db8bot/discord-db8bot/"$IMGNAME"
             docker push us-central1-docker.pkg.dev/db8bot/discord-db8bot/"$IMGNAME"
             gcloud compute ssh discord-db8bot-host --zone=us-central1-a --command="docker system prune -f" --quiet --project=db8bot
-            gcloud compute instances update-container discord-db8bot-host --project=db8bot --container-image=us-central1-docker.pkg.dev/db8bot/discord-db8bot/"$IMGNAME" --container-env=DOPPLER_TOKEN="${DOPPLER_TKN}" --container-restart-policy=always
+            gcloud compute instances update-container discord-db8bot-host --project=db8bot --container-image=us-central1-docker.pkg.dev/db8bot/discord-db8bot/"$IMGNAME":latest --container-env=DOPPLER_TOKEN="${DOPPLER_TKN}" --container-restart-policy=always
 
 
 workflows:
