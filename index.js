@@ -105,12 +105,6 @@ if (versionSelector === 'prod') {
         })()
     })
 } else if (versionSelector === 'dev') {
-    // var config = require('dotenv').config({ path: './dev.env' })
-    // if (config.error) {
-    // process.exit(1)
-    // }
-    // process.env = config.parsed
-
     for (const file of commandFiles) {
         const command = require(`./commands/${file}`)
         commands.push(command.data.toJSON())
