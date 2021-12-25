@@ -49,7 +49,7 @@ exports.run = async function (client, message, args) {
                 database.close()
             } else { // open child process to generate pdf
                 database.close()
-                message.channel.send('Job added to paywall unlock queue. This may take a few minutes. It will return an HTML file. Download using the button on the bottom right & open in any major browser.')
+                message.channel.send('Job added to paywall unlock queue. This may take a few minutes. It will return an HTML file. Download using the button on the bottom right & **open in any major browser.** If nothing is returned, please try again in a few minutes.')
                 // var filename = './newsTempOutFiles/' + getRndInteger(999, 999999).toString() + interaction.channelId + 'x' + '.mhtml'
                 var filename = './newsTempOutFiles/' + getRndInteger(999, 999999).toString() + message.channel.id + 'x' + '.html'
                 var urlParsed = psl.parse(url.replace('https://', '').replace('http://', '').split('/')[0])
@@ -81,23 +81,23 @@ exports.run = async function (client, message, args) {
                     const htmldoc = await mhtml2html.convert(mhtml, { parseDOM: (html) => new JSDOM(html) })
                     await fsp.writeFile(filename.toString(), htmldoc.serialize())
                     await message.channel.send({ files: [filename] })
-                    var readStream = fs.createReadStream(filename)
-                    const ipfsNode = await IPFS.create()
-                    const results = await ipfsNode.add(readStream)
+                    // var readStream = fs.createReadStream(filename)
+                    // const ipfsNode = await IPFS.create()
+                    // const results = await ipfsNode.add(readStream)
 
-                    // write key to mongo
-                    database.connect(async (err, dbClient) => {
-                        if (err) console.error(err)
-                        const collection = dbClient.db('db8bot').collection('ipfsKeys')
-                        collection.insertOne({
-                            link: url,
-                            path: results.path
-                        }, function (err, res) {
-                            if (err) console.error(err)
-                            database.close()
-                        })
-                        console.log('inserted')
-                    })
+                    // // write key to mongo
+                    // database.connect(async (err, dbClient) => {
+                    //     if (err) console.error(err)
+                    //     const collection = dbClient.db('db8bot').collection('ipfsKeys')
+                    //     collection.insertOne({
+                    //         link: url,
+                    //         path: results.path
+                    //     }, function (err, res) {
+                    //         if (err) console.error(err)
+                    //         database.close()
+                    //     })
+                    //     console.log('inserted')
+                    // })
                     try {
                         await fsp.rm(filename)
                     } catch (e) {

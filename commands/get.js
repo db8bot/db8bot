@@ -183,6 +183,10 @@ module.exports = {
                     if (err) console.error(err)
                     var $ = cheerio.load(resLibgen.text)
                     var libLolLink = $($($($($('table').children()[2]).children('tr')[1]).children('td')[9]).children('a')[0]).attr('href')
+                    if (libLolLink === undefined) {
+                        interaction.reply('Not found. Try chaing the ISBN to 10 or 13 digits or entering the book\'s name.')
+                        return
+                    }
                     superagent
                         .get(libLolLink)
                         .redirects(2)
@@ -203,7 +207,7 @@ module.exports = {
                     database.close()
                 } else { // open child process to generate pdf
                     database.close()
-                    interaction.reply('Job added to paywall unlock queue. This may take a few minutes. It will return an HTML file. Download using the button on the bottom right & **open in any major browser.**')
+                    interaction.reply('Job added to paywall unlock queue. This may take a few minutes. It will return an HTML file. Download using the button on the bottom right & **open in any major browser.** If nothing is returned, please try again in a few minutes.')
                     // var filename = './newsTempOutFiles/' + getRndInteger(999, 999999).toString() + interaction.channelId + 'x' + '.mhtml'
                     var filename = './newsTempOutFiles/' + getRndInteger(999, 999999).toString() + interaction.channelId + 'x' + '.html'
                     var urlParsed = psl.parse(url.replace('https://', '').replace('http://', '').split('/')[0])
@@ -267,7 +271,7 @@ module.exports = {
             })
         } else if (flag === 'mf') {
             var url = link
-            interaction.reply('Job added to paywall unlock queue. This may take a few minutes. It will return an HTML file. Download using the button on the bottom right & **open in any major browser.**')
+            interaction.reply('Job added to paywall unlock queue. This may take a few minutes. It will return an HTML file. Download using the button on the bottom right & **open in any major browser.** If nothing is returned, please try again in a few minutes.')
             // var filename = './newsTempOutFiles/' + getRndInteger(999, 999999).toString() + interaction.channelId + 'x' + '.mhtml'
             var filename = './newsTempOutFiles/' + getRndInteger(999, 999999).toString() + interaction.channelId + 'x' + '.html'
             var urlParsed = psl.parse(url.replace('https://', '').replace('http://', '').split('/')[0])

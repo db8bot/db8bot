@@ -55,7 +55,20 @@ RUN npm install --production
 
 COPY . .
 
+# install chrome extensions in modules
+
+RUN wget https://github.com/iamadamdev/bypass-paywalls-chrome/archive/master.zip -O master.zip \
+    && mkdir -p modules/mediaExt/ \
+    && unzip master.zip -d modules/mediaExt/ \
+    && rm master.zip
+
+RUN wget https://cloud.airfusion.dev/index.php/s/9FpzKEBGRBfY23Q/download/extension_3_3_5_0.zip -O extension_3_3_5_0.zip \
+    && mkdir -p modules/cookieExt/i-dont-care-about-cookies/ \
+    && unzip extension_3_3_5_0.zip -d modules/cookieExt/i-dont-care-about-cookies/ \
+    && rm extension_3_3_5_0.zip 
+
 # test display device
 ENV DISPLAY :99
 
-CMD Xvfb :99 -screen 0 1024x768x16 & npm start
+# start application
+CMD npm start

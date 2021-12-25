@@ -30,6 +30,8 @@ data/
 
 modules/mediaExt/bypass-paywalls-chrome-master/
 
+modules/cookieExt/i-dont-care-about-cookies/
+
 db8bot old sql data/
 
 log.txt
