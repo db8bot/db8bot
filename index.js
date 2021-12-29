@@ -13,6 +13,7 @@ const Long = require('long')
 const MongoClient = require('mongodb').MongoClient
 const ua = require('universal-analytics')
 const Enmap = require('enmap')
+const express = require('express')
 const Sentry = require('@sentry/node')
 const Tracing = require('@sentry/tracing')
 
@@ -35,6 +36,11 @@ const commands = []
 const serverSpecificCommands = []
 client.commands = new Collection()
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
+
+// setup express
+var app = express()
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 // execution/launch settings
 const versionSelector = 'dev'
@@ -491,3 +497,11 @@ client.on('error', (error) => {
     console.error(chalk.red(error.replace(token, 'HIDDEN')))
 })
 client.login(process.env.TOKEN)
+
+var port = process.env.PORT
+if (port == null || port === '' || versionSelector === 'dev') {
+    port = 8080
+}
+app.listen(port, () => {
+    console.log(`Listening at http://localhost:${port}`)
+})
