@@ -44,14 +44,14 @@ async function toMhtml(link, ua) {
             '--disable-dev-shm-usage',
             '--disable-accelerated-2d-canvas',
             '--no-first-run',
-            '--single-process', // <- this one doesn't works in Windows
+            // '--single-process', // <- this one doesn't works in Windows
             '--disable-gpu',
             '--disable-accelerated-mjpeg-decode',
             '--disable-accelerated-video-decode',
             '--disable-breakpad', // disables crash reporting
             '--disable-client-side-phishing-detection',
             '--disable-default-apps',
-            '--disable-features=Translate',
+            '--disable-features=Translate,AudioServiceOutOfProcess,IsolateOrigins,site-per-process',
             '--disable-popup-blocking',
             '--disable-renderer-backgrounding', // disables tab freezing
             '--disable-sync',
@@ -59,7 +59,6 @@ async function toMhtml(link, ua) {
             '--autoplay-policy=user-gesture-required',
             '--disable-component-update',
             '--disable-domain-reliability',
-            '--disable-features=AudioServiceOutOfProcess,IsolateOrigins,site-per-process',
             '--disable-print-preview',
             '--disable-site-isolation-trials',
             '--disable-speech-api',
@@ -68,6 +67,14 @@ async function toMhtml(link, ua) {
             '--no-default-browser-check',
             '--no-pings',
             '--use-gl=swiftshader',
+            '--disable-canvas-aa',
+            '--disable-composited-antialiasing',
+            '--disable-extensions-http-throttling',
+            '--disable-gpu-sandbox',
+            '--disable-namespace-sandbox',
+            '--disable-seccomp-filter-sandbox',
+            '--no-experiments',
+            '--disable-renderer-backgrounding',
             '--display=' + xvfb._display
         ],
         headless: false,
