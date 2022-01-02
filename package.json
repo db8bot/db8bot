@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/AirFusion45/db8bot#readme",
   "dependencies": {
-    "@discordjs/builders": "^0.8.2",
+    "@discordjs/builders": "^0.11.0",
     "@discordjs/rest": "^0.1.0-canary.0",
     "@google-cloud/tasks": "^2.5.0",
     "@sentry/node": "^6.16.1",
