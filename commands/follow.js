@@ -5,6 +5,10 @@ const { SlashCommandBuilder } = require('@discordjs/builders')
 const Discord = require('discord.js')
 const MongoClient = require('mongodb').MongoClient
 const superagent = require('superagent')
+const { CloudTasksClient } = require('@google-cloud/tasks')
+const taskClient = new CloudTasksClient()
+const MAX_SCHEDULE_LIMIT = 30 * 60 * 60 * 24 // Represents 30 days in seconds.
+const fs = require('fs').promises
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -77,7 +81,7 @@ module.exports = {
         } else {
             // team with same code does not exist, create new entry, follow normally
             await interaction.reply('Following...')
-            var payload = {
+            var authPayload = {
                 apiauth: process.env.TABAPIKEY,
                 username: process.env.TABUSERNAME,
                 password: process.env.TABPASSWORD
@@ -85,7 +89,7 @@ module.exports = {
             superagent
                 .post('https://debateapis.wm.r.appspot.com/login')
                 .set('Content-Type', 'application/x-www-form-urlencoded')
-                .send(JSON.parse(JSON.stringify(payload)))
+                .send(JSON.parse(JSON.stringify(authPayload)))
                 .end((err, res) => {
                     // if (err) console.error(err)
                     var token = res.body.token
@@ -121,9 +125,11 @@ module.exports = {
                         })
                     }
 
-                    Promise.all([follow(followPayload), getTournInfo(followPayload.entryLink)]).then((val) => {
+                    Promise.all([follow(followPayload), getTournInfo(followPayload.entryLink)]).then(async (val) => {
                         var followRes = val[0]
                         var tournInfo = val[1]
+                        var usersToNotify = [interaction.options.getUser('notify-user1'), interaction.options.getUser('notify-user2'), interaction.options.getUser('notify-user3'), interaction.options.getUser('notify-user4'), interaction.options.getUser('notify-user5')].filter(user => user)
+                        usersToNotify = usersToNotify.map(user => user.id)
                         var mongoEntry = {
                             trackedTeamCode: interaction.options.getString('team-code'),
                             tournStart: tournInfo.startDateUnix,
@@ -132,9 +138,10 @@ module.exports = {
                             tournName: tournInfo.tournName,
                             sendServer: interaction.guildId,
                             sendChannel: interaction.options.getChannel('notify-channel').id,
-                            notifyUsers: [], // todo
-                            notifyRole: null, // todo
+                            notifyUsers: usersToNotify.length > 0 ? usersToNotify : null,
+                            notifyRole: interaction.options.getRole('notify-role'),
                             analytics: interaction.options.getString('enable-analytics') === 'true',
+                            event: null,
                             expireAt: new Date(parseInt(tournInfo.endDateUnix))
                         }
                         console.log(mongoEntry)
@@ -142,8 +149,74 @@ module.exports = {
                             if (err) console.error(err)
                             console.log('inserted')
                         })
-                        // add info to database
-                        // return success msg
+
+                        // auto-unfollow cloud function via cloud tasks
+                        const project = 'db8bot' // Your GCP Project id
+                        const queue = 'unfollowqueue' // Name of your Queue
+                        const location = 'us-central1' // The GCP region of your queue
+                        const url = 'https://us-central1-db8bot.cloudfunctions.net/unfollow' // The full url path that the request will be sent to
+                        const email = 'automatic-unfollow@db8bot.iam.gserviceaccount.com' // Cloud IAM service account
+                        const unfollowPayload = { // The task HTTP request body
+                            username: process.env.TABUSERNAME,
+                            password: process.env.TABPASSWORD,
+                            tabapiauth: process.env.TABAPIKEY,
+                            unfollowLink: followRes.unfollowLink
+                        }
+                        // write service account key to file
+                        await fs.writeFile('./gcloudservicekey.json', process.env.GCLOUDCFSERVICE, 'utf8')
+                        process.env.GOOGLE_APPLICATION_CREDENTIALS = './gcloudservicekey.json'
+
+                        // Construct the fully qualified queue name.
+                        const parent = taskClient.queuePath(project, location, queue)
+
+                        // Convert message to buffer.
+                        const body = Buffer.from(JSON.stringify(unfollowPayload)).toString('base64')
+
+                        const task = {
+                            httpRequest: {
+                                httpMethod: 'POST',
+                                url,
+                                oidcToken: {
+                                    serviceAccountEmail: email
+                                },
+                                headers: {
+                                    'Content-Type': 'text/plain'
+                                },
+                                body
+                            }
+                        }
+
+                        const convertedDate = new Date(parseInt(tournInfo.endDateUnix))
+                        const currentDate = new Date()
+
+                        // Schedule time can not be in the past.
+                        if (convertedDate < currentDate) {
+                            console.error('Scheduled date in the past.')
+                        } else if (convertedDate > currentDate) {
+                            const dateDiffInSeconds = (convertedDate - currentDate) / 1000
+                            // Restrict schedule time to the 30 day maximum.
+                            if (dateDiffInSeconds > MAX_SCHEDULE_LIMIT) {
+                                console.error('Schedule time is over 30 day maximum.')
+                            }
+                            // Construct future date in Unix time.
+                            const dateInSeconds =
+                                Math.min(dateDiffInSeconds, MAX_SCHEDULE_LIMIT) + Date.now() / 1000
+                            // Add schedule time to request in Unix time using Timestamp structure.
+                            // https://googleapis.dev/nodejs/tasks/latest/google.protobuf.html#.Timestamp
+                            task.scheduleTime = {
+                                seconds: dateInSeconds
+                            }
+                        }
+
+                        try {
+                            // Send create task request.
+                            const [response] = await taskClient.createTask({ parent, task })
+                            console.log(`Created task ${response.name}`)
+                        } catch (error) {
+                            // Construct error for Stackdriver Error Reporting
+                            console.error(Error(error.message))
+                        }
+
                         interaction.fetchReply()
                             .then(reply => {
                                 interaction.editReply('Followed!')
