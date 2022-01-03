@@ -44,7 +44,7 @@ app.use(express.urlencoded({ extended: true }))
 
 // execution/launch settings
 const versionSelector = 'dev'
-const testServerGuildID = '689368206904655878'
+const testServerGuildID = '689368206904655878' // test1: test2: 900260322378653726
 
 if (versionSelector === 'prod') {
     Sentry.init({
