@@ -486,6 +486,10 @@ client.on('messageCreate', async message => {
     }
 })
 
+// express routing
+const mailIn = require('./routes/mailin')
+app.use('/mailin', mailIn)
+
 const token = /[\w\d]{24}\.[\w\d]{6}\.[\w\d-_]{27}/g
 client.on('debug', error => {
     console.log(chalk.cyan(error.replace(token, 'HIDDEN')))
