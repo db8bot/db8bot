@@ -5,8 +5,10 @@ const upload = multer()
 const MongoClient = require('mongodb').MongoClient
 const uri = `mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@db8botcluster.q3bif.mongodb.net/23bot?retryWrites=true&w=majority`
 const database = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+const Discord = require('discord.js')
 
 router.post('/', upload.any(), async (req, resApp) => {
+    const client = req.app.get('client')
     // check if sender is blasts@www.tabroom.com OR live@tabroom.com - correct email address needs to be confirmed during testing so we will use both for now
     // check title containes "round"
     console.log(req.body)
@@ -59,12 +61,32 @@ router.post('/', upload.any(), async (req, resApp) => {
         // find server, find channel, send message
         console.log(`${searchString[0]} found in db`)
         console.log(searchStr0Res)
+        notifyServer(searchStr0Res[0], { msg: msg, title: title, judging: judging, start: start, room: room, extraInfo: extraInfo })
     }
     if (searchStr1Res.length > 0) {
         console.log(`${searchString[1]} found in db`)
-        console.log(searchStr0Res)
+        console.log(searchStr1Res)
+        notifyServer(searchStr1Res)
+    }
+    async function notifyServer(searchStrRes, content) {
+        var notifyArr = searchStrRes.notify
+        console.log(notifyArr)
+        for (const server of notifyArr) {
+            var sendGuild = await client.guilds.fetch(server.server)
+            if (sendGuild.available) {
+                var guildChannels = await sendGuild.channels.fetch(server.channel)
+                try {
+                    guildChannels.send(`${content.title}\n${content.judging}`)
+                } catch (err) {
+                    console.error(err)
+                }
+            }
+        }
     }
     // }
+
+    // mark successful receipt
+    resApp.sendStatus(200)
 })
 
 module.exports = router

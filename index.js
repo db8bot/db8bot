@@ -488,6 +488,7 @@ client.on('messageCreate', async message => {
 
 // express routing
 const mailIn = require('./routes/mailin')
+app.set('client', client)
 app.use('/mailin', mailIn)
 
 const token = /[\w\d]{24}\.[\w\d]{6}\.[\w\d-_]{27}/g
