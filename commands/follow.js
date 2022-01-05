@@ -36,6 +36,75 @@ function getTournInfo(link) {
     })
 }
 
+async function createCloudTasks(followRes, tournInfo) {
+    // auto-unfollow cloud function via cloud tasks
+    const project = 'db8bot' // Your GCP Project id
+    const queue = 'unfollowqueue' // Name of your Queue
+    const location = 'us-central1' // The GCP region of your queue
+    const url = 'https://us-central1-db8bot.cloudfunctions.net/unfollow' // The full url path that the request will be sent to
+    const email = 'automatic-unfollow@db8bot.iam.gserviceaccount.com' // Cloud IAM service account
+    const unfollowPayload = { // The task HTTP request body
+        username: process.env.TABUSERNAME,
+        password: process.env.TABPASSWORD,
+        tabapiauth: process.env.TABAPIKEY,
+        unfollowLink: followRes.unfollowLink
+    }
+    // write service account key to file
+    await fs.writeFile('./gcloudservicekey.json', process.env.GCLOUDCFSERVICE, 'utf8')
+    process.env.GOOGLE_APPLICATION_CREDENTIALS = './gcloudservicekey.json'
+
+    // Construct the fully qualified queue name.
+    const parent = taskClient.queuePath(project, location, queue)
+
+    // Convert message to buffer.
+    const body = Buffer.from(JSON.stringify(unfollowPayload)).toString('base64')
+
+    const task = {
+        httpRequest: {
+            httpMethod: 'POST',
+            url,
+            oidcToken: {
+                serviceAccountEmail: email
+            },
+            headers: {
+                'Content-Type': 'text/plain'
+            },
+            body
+        }
+    }
+
+    const convertedDate = new Date(parseInt(tournInfo.endDateUnix))
+    const currentDate = new Date()
+
+    // Schedule time can not be in the past.
+    if (convertedDate < currentDate) {
+        console.error('Scheduled date in the past.')
+    } else if (convertedDate > currentDate) {
+        const dateDiffInSeconds = (convertedDate - currentDate) / 1000
+        // Restrict schedule time to the 30 day maximum.
+        if (dateDiffInSeconds > MAX_SCHEDULE_LIMIT) {
+            console.error('Schedule time is over 30 day maximum.')
+        }
+        // Construct future date in Unix time.
+        const dateInSeconds =
+            Math.min(dateDiffInSeconds, MAX_SCHEDULE_LIMIT) + Date.now() / 1000
+        // Add schedule time to request in Unix time using Timestamp structure.
+        // https://googleapis.dev/nodejs/tasks/latest/google.protobuf.html#.Timestamp
+        task.scheduleTime = {
+            seconds: dateInSeconds
+        }
+    }
+
+    try {
+        // Send create task request.
+        const [response] = await taskClient.createTask({ parent, task })
+        console.log(`Created task ${response.name}`)
+    } catch (error) {
+        // Construct error for Stackdriver Error Reporting
+        console.error(Error(error.message))
+    }
+}
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('follow')
@@ -95,9 +164,12 @@ module.exports = {
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
         if (!interaction.guild) return (interaction.reply('Command not available in DMs.'))
+        if (!(/https:\/\/www.tabroom.com\/index.tourn\/fields.mhtml\?tourn_id=[0-9]+&event_id=[0-9]+/gi.test(interaction.options.getString('entry-list')))) { // test for valid tabroom url, if false enters the if
+            interaction.reply('Invalid tabroom.com URL. Please try again. URL should include fields.mhtml and look like this `https://www.tabroom.com/index/tourn/fields.mhtml?tourn_id=[some numbers]&event_id=[some numbers]`')
+            return
+        }
         const uri = `mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@db8botcluster.q3bif.mongodb.net/23bot?retryWrites=true&w=majority`
         const database = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-        const guild = interaction.guild
         var usersToNotify = [interaction.options.getUser('notify-user1'), interaction.options.getUser('notify-user2'), interaction.options.getUser('notify-user3'), interaction.options.getUser('notify-user4'), interaction.options.getUser('notify-user5')].filter(user => user)
         usersToNotify = usersToNotify.map(user => user.id)
         // check db for existing code
@@ -128,7 +200,20 @@ module.exports = {
                     }, {
                         $push: { notify: serverDetails }
                     })
-                    interaction.reply('Followed!')
+                    // followed! send confirmation
+                    const existingFollowEmbed = new Discord.MessageEmbed()
+                        .setColor('#016f94')
+                        .setTitle(`Following ${interaction.options.getString('team-code')}`)
+                        .addField('Event', sameTeamDBSearchRes.event, true)
+                        .addField('Tournament', sameTeamDBSearchRes.tournName, true)
+                        .addField('Start', new Date(sameTeamDBSearchRes.tournStart).toString(), true)
+                        .addField('End', new Date(sameTeamDBSearchRes.tournEnd).toString(), true)
+                        .addField('Notify Channel', `#${interaction.options.getChannel('notify-channel').name}`, true)
+                        .addField('Notify Role', interaction.options.getRole('notify-role') ? `@${interaction.options.getRole('notify-role').name}` : 'No notify role specified.', true)
+                        .addField('Notify Users', usersToNotify.map(user => `<@${user}>`).join(', '), true)
+                        .addField('Analytics', interaction.options.getString('enable-analytics') === 'true' ? 'Enabled' : 'Disabled', true)
+                        .addField('Follow Expires', new Date(sameTeamDBSearchRes.tournEnd).toString(), true)
+                    interaction.reply({ embeds: [existingFollowEmbed] })
                 } else { // if inputted server is already following this team, do nothing
                     interaction.reply('You or this server are/is already following this team.')
                 }
@@ -144,14 +229,14 @@ module.exports = {
                     var startsInRange = (inputtedTournamentInfo.startDateUnix >= sameCodeDBSearchRes[i].tournStart && inputtedTournamentInfo.endDateUnix >= sameCodeDBSearchRes[i].tournEnd) // [existing start]------<inputted start>-----[existing end]----<inputted end>
                     var includesExistingRange = (inputtedTournamentInfo.startDateUnix <= sameCodeDBSearchRes[i].tournStart && inputtedTournamentInfo.endDateUnix >= sameCodeDBSearchRes[i].tournEnd) // <inputted start>------[existing start]------[existing end]-------<inputted end>
                     if ((betweenExistingRange) || (endsInRange) || (startsInRange) || (includesExistingRange)) { // if any of these are true, break and return err
-                        interaction.reply('ERR! Same team code, same tournament schedule, different tournament. NOT ALLOWED.')
+                        interaction.reply('Error! tl;dr: db8bot doesn not support following a person/team that is double entered at 1 or more tournaments at the same time.\ndb8bot does not support following a team at a different tournament with the same team code and tournament start/end date as a team that is currently being followed.')
                         return
                     }
                 }
                 // passed all timing checks, meaning it is a diff tournament with different non overlapping dates in which the same team code (as a previous tournament already in db) is used. Allow entry into db
 
                 // @TODO Sort out the copy-pasted code - pull into functions.
-                await interaction.reply('Following...')
+                await interaction.reply(`Following... Track the operation progress below:\n- Authenticating with Tabroom.com\n- Requesting Tabroom.com to follow ${interaction.options.getString('team-code')}\n- Requesting tournament information from Tabroom.com\n- Adding to database\n- Scheduling automatic unfollow on tournament end date`)
                 var authPayload = {
                     apiauth: process.env.TABAPIKEY,
                     username: process.env.TABUSERNAME,
@@ -162,16 +247,28 @@ module.exports = {
                     .set('Content-Type', 'application/x-www-form-urlencoded')
                     .send(JSON.parse(JSON.stringify(authPayload)))
                     .end(async (err, res) => {
-                        // if (err) console.error(err)
+                        if (err) console.error(err)
+                        interaction.fetchReply()
+                            .then(reply => {
+                                interaction.editReply(`Following... Track the operation progress below:\n:white_check_mark: Authenticating with Tabroom.com\n- Requesting Tabroom.com to follow ${interaction.options.getString('team-code')}\n- Requesting tournament information from Tabroom.com\n- Adding to database\n- Scheduling automatic unfollow on tournament end date`)
+                            })
                         var token = res.body.token
                         var followPayload = {
                             apiauth: process.env.TABAPIKEY,
                             token: token,
-                            entryLink: interaction.options.getString('entry-list'), // need to be regex tested for the correct link
+                            entryLink: interaction.options.getString('entry-list'),
                             code: interaction.options.getString('team-code')
                         }
                         var followRes = await follow(followPayload)
+                        interaction.fetchReply()
+                            .then(reply => {
+                                interaction.editReply(`Following... Track the operation progress below:\n:white_check_mark: Authenticating with Tabroom.com\n:white_check_mark: Requesting Tabroom.com to follow ${interaction.options.getString('team-code')}\n- Requesting tournament information from Tabroom.com\n- Adding to database\n- Scheduling automatic unfollow on tournament end date`)
+                            })
                         var tournInfo = inputtedTournamentInfo
+                        interaction.fetchReply()
+                            .then(reply => {
+                                interaction.editReply(`Following... Track the operation progress below:\n:white_check_mark: Authenticating with Tabroom.com\n:white_check_mark: Requesting Tabroom.com to follow ${interaction.options.getString('team-code')}\n:white_check_mark: Requesting tournament information from Tabroom.com\n- Adding to database\n- Scheduling automatic unfollow on tournament end date`)
+                            })
                         var mongoEntry = {
                             trackedTeamCode: interaction.options.getString('team-code'),
                             tournStart: tournInfo.startDateUnix,
@@ -185,91 +282,42 @@ module.exports = {
                                 role: interaction.options.getRole('notify-role') ? interaction.options.getRole('notify-role').id : null,
                                 analytics: interaction.options.getString('enable-analytics') === 'true'
                             }],
-                            event: null,
+                            event: 'null',
                             expireAt: new Date(parseInt(tournInfo.endDateUnix))
                         }
-                        console.log(mongoEntry)
                         collection.insertOne(mongoEntry, (err, res) => {
                             if (err) console.error(err)
-                            console.log('inserted')
                         })
-
-                        // auto-unfollow cloud function via cloud tasks
-                        const project = 'db8bot' // Your GCP Project id
-                        const queue = 'unfollowqueue' // Name of your Queue
-                        const location = 'us-central1' // The GCP region of your queue
-                        const url = 'https://us-central1-db8bot.cloudfunctions.net/unfollow' // The full url path that the request will be sent to
-                        const email = 'automatic-unfollow@db8bot.iam.gserviceaccount.com' // Cloud IAM service account
-                        const unfollowPayload = { // The task HTTP request body
-                            username: process.env.TABUSERNAME,
-                            password: process.env.TABPASSWORD,
-                            tabapiauth: process.env.TABAPIKEY,
-                            unfollowLink: followRes.unfollowLink
-                        }
-                        // write service account key to file
-                        await fs.writeFile('./gcloudservicekey.json', process.env.GCLOUDCFSERVICE, 'utf8')
-                        process.env.GOOGLE_APPLICATION_CREDENTIALS = './gcloudservicekey.json'
-
-                        // Construct the fully qualified queue name.
-                        const parent = taskClient.queuePath(project, location, queue)
-
-                        // Convert message to buffer.
-                        const body = Buffer.from(JSON.stringify(unfollowPayload)).toString('base64')
-
-                        const task = {
-                            httpRequest: {
-                                httpMethod: 'POST',
-                                url,
-                                oidcToken: {
-                                    serviceAccountEmail: email
-                                },
-                                headers: {
-                                    'Content-Type': 'text/plain'
-                                },
-                                body
-                            }
-                        }
-
-                        const convertedDate = new Date(parseInt(tournInfo.endDateUnix))
-                        const currentDate = new Date()
-
-                        // Schedule time can not be in the past.
-                        if (convertedDate < currentDate) {
-                            console.error('Scheduled date in the past.')
-                        } else if (convertedDate > currentDate) {
-                            const dateDiffInSeconds = (convertedDate - currentDate) / 1000
-                            // Restrict schedule time to the 30 day maximum.
-                            if (dateDiffInSeconds > MAX_SCHEDULE_LIMIT) {
-                                console.error('Schedule time is over 30 day maximum.')
-                            }
-                            // Construct future date in Unix time.
-                            const dateInSeconds =
-                                Math.min(dateDiffInSeconds, MAX_SCHEDULE_LIMIT) + Date.now() / 1000
-                            // Add schedule time to request in Unix time using Timestamp structure.
-                            // https://googleapis.dev/nodejs/tasks/latest/google.protobuf.html#.Timestamp
-                            task.scheduleTime = {
-                                seconds: dateInSeconds
-                            }
-                        }
-
-                        try {
-                            // Send create task request.
-                            const [response] = await taskClient.createTask({ parent, task })
-                            console.log(`Created task ${response.name}`)
-                        } catch (error) {
-                            // Construct error for Stackdriver Error Reporting
-                            console.error(Error(error.message))
-                        }
-
                         interaction.fetchReply()
                             .then(reply => {
-                                interaction.editReply('Followed!')
+                                interaction.editReply(`Following... Track the operation progress below:\n:white_check_mark: Authenticating with Tabroom.com\n:white_check_mark: Requesting Tabroom.com to follow ${interaction.options.getString('team-code')}\n:white_check_mark: Requesting tournament information from Tabroom.com\n:white_check_mark: Adding to database\n- Scheduling automatic unfollow on tournament end date`)
+                            })
+                        await createCloudTasks(followRes, tournInfo) // create cloud tasks for auto-unfollow
+                        interaction.fetchReply()
+                            .then(reply => {
+                                interaction.editReply(`Following... Track the operation progress below:\n:white_check_mark: Authenticating with Tabroom.com\n:white_check_mark: Requesting Tabroom.com to follow ${interaction.options.getString('team-code')}\n:white_check_mark: Requesting tournament information from Tabroom.com\n:white_check_mark: Adding to database\n:white_check_mark: Scheduling automatic unfollow on tournament end date`)
+                            })
+                        interaction.fetchReply()
+                            .then(reply => {
+                                const followEmbed = new Discord.MessageEmbed()
+                                    .setColor('#016f94')
+                                    .setTitle(`Following ${interaction.options.getString('team-code')}`)
+                                    .addField('Event', mongoEntry.event, true)
+                                    .addField('Tournament', mongoEntry.tournName, true)
+                                    .addField('Start', new Date(mongoEntry.tournStart).toString(), true)
+                                    .addField('End', new Date(mongoEntry.tournEnd).toString(), true)
+                                    .addField('Notify Channel', `#${interaction.options.getChannel('notify-channel').name}`, true)
+                                    .addField('Notify Role', interaction.options.getRole('notify-role') ? `<@&${interaction.options.getRole('notify-role').name}>` : 'No notify role specified.', true)
+                                    .addField('Notify Users', usersToNotify.map(user => `<@${user}>`).join(', '), true)
+                                    .addField('Analytics', interaction.options.getString('enable-analytics') === 'true' ? 'Enabled' : 'Disabled', true)
+                                    .addField('Follow Expires', new Date(mongoEntry.tournEnd).toString(), true)
+                                interaction.editReply({ embeds: [followEmbed] })
                             })
                     })
             }
         } else {
             // team with same code does not exist, create new entry, follow normally
-            await interaction.reply('Following...')
+            await interaction.reply(`Following... Track the operation progress below:\n- Authenticating with Tabroom.com\n- Requesting Tabroom.com to follow ${interaction.options.getString('team-code')}\n- Requesting tournament information from Tabroom.com\n- Adding to database\n- Scheduling automatic unfollow on tournament end date`)
             var authPayload = {
                 apiauth: process.env.TABAPIKEY,
                 username: process.env.TABUSERNAME,
@@ -280,7 +328,11 @@ module.exports = {
                 .set('Content-Type', 'application/x-www-form-urlencoded')
                 .send(JSON.parse(JSON.stringify(authPayload)))
                 .end((err, res) => {
-                    // if (err) console.error(err)
+                    if (err) console.error(err)
+                    interaction.fetchReply()
+                        .then(reply => {
+                            interaction.editReply(`Following... Track the operation progress below:\n:white_check_mark: Authenticating with Tabroom.com\n- Requesting Tabroom.com to follow ${interaction.options.getString('team-code')}\n- Requesting tournament information from Tabroom.com\n- Adding to database\n- Scheduling automatic unfollow on tournament end date`)
+                        })
                     var token = res.body.token
                     var followPayload = {
                         apiauth: process.env.TABAPIKEY,
@@ -290,6 +342,7 @@ module.exports = {
                     }
 
                     Promise.all([follow(followPayload), getTournInfo(followPayload.entryLink)]).then(async (val) => {
+                        interaction.editReply(`Following... Track the operation progress below:\n:white_check_mark: Authenticating with Tabroom.com\n:white_check_mark: Requesting Tabroom.com to follow ${interaction.options.getString('team-code')}\n:white_check_mark: Requesting tournament information from Tabroom.com\n- Adding to database\n- Scheduling automatic unfollow on tournament end date`)
                         var followRes = val[0]
                         var tournInfo = val[1]
                         var mongoEntry = {
@@ -305,85 +358,33 @@ module.exports = {
                                 role: interaction.options.getRole('notify-role') ? interaction.options.getRole('notify-role').id : null,
                                 analytics: interaction.options.getString('enable-analytics') === 'true'
                             }],
-                            event: null,
+                            event: 'null', // this will change later once pf is implemented
                             expireAt: new Date(parseInt(tournInfo.endDateUnix))
                         }
-                        console.log(mongoEntry)
                         collection.insertOne(mongoEntry, (err, res) => {
                             if (err) console.error(err)
-                            console.log('inserted')
                         })
+                        interaction.editReply(`Following... Track the operation progress below:\n:white_check_mark: Authenticating with Tabroom.com\n:white_check_mark: Requesting Tabroom.com to follow ${interaction.options.getString('team-code')}\n:white_check_mark: Requesting tournament information from Tabroom.com\n:white_check_mark: Adding to database\n- Scheduling automatic unfollow on tournament end date`)
 
-                        // auto-unfollow cloud function via cloud tasks
-                        const project = 'db8bot' // Your GCP Project id
-                        const queue = 'unfollowqueue' // Name of your Queue
-                        const location = 'us-central1' // The GCP region of your queue
-                        const url = 'https://us-central1-db8bot.cloudfunctions.net/unfollow' // The full url path that the request will be sent to
-                        const email = 'automatic-unfollow@db8bot.iam.gserviceaccount.com' // Cloud IAM service account
-                        const unfollowPayload = { // The task HTTP request body
-                            username: process.env.TABUSERNAME,
-                            password: process.env.TABPASSWORD,
-                            tabapiauth: process.env.TABAPIKEY,
-                            unfollowLink: followRes.unfollowLink
-                        }
-                        // write service account key to file
-                        await fs.writeFile('./gcloudservicekey.json', process.env.GCLOUDCFSERVICE, 'utf8')
-                        process.env.GOOGLE_APPLICATION_CREDENTIALS = './gcloudservicekey.json'
+                        await createCloudTasks(followRes, tournInfo) // create cloud tasks for auto-unfollow
 
-                        // Construct the fully qualified queue name.
-                        const parent = taskClient.queuePath(project, location, queue)
-
-                        // Convert message to buffer.
-                        const body = Buffer.from(JSON.stringify(unfollowPayload)).toString('base64')
-
-                        const task = {
-                            httpRequest: {
-                                httpMethod: 'POST',
-                                url,
-                                oidcToken: {
-                                    serviceAccountEmail: email
-                                },
-                                headers: {
-                                    'Content-Type': 'text/plain'
-                                },
-                                body
-                            }
-                        }
-
-                        const convertedDate = new Date(parseInt(tournInfo.endDateUnix))
-                        const currentDate = new Date()
-
-                        // Schedule time can not be in the past.
-                        if (convertedDate < currentDate) {
-                            console.error('Scheduled date in the past.')
-                        } else if (convertedDate > currentDate) {
-                            const dateDiffInSeconds = (convertedDate - currentDate) / 1000
-                            // Restrict schedule time to the 30 day maximum.
-                            if (dateDiffInSeconds > MAX_SCHEDULE_LIMIT) {
-                                console.error('Schedule time is over 30 day maximum.')
-                            }
-                            // Construct future date in Unix time.
-                            const dateInSeconds =
-                                Math.min(dateDiffInSeconds, MAX_SCHEDULE_LIMIT) + Date.now() / 1000
-                            // Add schedule time to request in Unix time using Timestamp structure.
-                            // https://googleapis.dev/nodejs/tasks/latest/google.protobuf.html#.Timestamp
-                            task.scheduleTime = {
-                                seconds: dateInSeconds
-                            }
-                        }
-
-                        try {
-                            // Send create task request.
-                            const [response] = await taskClient.createTask({ parent, task })
-                            console.log(`Created task ${response.name}`)
-                        } catch (error) {
-                            // Construct error for Stackdriver Error Reporting
-                            console.error(Error(error.message))
-                        }
+                        interaction.editReply(`Following... Track the operation progress below:\n:white_check_mark: Authenticating with Tabroom.com\n:white_check_mark: Requesting Tabroom.com to follow ${interaction.options.getString('team-code')}\n:white_check_mark: Requesting tournament information from Tabroom.com\n:white_check_mark: Adding to database\n:white_check_mark: Scheduling automatic unfollow on tournament end date`)
 
                         interaction.fetchReply()
                             .then(reply => {
-                                interaction.editReply('Followed!')
+                                const followEmbed = new Discord.MessageEmbed()
+                                    .setColor('#016f94')
+                                    .setTitle(`Following ${interaction.options.getString('team-code')}`)
+                                    .addField('Event', mongoEntry.event, true)
+                                    .addField('Tournament', mongoEntry.tournName, true)
+                                    .addField('Start', new Date(mongoEntry.tournStart).toString(), true)
+                                    .addField('End', new Date(mongoEntry.tournEnd).toString(), true)
+                                    .addField('Notify Channel', `#${interaction.options.getChannel('notify-channel').name}`, true)
+                                    .addField('Notify Role', interaction.options.getRole('notify-role') ? `@${interaction.options.getRole('notify-role').name}` : 'No notify role specified.', true)
+                                    .addField('Notify Users', usersToNotify.map(user => `<@${user}>`).join(', '), true)
+                                    .addField('Analytics', interaction.options.getString('enable-analytics') === 'true' ? 'Enabled' : 'Disabled', true)
+                                    .addField('Follow Expires', new Date(mongoEntry.tournEnd).toString(), true)
+                                interaction.editReply({ embeds: [followEmbed] })
                             })
                     })
                 })
