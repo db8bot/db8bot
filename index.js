@@ -487,7 +487,7 @@ client.on('messageCreate', async message => {
 })
 
 // express routing
-const mailIn = require('./routes/mailin')
+const mailIn = require('./routes/mailIn')
 app.set('client', client) // pass client on to express for use in routes
 app.use('/mailin', mailIn)
 
