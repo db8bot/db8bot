@@ -67,8 +67,11 @@ RUN wget https://cloud.airfusion.dev/index.php/s/9FpzKEBGRBfY23Q/download/extens
     && unzip extension_3_3_5_0.zip -d modules/cookieExt/i-dont-care-about-cookies/ \
     && rm extension_3_3_5_0.zip 
 
-# test display device
+# set display env
 ENV DISPLAY :99
+
+# expose 8080 for receiving follow emails
+EXPOSE 8080
 
 # start application
 CMD npm start
