@@ -23,7 +23,7 @@ router.post('/', upload.any(), async (req, resApp) => {
         var receiveDate = new Date(req.body.headers.match(/Date: .+?(?=\n)/gmi)[0].trim().replace('Date: ', ''))
         var msg = req.body.text
         console.log(msg)
-        var competition = msg.substring(0, msg.toLowerCase().indexOf('judging:')).replace(/\n/gmi, '').replace(/\r/gmi, ' ').trim()
+        var competition = msg.substring(0, msg.toLowerCase().indexOf('judging:')).replace(/\n/gmi, ' ').replace(/\r/gmi, ' ').trim() // tabromm doesnt use \r whereas gmail does. the \r replace is for when its from gmail (testing), \n is for prod
         console.log(competition)
         var searchString = competition.split('vs.')
         searchString.forEach((x, index) => {
