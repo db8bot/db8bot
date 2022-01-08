@@ -31,7 +31,6 @@ jobs:
             export IMGNAME=$(node -p "require('./package.json').scripts.build.replace('docker build . -t ','')")
             docker tag "$IMGNAME" us-central1-docker.pkg.dev/db8bot/discord-db8bot/"$IMGNAME"
             docker push us-central1-docker.pkg.dev/db8bot/discord-db8bot/"$IMGNAME"
-            gcloud compute ssh discord-db8bot-host --zone=us-central1-a --command="docker kill $(docker ps -q)" --quiet --project=db8bot
             gcloud compute ssh discord-db8bot-host --zone=us-central1-a --command="docker system prune -a -f" --quiet --project=db8bot
             gcloud compute ssh discord-db8bot-host --zone=us-central1-a --command="docker image prune -a -f" --quiet --project=db8bot
             gcloud compute instances update-container discord-db8bot-host --project=db8bot --container-image=us-central1-docker.pkg.dev/db8bot/discord-db8bot/"$IMGNAME":latest --container-env=DOPPLER_TOKEN="${DOPPLER_TKN}" --container-restart-policy=always
