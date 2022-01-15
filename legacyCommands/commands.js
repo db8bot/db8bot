@@ -1,6 +1,6 @@
 exports.run = function (client, message) {
     const Discord = require('discord.js')
-    const config = client.config
+    const config = process.env
     const embedNew = new Discord.MessageEmbed()
         .setColor('36393E') // change the color!
         .setTitle('DB8Bot Commands\n\n')

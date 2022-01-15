@@ -21,7 +21,19 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}\\index.js",
-            "runtimeVersion":"16"
+            "runtimeVersion": "16"
+        },
+        {
+            "name": "node: server",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "doppler",
+            "runtimeArgs": [
+                "run",
+                "--",
+                "node",
+                "index.js"
+            ]
         }
     ]
 }

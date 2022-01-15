@@ -5,7 +5,7 @@ exports.run = function (client, message, args) {
     const embed = new Discord.MessageEmbed()
         .setColor('#00ffff')
         .setTimestamp()
-        .setFooter(`Invite Link for ${client.config.NAME}`)
-        .addField('Invite link:', `[Here](${client.config.INVLINK}) | Thanks for inviting ${client.config.NAME}!`)
+        .setFooter(`Invite Link for ${process.env.NAME}`)
+        .addField('Invite link:', `[Here](${process.env.INVLINK}) | Thanks for inviting ${process.env.NAME}!`)
     message.channel.send({ embeds: [embed] })
 }

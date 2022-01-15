@@ -100,8 +100,9 @@ This Project is licensed under MIT License - see the LICENSE.md file for more de
 
 ## Credits
 Here are credits for all the code I used that was from other repositories.
-  * -botinfo command's uptime calculations code & general ideas/inspiration from Dank-Memer's Dank-Memer [here](https://github.com/Dank-Memer/Dank-Memer).
+  * /botinfo command's uptime calculations code & general ideas/inspiration from Dank-Memer's Dank-Memer [here](https://github.com/Dank-Memer/Dank-Memer).
   * Majority of bot structure from AnIdiotsGuide's Tutorial-Bot [here](https://github.com/AnIdiotsGuide/Tutorial-Bot).
+  * /get media command core from iamadamdev's bypass-paywalls-chrome [here](https://github.com/iamadamdev/bypass-paywalls-chrome/)
 
 ## Contact Me
 Feel free to contact me if you find bugs, license issues, missing credits, etc.

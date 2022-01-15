@@ -1,7 +1,9 @@
 const puppeteer = require('puppeteer')
 // const fs = require('fs').promises
-const extPath = `${process.cwd()}/modules/mediaExt/bypass-paywalls-chrome-master`
-// const extPath = `${process.cwd()}/mediaExt/bypass-paywalls-chrome-master` // use if in child-process mode
+const paywallExtPath = `${process.cwd()}/modules/mediaExt/bypass-paywalls-chrome-master`
+// const paywallExtPath = `${process.cwd()}/mediaExt/bypass-paywalls-chrome-master` // use if in child-process mode
+const cookieExtPath = `${process.cwd()}/modules/cookieExt/i-dont-care-about-cookies`
+const Xvfb = require('xvfb')
 
 process.on('message', async (msg) => {
     try {
@@ -21,6 +23,11 @@ process.on('message', async (msg) => {
 })
 
 async function toMhtml(link, ua) {
+    const xvfb = new Xvfb({
+        silent: true,
+        xvfb_args: ['-screen', '0', '1024x768x24', '-ac']
+    })
+    xvfb.startSync()
     const browser = await puppeteer.launch({
         args: [
             '--no-sandbox',
@@ -31,10 +38,44 @@ async function toMhtml(link, ua) {
             '--ignore-certifcate-errors-spki-list',
             `--user-agent=${ua}`,
             '--disable-features=ImprovedCookieControls',
-            `--disable-extensions-except=${extPath}`,
-            `--load-extension=${extPath}`,
+            `--disable-extensions-except=${paywallExtPath},${cookieExtPath}`,
+            `--load-extension=${paywallExtPath},${cookieExtPath}`,
             '--no-zygote',
-            '--disable-dev-shm-usage'
+            '--disable-dev-shm-usage',
+            '--disable-accelerated-2d-canvas',
+            '--no-first-run',
+            // '--single-process', // <- this one doesn't works in Windows
+            '--disable-gpu',
+            '--disable-accelerated-mjpeg-decode',
+            '--disable-accelerated-video-decode',
+            '--disable-breakpad', // disables crash reporting
+            '--disable-client-side-phishing-detection',
+            '--disable-default-apps',
+            '--disable-features=Translate,AudioServiceOutOfProcess,IsolateOrigins,site-per-process',
+            '--disable-popup-blocking',
+            '--disable-renderer-backgrounding', // disables tab freezing
+            '--disable-sync',
+            '--mute-audio',
+            '--autoplay-policy=user-gesture-required',
+            '--disable-component-update',
+            '--disable-domain-reliability',
+            '--disable-print-preview',
+            '--disable-site-isolation-trials',
+            '--disable-speech-api',
+            '--disable-web-security',
+            '--enable-features=SharedArrayBuffer',
+            '--no-default-browser-check',
+            '--no-pings',
+            '--use-gl=swiftshader',
+            '--disable-canvas-aa',
+            '--disable-composited-antialiasing',
+            '--disable-extensions-http-throttling',
+            '--disable-gpu-sandbox',
+            '--disable-namespace-sandbox',
+            '--disable-seccomp-filter-sandbox',
+            '--no-experiments',
+            '--disable-renderer-backgrounding',
+            '--display=' + xvfb._display
         ],
         headless: false,
         defaultViewport: null,
@@ -123,6 +164,7 @@ async function toMhtml(link, ua) {
     const client = await page.target().createCDPSession()
     const { data } = await client.send('Page.captureSnapshot', { format: 'mhtml' })
     await browser.close()
+    xvfb.stopSync()
     return data
 }
 

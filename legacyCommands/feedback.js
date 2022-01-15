@@ -1,7 +1,7 @@
 exports.run = function (client, message, args) {
     var guild = message.guild
     const Discord = require('discord.js')
-    const config = client.config
+    const config = process.env
     if (args.join(' ') !== '') {
         message.reply('Feedback received from Discord Chatbox! Thank you for your feedback!')
         message.delete()

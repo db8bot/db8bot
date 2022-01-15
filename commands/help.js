@@ -10,7 +10,6 @@ module.exports = {
         .setDescription('Displays Bot Help Page'),
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
-        const config = interaction.client.config
         var select = getRandomIntInclusive(1, 3)
         const embed = new Discord.MessageEmbed()
             .setColor(select === 1 ? '#ccff00' : select === 2 ? '#0072bb' : select === 3 ? '#ff4f00' : '#ccff00')
@@ -24,8 +23,8 @@ module.exports = {
             .addField('Github', 'The repo for this bot can be found [here](https://github.com/AirFusion45/db8bot).')
             .addField('Bot Status', 'The bot has a status page [here](https://airfusion.statuspage.io/). Please check this page first if a function isn\'t working. We might already be patching it!')
             .addField('Support Server:', 'Come [here](https://discord.gg/rEQc7C7) to get help or just hang out.')
-            .addField('Bot Invite Link', `Use \`/invite\` for the bot's invite link, or click [here](${config.INVLINK})`)
-            .setFooter(`Made by ${config.OWNERTAG}`)
+            .addField('Bot Invite Link', `Use \`/invite\` for the bot's invite link, or click [here](${process.env.INVLINK})`)
+            .setFooter(`Made by ${process.env.OWNERTAG}`)
             .setTimestamp()
 
         interaction.reply({ embeds: [embed] })

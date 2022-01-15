@@ -4,12 +4,12 @@ module.exports = (client, message) => {
     if (message.author.bot) return
 
     // Ignore messages not starting with the prefix (in config.json)
-    if (message.content.indexOf(client.config.PREFIX) !== 0) return
+    if (message.content.indexOf(process.env.PREFIX) !== 0) return
     client.options.disableMentions = 'everyone'
-    if (!message.content.startsWith(client.config.PREFIX) || message.author.bot) return
+    if (!message.content.startsWith(process.env.PREFIX) || message.author.bot) return
 
     // Our standard argument/command name definition.
-    const args = message.content.slice(client.config.PREFIX.length).trim().split(/ +/g)
+    const args = message.content.slice(process.env.PREFIX.length).trim().split(/ +/g)
     const command = args.shift().toLowerCase()
 
     // Grab the command data from the client.commands Enmap
