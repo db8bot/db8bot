@@ -28,7 +28,7 @@ fs.readdir(dir, (err, files) => {
 
 exports.run = function (client, message, args) {
     const Discord = require('discord.js')
-    const config = client.config
+    const config = process.env
     const pkg = require('../package.json')
     const os = require('os')
     let totalPeople = 0

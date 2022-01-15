@@ -11,3 +11,7 @@ configDev.json
 data
 
 dev
+
+modules/mediaExt/bypass-paywalls-chrome-master/
+
+modules/cookieExt/i-dont-care-about-cookies/

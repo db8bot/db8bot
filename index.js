@@ -13,6 +13,9 @@ const Long = require('long')
 const MongoClient = require('mongodb').MongoClient
 const ua = require('universal-analytics')
 const Enmap = require('enmap')
+const express = require('express')
+const Sentry = require('@sentry/node')
+const Tracing = require('@sentry/tracing')
 
 // Client Setup & Defaults Initialization
 const client = new Client({
@@ -34,17 +37,20 @@ const serverSpecificCommands = []
 client.commands = new Collection()
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
 
+// setup express
+var app = express()
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
 // execution/launch settings
 const versionSelector = 'prod'
-const testServerGuildID = '689368206904655878'
+const testServerGuildID = '689368206904655878' // test1: test2: 900260322378653726
 
 if (versionSelector === 'prod') {
-    var config = require('dotenv').config({ path: './prod.env' })
-    if (config.error) {
-        process.exit(1)
-    }
-
-    client.config = config.parsed
+    Sentry.init({
+        dsn: 'https://3a8ab5afe5824525ac1f41ebe688fbd0@o196622.ingest.sentry.io/5188131',
+        tracesSampleRate: 1.0
+    })
 
     const database = new MongoClient(process.env.MONGOURI, { useNewUrlParser: true, useUnifiedTopology: true })
     database.connect(async (err, dbClient) => {
@@ -63,7 +69,11 @@ if (versionSelector === 'prod') {
             if (Object.keys(serverSpecificSlashGlobal).includes(file.replace('.js', ''))) {
                 serverSpecificCommands.push(command.data.toJSON())
             } else {
-                commands.push(command.data.toJSON())
+                try {
+                    commands.push(command.data.toJSON())
+                } catch (err) {
+                    console.log(`File failed: ${file}`)
+                }
             }
             client.commands.set(command.data.name, command)
         }
@@ -95,12 +105,6 @@ if (versionSelector === 'prod') {
         })()
     })
 } else if (versionSelector === 'dev') {
-    var config = require('dotenv').config({ path: './dev.env' })
-    if (config.error) {
-        process.exit(1)
-    }
-    client.config = config.parsed
-
     for (const file of commandFiles) {
         const command = require(`./commands/${file}`)
         commands.push(command.data.toJSON())
@@ -206,7 +210,7 @@ client.on('messageCreate', async message => {
 
     // command & args
     if (message.content.indexOf('<@!') === 0) {
-        var prefix = `<@!${client.config.BOTID}>`
+        var prefix = `<@!${process.env.BOTID}>`
         var args = message.content.replace(prefix, '').split(' ').filter(n => n)
         var command = args.shift().toLowerCase()
     } else {
@@ -223,7 +227,7 @@ client.on('messageCreate', async message => {
     if (prefix === '/') {
         if (command === 'clean') {
             message.channel.messages.fetch({ limit: 1 }).then(chanmsg => {
-                if (chanmsg.last().content === `${client.config.PREFIX}clean` && chanmsg.last().attachments.first() === undefined) { // no image in current msg
+                if (chanmsg.last().content === `${process.env.PREFIX}clean` && chanmsg.last().attachments.first() === undefined) { // no image in current msg
                     message.channel.messages.fetch({ limit: 2 }).then(chanmsg2 => { // check last message
                         if (chanmsg2.last().attachments.first() !== undefined) {
                             superagent.get(chanmsg2.last().attachments.first().url).pipe(
@@ -287,8 +291,8 @@ client.on('messageCreate', async message => {
             }
         }
     } else if (prefix === '-' && legacyCommandNames.includes(command)) {
-        message.channel.send(`:warning: ${client.config.NAME} has migrated to Discord Slash Commands in preparation for Discord's mandatory transition in April 2022. Some commands are still accessible using the ${client.config.PREFIX} prefix to aid with the transition to Slash Commands. However, these legacy commands will have fewer features & degraded performance and will be removed in the next major update. Please use / to access the bot's commands in the future. **If none of the Slash Commands work, you need to ask someone with MANAGE_SERVER permissions to reauthorize the bot using this link: https://discord.com/api/oauth2/authorize?client_id=689368779305779204&permissions=310647056497&scope=bot%20applications.commands** Thanks for your understanding!`)
-    } else if (prefix === `<@!${client.config.BOTID}>`) {
+        message.channel.send(`:warning: ${process.env.NAME} has migrated to Discord Slash Commands in preparation for Discord's mandatory transition in April 2022. Some commands are still accessible using the ${process.env.PREFIX} prefix to aid with the transition to Slash Commands. However, these legacy commands will have fewer features & degraded performance and will be removed in the next major update. Please use / to access the bot's commands in the future. **If none of the Slash Commands work, you need to ask someone with MANAGE_SERVER permissions to reauthorize the bot using this link: https://discord.com/api/oauth2/authorize?client_id=689368779305779204&permissions=310647056497&scope=bot%20applications.commands** Thanks for your understanding!`)
+    } else if (prefix === `<@!${process.env.BOTID}>`) {
         if (command === 'test') {
             message.channel.send('test')
         } else if (command === 'ownerhelp') {
@@ -314,7 +318,7 @@ client.on('messageCreate', async message => {
 
             message.channel.send({ embeds: [ownercmds] })
         } else if (command === 'setgame') {
-            if (message.author.id === client.config.OWNER) {
+            if (message.author.id === process.env.OWNER) {
                 if (['playing', 'streaming', 'listening', 'watching', 'competing'].includes(args[0].toLowerCase())) {
                     args.shift()
                     client.user.setActivity(args.join(' '), { type: args[0].toUpperCase() })
@@ -323,7 +327,7 @@ client.on('messageCreate', async message => {
                 }
             }
         } else if (command === 'setstatus') {
-            if (message.author.id === client.config.OWNER) {
+            if (message.author.id === process.env.OWNER) {
                 if (['online', 'idle', 'invisible', 'dnd'].includes(args.join(' ').toLowerCase())) {
                     client.user.setStatus(args.join(' '))
                 } else {
@@ -331,7 +335,7 @@ client.on('messageCreate', async message => {
                 }
             }
         } else if (command === 'getallserver') {
-            if (message.author.id === client.config.owner) {
+            if (message.author.id === process.env.owner) {
                 var user = message.author
                 var serverNameStr = client.guilds.cache.map(e => e.toString()).join(', ')
                 while (serverNameStr.length > 1990) {
@@ -341,12 +345,12 @@ client.on('messageCreate', async message => {
                 user.send(serverNameStr)
             }
         } else if (command === 'idtoname') {
-            if (message.author.id === client.config.OWNER) {
+            if (message.author.id === process.env.OWNER) {
                 const getx = client.guilds.cache.find(server => server.id === args.join(' '))
                 message.author.send(getx.name)
             }
         } else if (command === 'broadcast') {
-            if (command.author.id === client.config.OWNER) {
+            if (command.author.id === process.env.OWNER) {
                 function getDefaultChannel(guild) {
                     if (guild.channels.cache.some(name1 => name1.name === 'general')) { return guild.channels.cache.find(name => name.name === 'general') }
                     // Now we get into the heavy stuff: first channel in order where the bot can speak
@@ -361,7 +365,7 @@ client.on('messageCreate', async message => {
                 client.guilds.cache.map(e => getDefaultChannel(e).send(args.join(' ')))
             }
         } else if (command === 'sendmsgto') {
-            if (message.author.id === client.config.OWNER) {
+            if (message.author.id === process.env.OWNER) {
                 function getDefaultChannel(guild) {
                     if (guild.channels.cache.some(name1 => name1.name === 'general')) { return guild.channels.cache.find(name => name.name === 'general') }
                     // Now we get into the heavy stuff: first channel in order where the bot can speak
@@ -376,15 +380,15 @@ client.on('messageCreate', async message => {
                 getDefaultChannel(client.guilds.cache.find(server => server.name === args[0])).send(args.slice(1).join(' '))
             }
         } else if (command === 'leaveserver') {
-            if (message.author.id === client.config.OWNER) {
+            if (message.author.id === process.env.OWNER) {
                 var guild = client.guilds.cache.find(val => val.name === args.join(' ')).leave()
             }
         } else if (command === 'getlog') {
-            if (message.author.id === client.config.OWNER) {
+            if (message.author.id === process.env.OWNER) {
                 message.author.send({ files: ['log.txt'] })
             }
         } else if (command === 'killall') {
-            if (message.author.id === client.config.OWNER) {
+            if (message.author.id === process.env.OWNER) {
                 setTimeout(async function () {
                     const command = `pm2 stop ${versionSelector}` // add exec cmd to credits NOTE: 0 = powerbot or default host of the code [add in readme that make sure process is in #0 if using pm2] 1 = signature
                     const outMessage = await message.channel.send(`Running \`${command}\`...`)
@@ -397,7 +401,7 @@ client.on('messageCreate', async message => {
                 }, 3000)
             }
         } else if (command === 'restart') {
-            if (message.author.id === client.config.OWNER) {
+            if (message.author.id === process.env.OWNER) {
                 if (args.join(' ') === 'f') {
                     process.abort()
                 } else {
@@ -405,7 +409,7 @@ client.on('messageCreate', async message => {
                 }
             }
         } else if (command === 'exec') {
-            if (message.author.id === client.config.OWNER) {
+            if (message.author.id === process.env.OWNER) {
                 const command = args.join(' ')
                 const outMessage = await message.channel.send(`Running \`${command}\`...`)
                 let stdOut = await doExec(command).catch(data => outputErr(outMessage, data))
@@ -416,9 +420,9 @@ client.on('messageCreate', async message => {
               \`\`\``)
             }
         } else if (command === 'eval') {
-            if (message.author.id === client.config.OWNER) {
+            if (message.author.id === process.env.OWNER) {
                 var x, y
-                if (message.author.id !== client.config.OWNER) return
+                if (message.author.id !== process.env.OWNER) return
                 x = Date.now()
                 try {
                     const code = args.join(' ')
@@ -437,7 +441,7 @@ client.on('messageCreate', async message => {
                 }
             }
         } else if (command === 'spyon') {
-            if (message.author.id === client.config.OWNER) {
+            if (message.author.id === process.env.OWNER) {
                 function getDefaultChannel(guild) {
                     if (guild.channels.cache.some(name1 => name1.name === 'general')) { return guild.channels.cache.find(name => name.name === 'general') }
                     // Now we get into the heavy stuff: first channel in order where the bot can speak
@@ -457,9 +461,9 @@ client.on('messageCreate', async message => {
                 }
             }
         } else if (command === 'gethostip') {
-            if (message.author.id === client.config.OWNER) {
+            if (message.author.id === process.env.OWNER) {
                 superagent
-                    .get(`https://ipinfo.io/json?token=${client.config.IPINFOTOKEN}`)
+                    .get(`https://ipinfo.io/json?token=${process.env.IPINFOTOKEN}`)
                     .end((err, res) => {
                         const response = JSON.parse(res.text)
                         if (err) console.error(err)
@@ -482,6 +486,11 @@ client.on('messageCreate', async message => {
     }
 })
 
+// express routing
+const mailIn = require('./routes/mailIn')
+app.set('client', client) // pass client on to express for use in routes
+app.use('/mailin', mailIn)
+
 const token = /[\w\d]{24}\.[\w\d]{6}\.[\w\d-_]{27}/g
 client.on('debug', error => {
     console.log(chalk.cyan(error.replace(token, 'HIDDEN')))
@@ -492,4 +501,12 @@ client.on('warn', error => {
 client.on('error', (error) => {
     console.error(chalk.red(error.replace(token, 'HIDDEN')))
 })
-client.login(client.config.TOKEN)
+client.login(process.env.TOKEN)
+
+var port = process.env.PORT
+if (port == null || port === '' || versionSelector === 'dev') {
+    port = 8080
+}
+app.listen(port, () => {
+    console.log(`Listening at http://localhost:${port}`)
+})

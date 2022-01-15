@@ -9,8 +9,7 @@ module.exports = {
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
         if (!interaction.guild) return (interaction.reply('Command not available in DMs.'))
-        const config = interaction.client.config
-        const uri = `mongodb+srv://${config.MONGOUSER}:${config.MONGOPASS}@db8botcluster.q3bif.mongodb.net/23bot?retryWrites=true&w=majority`
+        const uri = `mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@db8botcluster.q3bif.mongodb.net/23bot?retryWrites=true&w=majority`
         const database = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true })
         const guild = interaction.guild
 

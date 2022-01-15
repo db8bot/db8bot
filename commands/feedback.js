@@ -10,8 +10,7 @@ module.exports = {
         ),
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
-        const config = interaction.client.config
         interaction.reply({ content: 'Feedback received from Discord Chatbox! Thank you for your feedback!', ephemeral: true })
-        interaction.client.users.cache.find(val1 => val1.id === config.OWNER).send(`New feedback from ${interaction.user.tag} from server: ${interaction.guild.name}. Message/Feedback: ${interaction.options.getString('feedback')}`)
+        interaction.client.users.cache.find(val1 => val1.id === process.env.OWNER).send(`New feedback from ${interaction.user.tag} from server: ${interaction.guild.name}. Message/Feedback: ${interaction.options.getString('feedback')}`)
     }
 }

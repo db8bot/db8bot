@@ -38,6 +38,13 @@ RUN apt-get update &&\
     ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget \
     xvfb x11vnc x11-xkb-utils xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic x11-apps
 
+# Install Doppler CLI
+RUN apt-get update && apt-get install -y apt-transport-https ca-certificates curl gnupg && \
+    curl -sLf --retry 3 --tlsv1.2 --proto "=https" 'https://packages.doppler.com/public/cli/gpg.DE2A7741A397C129.key' | apt-key add - && \
+    echo "deb https://packages.doppler.com/public/cli/deb/debian any-version main" | tee /etc/apt/sources.list.d/doppler-cli.list && \
+    apt-get update && \
+    apt-get -y install doppler
+
 # install Puppeteer & other required libs
 
 WORKDIR /db8bot
@@ -48,7 +55,23 @@ RUN npm install --production
 
 COPY . .
 
-# test display device
+# install chrome extensions in modules
+
+RUN wget https://github.com/iamadamdev/bypass-paywalls-chrome/archive/master.zip -O master.zip \
+    && mkdir -p modules/mediaExt/ \
+    && unzip master.zip -d modules/mediaExt/ \
+    && rm master.zip
+
+RUN wget https://cloud.airfusion.dev/index.php/s/9FpzKEBGRBfY23Q/download/extension_3_3_5_0.zip -O extension_3_3_5_0.zip \
+    && mkdir -p modules/cookieExt/i-dont-care-about-cookies/ \
+    && unzip extension_3_3_5_0.zip -d modules/cookieExt/i-dont-care-about-cookies/ \
+    && rm extension_3_3_5_0.zip 
+
+# set display env
 ENV DISPLAY :99
 
-CMD Xvfb :99 -screen 0 1024x768x16 & npm start
+# expose 8080 for receiving follow emails
+EXPOSE 8080
+
+# start application
+CMD npm start

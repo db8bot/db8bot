@@ -6,14 +6,13 @@ module.exports = {
         .setDescription('Show Bot\'s Available Commands!'),
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
-        const config = interaction.client.config
         const embedNew = new Discord.MessageEmbed()
             .setColor('36393E') // change the color!
             .setTitle('DB8Bot Commands\n\n')
-            .setDescription(`**Prefix:** **${config.PREFIX}**`)
-            .setFooter(`${config.NAME} Commands`)
+            .setDescription(`**Prefix:** **${process.env.PREFIX}**`)
+            .setFooter(`${process.env.NAME} Commands`)
             .setTimestamp()
-            .setTitle(`Please use the prefix "${config.PREFIX}" in front of all commands!`)
+            .setTitle(`Please use the prefix "${process.env.PREFIX}" in front of all commands!`)
             .addField(':tools: **General**', 'commands, help, feedback, invite, ping, say, serverinv, clean', true)
             .addField(':hammer: **Moderation**', 'lockdown (lockdown unlock), mute & unmute(mute role required), purge', true)
             .addField(':information_source: **Information**', 'botinfo, serverinfo', true)
