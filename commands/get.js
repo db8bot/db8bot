@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const superagent = require('superagent')
-const psl = require('psl')
 
 async function reqSciHub(query) {
     return new Promise((resolve, reject) => {
@@ -52,7 +51,7 @@ module.exports = {
             })
         } catch (e) {
             console.error(e)
-            interaction.reply('Not Found. <reminder abt isbn, media, doi, paper title>')
+            interaction.reply('Not Found. If the article has a DOI, you should try using that. You should also try setting the paper\'s title as the source. If you are searching a book, use /getbook, if you are trying to get a news article from the press, use /getmedia.')
         }
     }
 }
