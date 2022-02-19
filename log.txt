@@ -29,3 +29,8 @@
 {"level":"info","message":"getbook command used by AirFusion Time: Fri Feb 18 2022 10:24:10 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
 {"level":"info","message":"getbook command used by AirFusion Time: Fri Feb 18 2022 10:24:27 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
 {"level":"info","message":"getbook command used by AirFusion Time: Fri Feb 18 2022 10:24:37 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"getpress command used by AirFusion Time: Sat Feb 19 2022 00:33:47 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"getpress command used by AirFusion Time: Sat Feb 19 2022 00:34:11 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"getpress command used by AirFusion Time: Sat Feb 19 2022 00:38:56 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"getpress command used by AirFusion Time: Sat Feb 19 2022 00:39:12 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
+{"level":"info","message":"getpress command used by AirFusion Time: Sat Feb 19 2022 00:39:21 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
