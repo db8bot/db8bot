@@ -10,7 +10,64 @@ const Discord = require('discord.js')
 router.post('/', upload.any(), async (req, resApp) => {
     const client = req.app.get('client')
 
-    async function notifyServer(searchStrRes, content) {
+    async function searchDB(collection, searchStr0, receiveDate) {
+        return (await collection.find({
+            trackedTeamCode: searchStr0,
+            tournStart: {
+                $lte: receiveDate.getTime()
+            },
+            tournEnd: {
+                $gte: receiveDate.getTime()
+            }
+        }).toArray())
+    }
+    /** left to right
+     * flow: msg receive -> check bye:
+     * if bye: slice team accordingly (DATE RECEIVED!) & notify server
+     * if not bye: slice team accoridngly (replace aff/neg pro/con) -> slice team name into search str -> search db for said team, find their event
+     * slice msg according to event
+     * cx: check for (flip) = elim
+     * cx: aff/neg, no flights, mind judge pannels
+     * pf: check for flip = non elim. in elim sides might be locked - account for that
+     * pf: pro/con, flights, judge pannels
+     * ld: check for flip = elim
+     * ld: aff/neg, flights (? - nsda yes, check email from tab), mind judge pannels
+     *  -> notify server
+     */
+
+    // eslint-disable-next-line no-control-regex
+    var sender = req.body.from.match(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/gmi)[0]
+    var title = req.body.subject
+    if ((sender === 'blasts@www.tabroom.com' || sender === 'yfang@thecollegepreparatoryschool.org') && (!title.toLowerCase().includes('tabroom update') && !title.toLowerCase().includes('message from tab'))) { // check sender is from tabroom blasts (or me lol) NOT updates & title check just for good measure
+        // establish db, open connection
+        var dbClient = await database.connect()
+        var collection = dbClient.db('db8bot').collection('tabroomLiveUpdates')
+
+        var receiveDate = new Date(req.body.headers.match(/Date: .+?(?=\n)/gmi)[0].trim().replace('Date: ', ''))
+        var msg = req.body.text
+
+        var searchStr0, searchStr1, searchStr0Res, searchStr1Res
+
+        // check for bye
+        if (msg.includes('BYE') && msg.length < 30) { // caps here is needed because the msg is always in caps
+            // slice team accordingly
+            searchStr0 = msg.replace('BYE', '').trim()
+            searchStr0Res = await searchDB(collection, searchStr0, receiveDate)
+            if (searchStr0Res.length > 0) {
+                // notify server
+                // build function
+            }
+        }
+    }
+
+
+})
+
+module.exports = router
+
+
+/* 
+ async function notifyServer(searchStrRes, content) {
         var notifyArr = searchStrRes.notify
         for (const server of notifyArr) {
             var sendGuild = await client.guilds.fetch(server.server)
@@ -137,6 +194,4 @@ router.post('/', upload.any(), async (req, resApp) => {
 
     // mark successful receipt
     resApp.sendStatus(200)
-})
-
-module.exports = router
+*/
