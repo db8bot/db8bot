@@ -21,6 +21,36 @@ router.post('/', upload.any(), async (req, resApp) => {
             }
         }).toArray())
     }
+
+    async function notifyServer(searchStrRes, emailMsgObject) {
+        var notifyArr = searchStrRes.notify
+        for (const server of notifyArr) {
+            var sendGuild = await client.guilds.fetch(server.server)
+            if (sendGuild.available) {
+                var guildChannels = await sendGuild.channels.fetch(server.channel)
+                try {
+                    var tagging = server.users.map(user => `<@${user}>`).join(', ') + '\n' + (server.role !== null ? `<@&${server.role}>` : '')
+                    const embed = new Discord.MessageEmbed()
+                        .setColor('#daeaf1')
+                        .setTitle(`${emailMsgObject.title} Pairings`)
+
+                    if (emailMsgObject.bye) {
+                        embed.setDescription(`${emailMsgObject.title} BYE`)
+                    } else {
+                        embed.addField('Competition', emailMsgObject.competition)
+                        embed.addField('Judging', emailMsgObject.judging)
+                        embed.addField('Start Time', emailMsgObject.start)
+                        embed.addField('Room', emailMsgObject.room)
+                        embed.addField('Extra Info', emailMsgObject.extraInfo)
+                        if (emailMsgObject.flight) embed.addField('Flight', emailMsgObject.flight)
+                    }
+                    guildChannels.send({ content: tagging, embeds: [embed] })
+                } catch (err) {
+                    console.error(err)
+                }
+            }
+        }
+    }
     /** left to right
      * flow: msg receive -> check bye:
      * if bye: slice team accordingly (DATE RECEIVED!) & notify server
@@ -52,21 +82,18 @@ router.post('/', upload.any(), async (req, resApp) => {
         if (msg.includes('BYE') && msg.length < 30) { // caps here is needed because the msg is always in caps
             // slice team accordingly
             searchStr0 = msg.replace('BYE', '').trim()
-            searchStr0Res = await searchDB(collection, searchStr0, receiveDate)
+            searchStr0Res = await searchDB(collection, searchStr0, receiveDate) // only need to search once since there is only 1 team in the msg
             if (searchStr0Res.length > 0) {
                 // notify server
-                // build function
+
             }
         }
     }
-
-
 })
 
 module.exports = router
 
-
-/* 
+/*
  async function notifyServer(searchStrRes, content) {
         var notifyArr = searchStrRes.notify
         for (const server of notifyArr) {
