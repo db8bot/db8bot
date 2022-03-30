@@ -1,9 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const MongoClient = require('mongodb').MongoClient
 const childProcess = require('child_process')
-const googleBotList = require('./getFiles/googleBot.json')
-const bingBotList = require('./getFiles/bingBot.json')
-const mediaProfilesAmp = require('./getFiles/mediaProfilesAMP.json')
+const googleBotList = require('../getFiles/googleBot.json')
+const bingBotList = require('../getFiles/bingBot.json')
+const mediaProfilesAmp = require('../getFiles/mediaProfilesAMP.json')
 const mhtml2html = require('mhtml2html')
 const { JSDOM } = require('jsdom')
 const IPFS = require('ipfs')
