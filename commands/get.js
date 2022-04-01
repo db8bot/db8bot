@@ -21,7 +21,7 @@ async function reqSciHub(query) {
             .end((err, res) => {
                 if (err) console.error(err)
                 try {
-                    resolve(res.text.match(/src="(.*?)" id = "pdf"/)[1].trim().replace('//', 'https://').replace('"', ''))
+                    resolve((res.text.match(/src="(.*?)" id = "pdf"/)[1].trim().replace('//', 'https://').replace('"', '')).includes('sci-hub') ? res.text.match(/src="(.*?)" id = "pdf"/)[1].trim().replace('//', 'https://').replace('"', '') : `https://sci-hub.se${res.text.match(/src="(.*?)" id = "pdf"/)[1].trim().replace('//', 'https://').replace('"', '')}`)
                 } catch (err) {
                     reject(err)
                 }
