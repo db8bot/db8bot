@@ -41,7 +41,7 @@
     "discord-api-types": "^0.25.0",
     "discord.js": "^13.1.0",
     "dotenv": "^16.0.0",
-    "enmap": "^5.8.7",
+    "enmap": "^5.9.0",
     "express": "^4.17.2",
     "ipfs": "^0.62.1",
     "jsdom": "^19.0.0",
