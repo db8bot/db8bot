@@ -56,7 +56,7 @@
     "superagent": "^7.1.2",
     "universal-analytics": "^0.5.1",
     "uuid": "^8.3.2",
-    "winston": "^3.3.3",
+    "winston": "^3.7.2",
     "xvfb": "^0.4.0"
   },
   "devDependencies": {
