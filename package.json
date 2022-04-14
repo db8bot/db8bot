@@ -60,7 +60,7 @@
     "xvfb": "^0.4.0"
   },
   "devDependencies": {
-    "@vitalets/google-translate-api": "^7.0.0",
+    "@vitalets/google-translate-api": "^8.0.0",
     "debug": "^4.3.3",
     "eslint": "^7.32.0",
     "eslint-config-standard": "^16.0.3",
