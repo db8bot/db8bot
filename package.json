@@ -61,7 +61,7 @@
   },
   "devDependencies": {
     "@vitalets/google-translate-api": "^8.0.0",
-    "debug": "^4.3.3",
+    "debug": "^4.3.4",
     "eslint": "^7.32.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.26.0",
