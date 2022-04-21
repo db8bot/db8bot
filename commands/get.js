@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const superagent = require('superagent')
-
+const axios = require('axios').default
+const qs = require('qs')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -23,10 +23,19 @@ module.exports = {
 
         // request to scihub.se with search term - either doi or link or title of paper - it will automatically resolve to a scihub link
         try {
-            var sciHubLink = await reqSciHub(search)
-            interaction.reply(sciHubLink)
-            interaction.channel.send({
-                files: [sciHubLink + '.pdf']
+            axios.post('https://db8bot.uc.r.appspot.com/get/paper', qs.stringify({
+                query: search
+            }), {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }).then((res) => {
+                if (res.data.includes('sci-hub')) {
+                    interaction.reply(res.data)
+                    interaction.channel.send({
+                        files: [res.data + '.pdf']
+                    })
+                } else {
+                    interaction.reply('Not Found. If the article has a DOI, you should try using that. You should also try setting the paper\'s title as the source. If you are searching a book, use /getbook, if you are trying to get a news article from the press, use /getmedia.')
+                }
             })
         } catch (e) {
             console.error(e)
