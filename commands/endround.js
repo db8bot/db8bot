@@ -13,7 +13,7 @@ module.exports = {
         .addStringOption(option =>
             option.setName('decision')
                 .setDescription('decision of the round')
-                .addChoices([['aff/pro', 'aff/pro'], ['neg/con', 'neg/con']])
+                .addChoices({ name: 'aff/pro', value: 'aff/pro' }, { name: 'neg/con', value: 'neg/con' })
                 .setRequired(true)
         ),
     async execute(interaction) {

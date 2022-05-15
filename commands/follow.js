@@ -158,8 +158,7 @@ module.exports = {
             option.setName('enable-analytics')
                 .setDescription('Allows user1 & user2 to use /roundinfo for analytics. Enabled by default.')
                 .setRequired(false)
-                .addChoice('Enabled', 'true')
-                .addChoice('Disabled', 'false')
+                .addChoices({ name: 'Enabled', value: 'true' }, { name: 'Disabled', value: 'false' })
         ),
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)

@@ -36,7 +36,7 @@ module.exports = {
         .setDescription('Basic Information About db8bot')
         .addStringOption(option =>
             option.setName('flags')
-                .addChoice('nerdy', 'nerdy')
+                .addChoices({ name: 'nerdy', value: 'nerdy' })
                 .setDescription('Optional flags for the botinfo command')
                 .setRequired(false)
         ),

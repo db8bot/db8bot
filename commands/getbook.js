@@ -33,8 +33,7 @@ module.exports = {
             option.setName('type')
                 .setDescription('Non-fiction or fiction')
                 .setRequired(true)
-                .addChoice('fiction', 'fiction')
-                .addChoice('non-fiction', 'nonfiction')
+                .addChoices({ name: 'fiction', value: 'fiction' }, { name: 'non-fiction', value: 'nonfiction' })
         ),
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
