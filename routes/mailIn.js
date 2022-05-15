@@ -35,7 +35,7 @@ router.post('/', upload.any(), async (req, resApp) => {
                         .setTitle(`${emailMsgObject.title} Pairings`)
 
                     if (emailMsgObject.bye) {
-                        embed.setDescription(`${emailMsgObject.title} BYE`)
+                        embed.setDescription(`${searchStrRes.trackedTeamCode} BYE`)
                     } else {
                         embed.addField('Competition', emailMsgObject.competition)
                         embed.addField('Judging', emailMsgObject.judging)
@@ -85,8 +85,13 @@ router.post('/', upload.any(), async (req, resApp) => {
             searchStr0Res = await searchDB(collection, searchStr0, receiveDate) // only need to search once since there is only 1 team in the msg
             if (searchStr0Res.length > 0) {
                 // notify server
-
+                notifyServer(searchStr0Res, { bye: true })
             }
+        } else { // if not bye: slice team accoridngly (replace aff/neg pro/con) -> slice team name into search str -> search db for said team, find their event
+            // slice team: 
+
+
+
         }
     }
 })
