@@ -32,7 +32,7 @@
   "dependencies": {
     "@discordjs/builders": "^0.13.0",
     "@discordjs/rest": "^0.4.1",
-    "@google-cloud/tasks": "^2.5.0",
+    "@google-cloud/tasks": "^2.6.0",
     "@sentry/node": "^6.19.6",
     "@sentry/tracing": "^6.19.6",
     "bad-words": "^3.0.4",
