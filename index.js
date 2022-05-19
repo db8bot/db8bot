@@ -12,7 +12,6 @@ const stream = require('stream')
 const Long = require('long')
 const MongoClient = require('mongodb').MongoClient
 const ua = require('universal-analytics')
-const Enmap = require('enmap')
 const express = require('express')
 const Sentry = require('@sentry/node')
 const Tracing = require('@sentry/tracing')
@@ -176,20 +175,8 @@ client.on('interactionCreate', async interaction => {
     }
 })
 
-client.legacyCommands = new Enmap()
-var legacyCommandNames = []
-fs.readdir('./legacyCommands/', (err, files) => {
-    if (err) return console.error(err)
-    console.log(chalk.green('|--------------------(Loading Commands)------------------------|'))
-    files.forEach(file => {
-        if (!file.endsWith('.js')) return
-        const props = require(`./legacyCommands/${file}`)
-        const commandName = file.split('.')[0]
-        console.log(chalk.green(`Loading command ${commandName}`))
-        client.legacyCommands.set(commandName, props)
-        legacyCommandNames.push(commandName)
-    })
-})
+// client.legacyCommands = new Enmap()
+var legacyCommandNames = ['agamben', 'amash', 'bataille', 'baudrillard', 'biden', 'botinfo', 'capitalism', 'clean', 'commands', 'communism', 'debatehelp', 'feedback', 'flip', 'foucault', 'get', 'help', 'invite', 'jpow', 'judgeinfo', 'ping', 'say', 'serverinfo', 'serverinv', 'speeches', 'trump', 'yellen'] // legacy commands list - final reminders!
 
 client.on('messageCreate', async message => {
     const doExec = (cmd, opts = {}) => { // -exec function
@@ -209,90 +196,24 @@ client.on('messageCreate', async message => {
     }
 
     // command & args
-    if (message.content.indexOf('<@!') === 0) {
-        var prefix = `<@!${process.env.BOTID}>`
+    if (message.content.indexOf('<@') === 0) {
+        var prefix = `<@${process.env.BOTID}>`
         var args = message.content.replace(prefix, '').split(' ').filter(n => n)
         var command = args.shift().toLowerCase()
+        console.log(command)
     } else {
         var prefix = message.content.split('')[0]
         var args = message.content.slice(process.env.PREFIX.length).trim().split(/ +/g)
         var command = args.shift().toLowerCase()
     }
 
-    if ((!message.content.startsWith(process.env.PREFIX) && !message.content.startsWith('/') && !message.content.startsWith(`<@!${process.env.BOTID}`)) || message.author.bot) return
-    if (message.content.indexOf(process.env.PREFIX) !== 0 && message.content.indexOf('/') !== 0 && message.content.indexOf(`<@!${process.env.BOTID}`) !== 0) return
+    if ((!message.content.startsWith(process.env.PREFIX) && !message.content.startsWith('/') && !message.content.startsWith(`<@${process.env.BOTID}`)) || message.author.bot) return
+    if (message.content.indexOf(process.env.PREFIX) !== 0 && message.content.indexOf('/') !== 0 && message.content.indexOf(`<@${process.env.BOTID}`) !== 0) return
 
     // message.guild.commands.set([]) // clear reset server slash commands
-
-    if (prefix === '/') {
-        if (command === 'clean') {
-            message.channel.messages.fetch({ limit: 1 }).then(chanmsg => {
-                if (chanmsg.last().content === `${process.env.PREFIX}clean` && chanmsg.last().attachments.first() === undefined) { // no image in current msg
-                    message.channel.messages.fetch({ limit: 2 }).then(chanmsg2 => { // check last message
-                        if (chanmsg2.last().attachments.first() !== undefined) {
-                            superagent.get(chanmsg2.last().attachments.first().url).pipe(
-                                new PNG({
-                                    colorType: 2,
-                                    bgColor: {
-                                        red: 255,
-                                        green: 255,
-                                        blue: 255
-                                    }
-                                })
-                            ).on('parsed', async function () {
-                                var sendDataArr = []
-                                const createWriteStream = () => {
-                                    return stream.Writable({
-                                        write(chunk, enc, next) {
-                                            sendDataArr.push(chunk)
-                                            next()
-                                        }
-                                    })
-                                }
-                                const writeStream = createWriteStream()
-                                this.pack().pipe(writeStream)
-                                writeStream.on('finish', () => {
-                                    message.channel.send({ files: [Buffer.concat(sendDataArr)] })
-                                })
-                            })
-                        }
-                    })
-                } else if (chanmsg.first().attachments.first() !== undefined) {
-                    superagent.get(chanmsg.first().attachments.first().url).pipe(
-                        new PNG({
-                            colorType: 2,
-                            bgColor: {
-                                red: 255,
-                                green: 255,
-                                blue: 255
-                            }
-                        })
-                    ).on('parsed', async function () {
-                        var sendDataArr = []
-                        const createWriteStream = () => {
-                            return stream.Writable({
-                                write(chunk, enc, next) {
-                                    sendDataArr.push(chunk)
-                                    next()
-                                }
-                            })
-                        }
-                        const writeStream = createWriteStream()
-                        this.pack().pipe(writeStream)
-                        writeStream.on('finish', () => {
-                            message.channel.send({ files: [Buffer.concat(sendDataArr)] })
-                        })
-                    })
-                }
-            })
-        } else if (command === 'benmoshe<3') {
-            if (message.guild.id === '685646226942984206' || message.guild.id === '688603800549851298') {
-                message.reply({ content: 'wHy r u rEaDINg bEn mOSHe', files: ['./assets/benmoshe.png'] })
-            }
-        }
-    } else if (prefix === '-' && legacyCommandNames.includes(command)) {
-        message.channel.send(`:warning: ${process.env.NAME} has migrated to Discord Slash Commands in preparation for Discord's mandatory transition in April 2022. Some commands are still accessible using the ${process.env.PREFIX} prefix to aid with the transition to Slash Commands. However, these legacy commands will have fewer features & degraded performance and will be removed in the next major update. Please use / to access the bot's commands in the future. **If none of the Slash Commands work, you need to ask someone with MANAGE_SERVER permissions to reauthorize the bot using this link: https://discord.com/api/oauth2/authorize?client_id=689368779305779204&permissions=310647056497&scope=bot%20applications.commands** Thanks for your understanding!`)
-    } else if (prefix === `<@!${process.env.BOTID}>`) {
+    if (prefix === '-' && legacyCommandNames.includes(command)) {
+        message.channel.send(`:warning: ${process.env.NAME} has migrated to Discord Slash Commands in preparation for Discord's mandatory transition in August 2022. Please use / to access the bot's commands. **If none of the Slash Commands work, you need to ask someone with MANAGE_SERVER permissions to reauthorize the bot using this link: https://discord.com/api/oauth2/authorize?client_id=689368779305779204&permissions=310647056497&scope=bot%20applications.commands** Thanks for your understanding!`)
+    } else if (prefix === `<@${process.env.BOTID}>`) {
         if (command === 'test') {
             message.channel.send('test')
         } else if (command === 'ownerhelp') {
