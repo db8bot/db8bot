@@ -100,8 +100,7 @@ module.exports = {
                             interaction.reply({ files: [Buffer.concat(sendDataArr)] })
                         })
                     })
-                }
-                else {
+                } else {
                     interaction.reply('Please specify a link or make sure the message above the command message is an image')
                 }
             })

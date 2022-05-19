@@ -7,14 +7,11 @@ const winston = require('winston')
 const fs = require('fs')
 const { exec } = require('child_process')
 const superagent = require('superagent')
-const PNG = require('pngjs').PNG
-const stream = require('stream')
 const Long = require('long')
 const MongoClient = require('mongodb').MongoClient
 const ua = require('universal-analytics')
 const express = require('express')
 const Sentry = require('@sentry/node')
-const Tracing = require('@sentry/tracing')
 
 // Client Setup & Defaults Initialization
 const client = new Client({
