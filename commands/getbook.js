@@ -1,23 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const superagent = require('superagent')
+const axios = require('axios').default
+const qs = require('qs')
 const cheerio = require('cheerio')
-
-async function getIPFSPortal(libgenLolLink) {
-    return new Promise((resolve, reject) => {
-        superagent
-            .get(libgenLolLink)
-            .redirects(2)
-            .end((err, ipfsPortalLink) => {
-                if (err) reject(err)
-                var $ = cheerio.load(ipfsPortalLink.text)
-                if (ipfsPortalLink.text.includes('Download from an IPFS distributed storage, choose any gateway:')) { // there are ipfs buttons
-                    resolve($($($($('#download').children('ul')[0]).children('li')[0]).children('a')[0]).attr('href'))
-                } else { // fall back on the slower get link
-                    resolve($($('#download').children('h2').children('a')[0]).attr('href'))
-                }
-            })
-    })
-}
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -39,38 +23,23 @@ module.exports = {
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
 
-        const bookType = interaction.options.getString('type')
+        const bookType = interaction.option.getString('type')
         const search = interaction.options.getString('isbn-or-name')
-
-        if (bookType === 'fiction') {
-            superagent
-                .get(`https://libgen.is/fiction/?q=${encodeURIComponent(search)}`)
-                .redirects(2)
-                .end(async (err, resLibgen) => {
-                    if (err) console.error(err)
-                    var $ = cheerio.load(resLibgen.text)
-                    var libgenLolLink = $($($($($('.catalog tbody').children('tr')[0]).children('td')[5]).children('ul').children('li')[0]).children('a')[0]).attr('href') // lol link of the first mirror of the first entry
-                    if (libgenLolLink === undefined) {
-                        interaction.reply('Not Found')
-                        return
-                    }
-                    // call getipfsportal func
-                    interaction.reply(`${await getIPFSPortal(libgenLolLink)}\nSee the full catalogue at https://libgen.is/fiction/?q=${encodeURIComponent(search)}`)
-                })
-        } else if (bookType === 'nonfiction') {
-            superagent
-                .get(`https://libgen.is/search.php?req=${encodeURIComponent(search)}&lg_topic=libgen&open=0&view=simple&res=25&phrase=1&column=def`)
-                .redirects(2)
-                .end(async (err, resLibgen) => {
-                    if (err) console.error(err)
-                    var $ = cheerio.load(resLibgen.text)
-                    var libgenLolLink = $($($($($('table').children()[2]).children('tr')[1]).children('td')[9]).children('a')[0]).attr('href')
-                    if (libgenLolLink === undefined) {
-                        interaction.reply('Not found')
-                        return
-                    }
-                    interaction.reply(`${await getIPFSPortal(libgenLolLink)}\nSee the full catalogue at https://libgen.is/search.php?req=${encodeURIComponent(search)}&lg_topic=libgen&open=0&view=simple&res=25&phrase=1&column=def`)
-                })
+        try {
+            axios.post('https://db8bot.uc.r.appspot.com/get/book', qs.stringify({
+                query: search,
+                params: bookType
+            }), {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }).then((res) => {
+                if (res.data.length > 0) { // there is content
+                    interaction.reply(`${res.data[0]}\nSee the full catalogue at ${res.data[1]}`)
+                } else {
+                    interaction.reply('Not found. If you used the ISBN try using the book name (and vice versa). If there are multiple ISBNs for a book (due to paperback, ebook, etc.) try those ISBNs as well.')
+                }
+            })
+        } catch (e) {
+            interaction.reply('Not found. If you used the ISBN try using the book name (and vice versa). If there are multiple ISBNs for a book (due to paperback, ebook, etc.) try those ISBNs as well.')
         }
     }
 }
