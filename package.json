@@ -52,6 +52,7 @@
     "pngjs": "^6.0.0",
     "psl": "^1.8.0",
     "puppeteer": "^13.5.2",
+    "qs": "^6.10.3",
     "superagent": "^7.1.2",
     "tesseract.js": "^2.1.5",
     "universal-analytics": "^0.5.1",
