@@ -109,7 +109,7 @@ Feel free to contact me if you find bugs, license issues, missing credits, etc.
 
   * Please contact me here:
     * Email: jfang.cv.ca.us@gmail.com
-    * Discord: AirFusion#1706
+    * Discord: AirFusion#5112
 
 ## Note/Notes 
   When self-hosting db8bot, we recommend downloading the latest release under the releases tab. As that is the most stable version.
