@@ -35,8 +35,8 @@ const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('
 
 // setup express
 var app = express()
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.json({ limit: '50mb' }))
+app.use(express.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }))
 
 // execution/launch settings
 const versionSelector = 'dev'
@@ -406,8 +406,10 @@ client.on('messageCreate', async message => {
 
 // express routing
 const mailIn = require('./routes/mailIn')
+const pdfIn = require('./routes/pdfIn')
 app.set('client', client) // pass client on to express for use in routes
 app.use('/mailin', mailIn)
+app.use('/pdfin', pdfIn)
 
 const token = /[\w\d]{24}\.[\w\d]{6}\.[\w\d-_]{27}/g
 client.on('debug', error => {
