@@ -39,7 +39,7 @@ app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }))
 
 // execution/launch settings
-const versionSelector = 'prod'
+const versionSelector = 'dev'
 const testServerGuildID = '689368206904655878' // test1: test2: 900260322378653726
 
 if (versionSelector === 'prod') {
