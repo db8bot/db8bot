@@ -11,31 +11,31 @@ var cache = redis.createClient({
 })
 
 async function buildEmbed(err, res, interaction, search) {
-    const jstorEmbed = new Discord.MessageEmbed()
+    const getEmbed = new Discord.MessageEmbed()
         .setColor('#8b0000')
         .setTimestamp(new Date())
     if (!err) {
         const authors = res[1].authors.map(author => author.given + ' ' + author.family).join(', ')
-        jstorEmbed.setTitle((res[1].title) ? res[1].title : 'Requested Article (No Title)')
-        jstorEmbed.setDescription('[Access Article](' + res[0] + ')')
-        jstorEmbed.setURL(res[0])
-        jstorEmbed.addField('Journal/Container', (res[1].containerTitle) ? res[1].containerTitle : 'No Container Title')
-        jstorEmbed.addField('DOI', (res[1].doi) ? res[1].doi : 'No DOI')
-        jstorEmbed.addField('Issued Year', (res[1].issuedYear) ? '' + res[1].issuedYear : 'No Issue Year', true)
-        jstorEmbed.addField('Issued Month', (res[1].issuedMonth) ? '' + res[1].issuedMonth : 'No Issue Month', true)
-        jstorEmbed.addField('Volume', (res[1].volume) ? res[1].volume : 'No Volume #')
-        jstorEmbed.addField('Issue', (res[1].issue) ? res[1].issue : 'No Issue #', true)
-        jstorEmbed.addField('Author(s)', authors)
-        jstorEmbed.addField('Original Query', search)
-        jstorEmbed.setFooter({
+        getEmbed.setTitle((res[1].title) ? res[1].title : 'Requested Article (No Title)')
+        getEmbed.setDescription('[Access Article](' + res[0] + ')')
+        getEmbed.setURL(res[0])
+        getEmbed.addField('Journal/Container', (res[1].containerTitle) ? res[1].containerTitle : 'No Container Title')
+        getEmbed.addField('DOI', (res[1].doi) ? res[1].doi : 'No DOI')
+        getEmbed.addField('Issued Year', (res[1].issuedYear) ? '' + res[1].issuedYear : 'No Issue Year', true)
+        getEmbed.addField('Issued Month', (res[1].issuedMonth) ? '' + res[1].issuedMonth : 'No Issue Month', true)
+        getEmbed.addField('Volume', (res[1].volume) ? res[1].volume : 'No Volume #')
+        getEmbed.addField('Issue', (res[1].issue) ? res[1].issue : 'No Issue #', true)
+        getEmbed.addField('Author(s)', authors)
+        getEmbed.addField('Original Query', search)
+        getEmbed.setFooter({
             text: `Requested by ${interaction.user.tag}`,
             icon_url: interaction.user.avatarURL()
         })
     } else {
-        jstorEmbed.setTitle('Error')
-        jstorEmbed.setDescription('No results found. If the article has a DOI, you should try using that (both the doi.org link and just the DOI). You should also try setting the paper\'s title as the source. Sometimes an journal/article is stored under different identifiers in the database.\nIf you are searching a book, use `/getbook`, if you are trying to get a news article from the press, use `/getmedia.`')
+        getEmbed.setTitle('Error')
+        getEmbed.setDescription('No results found. If the article has a DOI, you should try using that (both the doi.org link and just the DOI). You should also try setting the paper\'s title as the source. Sometimes an journal/article is stored under different identifiers in the database.\nIf you are searching a book, use `/getbook`, if you are trying to get a news article from the press, use `/getmedia.`')
     }
-    return (jstorEmbed)
+    return (getEmbed)
 }
 
 module.exports = {

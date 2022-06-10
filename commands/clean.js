@@ -19,8 +19,10 @@ module.exports = {
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
         const args = interaction.options.getString('link') || (interaction.options.getAttachment('image') !== null ? interaction.options.getAttachment('image').url : null)
-        if (args != null && (args.trim().match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/(attachments|(ephemeral-attachments))/g))) {
-            superagent.get(args).pipe(
+        var imgURL
+        if (args != null && (args.trim().match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/attachments\/[0-9]{0,18}\/[0-9]{0,18}\/[@"^[\w\-. ]+.(png|jpeg|jpg|webp|gif)/g))) {
+            imgURL = args.trim().match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/attachments\/[0-9]{0,18}\/[0-9]{0,18}\/[@"^[\w\-. ]+.(png|jpeg|jpg|webp|gif)/gmi)[0]
+            superagent.get(imgURL).pipe(
                 new PNG({
                     colorType: 2,
                     bgColor: {
@@ -47,8 +49,8 @@ module.exports = {
             })
         } else {
             interaction.channel.messages.fetch({ limit: 1 }).then(chanmsg => {
-                if (chanmsg.last().content.trim().match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/attachments/g) && chanmsg.last().attachments.first() === undefined) { // no image in current msg, check for url pasted img in last msg
-                    var imgURL = chanmsg.last().content.trim().match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/attachments\/[0-9]{0,18}\/[0-9]{0,18}\/[@"^[\w\-. ]+.(png|jpeg|jpg|webp|gif)/gmi)[0]
+                if (chanmsg.last().content.trim().match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/attachments\/[0-9]{0,18}\/[0-9]{0,18}\/[@"^[\w\-. ]+.(png|jpeg|jpg|webp|gif)/g) && chanmsg.last().attachments.first() === undefined) { // no image in current msg, check for url pasted img in last msg
+                    imgURL = chanmsg.last().content.trim().match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/attachments\/[0-9]{0,18}\/[0-9]{0,18}\/[@"^[\w\-. ]+.(png|jpeg|jpg|webp|gif)/gmi)[0]
                     superagent.get(imgURL).pipe(
                         new PNG({
                             colorType: 2,
@@ -74,8 +76,9 @@ module.exports = {
                             interaction.reply({ files: [Buffer.concat(sendDataArr)] })
                         })
                     })
-                } else if (chanmsg.first().attachments.first() !== undefined) {
-                    superagent.get(chanmsg.first().attachments.first().url).pipe(
+                } else if ((chanmsg.first().attachments.first() !== undefined) && (chanmsg.first().attachments.first().url.trim().match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/attachments\/[0-9]{0,18}\/[0-9]{0,18}\/[@"^[\w\-. ]+.(png|jpeg|jpg|webp|gif)/g))) {
+                    imgURL = chanmsg.first().attachments.first().url.match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/attachments\/[0-9]{0,18}\/[0-9]{0,18}\/[@"^[\w\-. ]+.(png|jpeg|jpg|webp|gif)/gmi)[0]
+                    superagent.get(imgURL).pipe(
                         new PNG({
                             colorType: 2,
                             bgColor: {

@@ -40,8 +40,8 @@ module.exports = {
             if (source.contentType.includes('image')) {
                 ocr(interaction, source.url)
             }
-        } else if (source.trim().match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/(attachments|(ephemeral-attachments))/g)) {
-            ocr(interaction, source)
+        } else if (source.trim().match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/attachments\/[0-9]{0,18}\/[0-9]{0,18}\/[@"^[\w\-. ]+.(png|jpeg|jpg|webp|gif)/g)) {
+            ocr(interaction, source.match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/attachments\/[0-9]{0,18}\/[0-9]{0,18}\/[@"^[\w\-. ]+.(png|jpeg|jpg|webp|gif)/gmi)[0])
         }
     }
 }
