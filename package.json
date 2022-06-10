@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/AirFusion45/db8bot#readme",
   "dependencies": {
+    "@db8bot/ddosguard-bypass": "^1.0.0",
     "@discordjs/builders": "^0.13.0",
     "@discordjs/rest": "^0.4.1",
     "@google-cloud/tasks": "^2.5.0",
@@ -54,6 +55,7 @@
     "psl": "^1.8.0",
     "puppeteer": "^13.5.2",
     "qs": "^6.10.3",
+    "redis": "^4.1.0",
     "superagent": "^7.1.2",
     "tesseract.js": "^2.1.5",
     "universal-analytics": "^0.5.1",

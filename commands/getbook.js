@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const axios = require('axios').default
 const qs = require('qs')
-const cheerio = require('cheerio')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -25,13 +24,13 @@ module.exports = {
         const bookType = interaction.option.getString('type')
         const search = interaction.options.getString('isbn-or-name')
         try {
-            axios.post('https://db8bot.uc.r.appspot.com/get/book', qs.stringify({
+            axios.post('https://db8bot-scihub-api.airfusion.workers.dev/book', qs.stringify({
                 query: search,
                 params: bookType
             }), {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }).then((res) => {
-                if (res.data.length > 0) { // there is content
+                if (res.data.length > 0 && res.status === 200) { // there is content
                     interaction.reply(`${res.data[0]}\nSee the full catalogue at ${res.data[1]}`)
                 } else {
                     interaction.reply('Not found. If you used the ISBN try using the book name (and vice versa). If there are multiple ISBNs for a book (due to paperback, ebook, etc.) try those ISBNs as well.')

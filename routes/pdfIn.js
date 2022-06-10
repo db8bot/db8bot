@@ -1,8 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const Discord = require('discord.js')
-const { resolveAny } = require('dns')
-const fs = require('fs').promises
 
 router.post('/', async (req, res) => {
     const client = res.app.get('client')
@@ -16,7 +14,7 @@ router.post('/', async (req, res) => {
         var guildChannels = await sendGuild.channels.fetch(req.body.channelID)
         try {
             guildChannels.send({
-                content: `<@${req.body.reqUser}>`,
+                content: `<@${req.body.reqUser}>'s request for ${req.body.link}`,
                 files: [
                     {
                         attachment: Buffer.from(req.body.file), name: `${req.body.guildID + req.body.reqUser + (Math.floor(Math.random() * 100) + 1)}.html`
