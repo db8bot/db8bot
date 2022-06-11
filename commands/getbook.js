@@ -55,6 +55,7 @@ module.exports = {
                 } else {
                     bookEmbed.setTitle('Error')
                     bookEmbed.setDescription('Not found. If you used the ISBN try using the book name (and vice versa). If there are multiple ISBNs for a book (due to paperback, ebook, etc.) try those ISBNs as well.')
+                    bookEmbed.addField('Original Query', `${search} | ${bookType}`)
                     interaction.fetchReply().then(async () => {
                         interaction.editReply({ embeds: [bookEmbed] })
                     })
@@ -63,6 +64,7 @@ module.exports = {
                 console.error(err)
                 bookEmbed.setTitle('Error')
                 bookEmbed.setDescription('Not found. If you used the ISBN try using the book name (and vice versa). If there are multiple ISBNs for a book (due to paperback, ebook, etc.) try those ISBNs as well.')
+                bookEmbed.addField('Original Query', `${search} | ${bookType}`)
                 interaction.fetchReply().then(async () => {
                     interaction.editReply({ embeds: [bookEmbed] })
                 })
@@ -70,6 +72,7 @@ module.exports = {
         } catch (e) {
             bookEmbed.setTitle('Error')
             bookEmbed.setDescription('Not found. If you used the ISBN try using the book name (and vice versa). If there are multiple ISBNs for a book (due to paperback, ebook, etc.) try those ISBNs as well.')
+            bookEmbed.addField('Original Query', `${search} | ${bookType}`)
             interaction.fetchReply().then(async () => {
                 interaction.editReply({ embeds: [bookEmbed] })
             })
