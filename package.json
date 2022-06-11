@@ -1,12 +1,12 @@
 {
   "name": "db8bot",
-  "version": "5.0.2",
+  "version": "5.1.2",
   "description": "db8bot/Debate Bot is a multipurpose high school debate bot - Provides helpful functions for debate such as research tools & debate tracking.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "doppler run --token=${DOPPLER_TOKEN} --command=\"node index.js\"",
-    "build": "docker build . -t db8bot-v5.0.2-blue-jay-prod",
+    "build": "docker build . -t db8bot-v5.1.2-blue-jay-prod",
     "start-dev": "doppler run --command=\"node index.js\""
   },
   "repository": {

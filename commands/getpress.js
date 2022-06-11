@@ -14,14 +14,24 @@ module.exports = {
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
         var url = interaction.options.getString('link')
-
-        var data = qs.stringify({
-            'link': url,
-            'ua': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4538.0 Safari/537.36',
-            'guildid': interaction.guildid, // take care of reqs in dms - same on server side
-            'requser': interaction.user.id,
-            'channelid': interaction.channelId
-        })
+        var data
+        if (interaction.inGuild()) {
+            data = qs.stringify({
+                'link': url,
+                'ua': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4538.0 Safari/537.36',
+                'guildid': interaction.guildid, // take care of reqs in dms - same on server side
+                'requser': interaction.user.id,
+                'channelid': interaction.channelId
+            })
+        } else {
+            data = qs.stringify({
+                'link': url,
+                'ua': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4538.0 Safari/537.36',
+                'guildid': null, // take care of reqs in dms - same on server side
+                'requser': interaction.user.id,
+                'channelid': null
+            })
+        }
         var config = {
             method: 'post',
             url: 'http://34.122.88.90:8081/add',
