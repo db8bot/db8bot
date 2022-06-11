@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
                 console.error(err)
             }
         }
-    } else { // dms - no guildID - message user
+    } else if (!req.body.guildID) { // dms - no guildID - message user
         var user = await client.users.fetch(req.body.reqUser)
         try {
             await user.send({
