@@ -1,10 +1,11 @@
 // temp before ventura releases
 require('dotenv').config({ path: './tempdev.env' })
 
-const { Client, Intents, Collection, GatewayIntentBits, MessageEmbed, Permissions, REST, Routes } = require('discord.js')
+const { Client, Intents, Collection, GatewayIntentBits, EmbedBuilder, Permissions, REST, Routes } = require('discord.js')
 const fs = require('fs')
 const path = require('path')
 const fsp = require('fs').promises
+const winston = require('winston')
 
 // client initialization
 const client = new Client({
@@ -80,5 +81,13 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
         console.error(error)
     }
 })()
+
+// setup local logging service
+client.logger = new winston.createLogger({
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({ filename: './log.txt' })
+    ]
+})
 
 client.login(process.env.TOKEN)
