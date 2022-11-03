@@ -32,3 +32,13 @@
 {"level":"info","message":"help command used by airfusion Time: Tue Nov 01 2022 13:55:45 GMT-0700 (Pacific Daylight Time) Guild: db8bottest2slash1"}
 {"level":"info","message":"help command used by airfusion Time: Tue Nov 01 2022 13:56:16 GMT-0700 (Pacific Daylight Time) Guild: db8bottest2slash1"}
 {"level":"info","message":"commands command used by airfusion Time: Tue Nov 01 2022 13:58:28 GMT-0700 (Pacific Daylight Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"invite command used by airfusion Time: Wed Nov 02 2022 13:10:36 GMT-0700 (Pacific Daylight Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"invite command used by airfusion Time: Wed Nov 02 2022 13:11:09 GMT-0700 (Pacific Daylight Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"invite command used by airfusion Time: Wed Nov 02 2022 13:11:33 GMT-0700 (Pacific Daylight Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"serverinv command used by airfusion Time: Wed Nov 02 2022 13:12:02 GMT-0700 (Pacific Daylight Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"say command used by airfusion Time: Wed Nov 02 2022 13:12:13 GMT-0700 (Pacific Daylight Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"purge command used by airfusion Time: Wed Nov 02 2022 13:12:49 GMT-0700 (Pacific Daylight Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"purge command used by airfusion Time: Wed Nov 02 2022 13:16:15 GMT-0700 (Pacific Daylight Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"purge command used by airfusion Time: Wed Nov 02 2022 13:21:03 GMT-0700 (Pacific Daylight Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"purge command used by airfusion Time: Wed Nov 02 2022 13:21:15 GMT-0700 (Pacific Daylight Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"purge command used by airfusion Time: Wed Nov 02 2022 13:40:36 GMT-0700 (Pacific Daylight Time) Guild: db8bottest2slash1"}
