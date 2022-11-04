@@ -38,6 +38,7 @@
     "long": "^5.2.0",
     "pngjs": "^6.0.0",
     "superagent": "^8.0.3",
+    "tesseract.js": "^3.0.3",
     "winston": "^3.8.2"
   },
   "devDependencies": {
