@@ -20,7 +20,7 @@ module.exports = {
         require('../modules/telemetry').telemetry(__filename, interaction)
         const args = interaction.options.getString('link') || (interaction.options.getAttachment('image') !== null ? interaction.options.getAttachment('image').url : null)
         var imgURL
-        if (args != null && (args.trim().match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/.*.(png|jpeg|jpg|webp|gif)/g))) {
+        if (args !== null && (args.trim().match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/.*.(png|jpeg|jpg|webp|gif)/g))) {
             imgURL = args.trim().match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/.*.(png|jpeg|jpg|webp|gif)/gmi)[0]
             superagent.get(imgURL).pipe(
                 new PNG({
