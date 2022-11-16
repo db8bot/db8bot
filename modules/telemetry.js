@@ -1,3 +1,4 @@
+// using twilio segment
 var Analytics = require('analytics-node')
 var analytics = new Analytics(process.env.TELEMETRYKEY)
 const path = require('path')

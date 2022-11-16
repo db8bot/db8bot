@@ -100,3 +100,7 @@
 {"level":"info","message":"serverinfo command used by airfusion Time: Sat Nov 05 2022 02:04:18 GMT-0700 (Pacific Daylight Time) Guild: db8bottest2slash1"}
 {"level":"info","message":"serverinfo command used by airfusion Time: Sat Nov 05 2022 02:08:54 GMT-0700 (Pacific Daylight Time) Guild: db8bottest2slash1"}
 {"level":"info","message":"serverinfo command used by airfusion Time: Sat Nov 05 2022 02:09:12 GMT-0700 (Pacific Daylight Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"cleanimg command used by airfusion Time: Sat Nov 12 2022 13:50:48 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"cleanimg command used by airfusion Time: Sat Nov 12 2022 13:51:22 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"cleanimg command used by airfusion Time: Sat Nov 12 2022 13:51:41 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"ocr command used by airfusion Time: Sat Nov 12 2022 13:55:30 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}

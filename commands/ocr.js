@@ -5,7 +5,6 @@ const { v4: uuidv4 } = require('uuid')
 async function ocr(interaction, lang, source) {
     const worker = createWorker()
     var jobOwner = !interaction.member ? null : interaction.member.id
-    var jobID = uuidv4()
     await interaction.reply(`OCR Request has been added to the queue. You should see a message in this channel with the OCRed content shortly. Job ID: \`${jobID}\``)
     await worker.load()
     await worker.loadLanguage(lang)
@@ -157,8 +156,11 @@ module.exports = {
         require('../modules/telemetry').telemetry(__filename, interaction)
         const source = interaction.options.getString('link') || (interaction.options.getAttachment('image') !== null ? interaction.options.getAttachment('image').url : null)
         const lang = interaction.options.getString('language') || 'eng'
-
         if (source !== null && (source.trim().match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/.*.(png|jpeg|jpg|webp|gif)/g))) {
+            var jobID = uuidv4()
+            // send request
+            await interaction.reply(`OCR Request has been added to the queue. You should see a message in this channel with the OCRed content shortly. Job ID: \`${jobID}\``)
+
             ocr(interaction, lang, source.trim().match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/.*.(png|jpeg|jpg|webp|gif)/gmi)[0])
         } else {
             interaction.reply('Please supply either an image or link for OCR.')
