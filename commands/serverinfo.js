@@ -6,10 +6,12 @@ module.exports = {
         .setDescription('information about the current server'),
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
-
+        // ensure interaction is in server only
+        if (!interaction.inGuild()) return interaction.reply('This command must be executed from a server!')
         // channel information:
         const channelSize = interaction.guild.channels.channelCountWithoutThreads
         const channelClassifications = interaction.guild.channels.cache.map(channel => channel.type).reduce(function (acc, curr) {
+            // eslint-disable-next-line no-return-assign, no-sequences
             return acc[curr] ? ++acc[curr] : acc[curr] = 1, acc
         }, {})
         const channelTypes = {

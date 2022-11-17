@@ -104,3 +104,17 @@
 {"level":"info","message":"cleanimg command used by airfusion Time: Sat Nov 12 2022 13:51:22 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
 {"level":"info","message":"cleanimg command used by airfusion Time: Sat Nov 12 2022 13:51:41 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
 {"level":"info","message":"ocr command used by airfusion Time: Sat Nov 12 2022 13:55:30 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"ocr command used by airfusion Time: Wed Nov 16 2022 19:01:28 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"ocr command used by airfusion Time: Wed Nov 16 2022 19:02:15 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"ocr command used by airfusion Time: Wed Nov 16 2022 19:03:15 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"ocr command used by airfusion Time: Wed Nov 16 2022 19:03:35 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"ocr command used by airfusion Time: Wed Nov 16 2022 19:04:03 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"ocr command used by airfusion Time: Wed Nov 16 2022 19:04:45 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"ocr command used by airfusion Time: Wed Nov 16 2022 19:05:19 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"ocr command used by airfusion Time: Wed Nov 16 2022 19:06:07 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"ocr command used by airfusion Time: Wed Nov 16 2022 19:06:48 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"ocr command used by airfusion Time: Wed Nov 16 2022 19:07:18 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"ocr command used by airfusion Time: Wed Nov 16 2022 20:31:23 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"ocr command used by airfusion Time: Wed Nov 16 2022 20:31:49 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"ocr command used by airfusion Time: Wed Nov 16 2022 20:32:38 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"ocr command used by airfusion Time: Wed Nov 16 2022 20:35:26 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}

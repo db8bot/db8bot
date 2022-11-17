@@ -1,18 +1,19 @@
 const { SlashCommandBuilder } = require('discord.js')
 const { createWorker } = require('tesseract.js')
 const { v4: uuidv4 } = require('uuid')
+const superagent = require('superagent')
 
-async function ocr(interaction, lang, source) {
-    const worker = createWorker()
-    var jobOwner = !interaction.member ? null : interaction.member.id
-    await interaction.reply(`OCR Request has been added to the queue. You should see a message in this channel with the OCRed content shortly. Job ID: \`${jobID}\``)
-    await worker.load()
-    await worker.loadLanguage(lang)
-    await worker.initialize(lang)
-    const { data: { text } } = await worker.recognize(source)
-    await interaction.channel.send({ content: `<@${!jobOwner ? '' : jobOwner}> | Job: \`${jobID}\``, files: [{ attachment: Buffer.from(text.trim()), name: `${jobID}OCR.txt` }] })
-    await worker.terminate()
-}
+// async function ocr(interaction, lang, source) {
+//     const worker = createWorker()
+//     var jobOwner = !interaction.member ? null : interaction.member.id
+//     await interaction.reply(`OCR Request has been added to the queue. You should see a message in this channel with the OCRed content shortly. Job ID: \`${jobID}\``)
+//     await worker.load()
+//     await worker.loadLanguage(lang)
+//     await worker.initialize(lang)
+//     const { data: { text } } = await worker.recognize(source)
+//     await interaction.channel.send({ content: `<@${!jobOwner ? '' : jobOwner}> | Job: \`${jobID}\``, files: [{ attachment: Buffer.from(text.trim()), name: `${jobID}OCR.txt` }] })
+//     await worker.terminate()
+// }
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('ocr')
@@ -161,7 +162,33 @@ module.exports = {
             // send request
             await interaction.reply(`OCR Request has been added to the queue. You should see a message in this channel with the OCRed content shortly. Job ID: \`${jobID}\``)
 
-            ocr(interaction, lang, source.trim().match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/.*.(png|jpeg|jpg|webp|gif)/gmi)[0])
+            // ocr(interaction, lang, source.trim().match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/.*.(png|jpeg|jpg|webp|gif)/gmi)[0])
+
+            // // Input Data Schema
+            // {
+            //     serverID: <Integer>
+            //     channelID: <Integer>
+            //     memberID: <Integer>
+            //     jobID: <UUID>
+            //     lang: <String>
+            //     source: <URL>
+            // }
+            superagent
+                .post(`${process.env.BLAZEURL}/ocr`)
+                .set('Content-Type', 'application/x-www-form-urlencoded')
+                .send({
+                    auth: process.env.BLAZEAUTH,
+                    serverID: interaction.guildId,
+                    channelID: interaction.channelId,
+                    memberID: (interaction.member) ? interaction.member.id : null,
+                    jobID,
+                    lang,
+                    source: source.trim().match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/.*.(png|jpeg|jpg|webp|gif)/gmi)[0],
+                    time: Date.now()
+                })
+                .end((err, res) => {
+                    if (err) console.error(err)
+                })
         } else {
             interaction.reply('Please supply either an image or link for OCR.')
         }

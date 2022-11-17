@@ -6,6 +6,8 @@ const fs = require('fs')
 const path = require('path')
 const fsp = require('fs').promises
 const winston = require('winston')
+const express = require('express')
+const cookieParser = require('cookie-parser')
 
 // client initialization
 const client = new Client({
@@ -90,4 +92,25 @@ client.logger = new winston.createLogger({
     ]
 })
 
+// setup express server to receive requests from blaze api
+const app = express()
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
+app.use(express.json({ limit: '50mb' }))
+app.use(express.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }))
+app.set('client', client)
+
+// setup express routes
+const ocrReceive = require('./routes/ocrReceive')
+app.use('/ocrinbound', ocrReceive)
+
+// auth & express listen
+var port = process.env.PORT
+if (port == null || port === '') {
+    port = 8081
+}
+app.listen(port, () => {
+    console.log(`Listening at http://localhost:${port}`)
+})
 client.login(process.env.TOKEN)
