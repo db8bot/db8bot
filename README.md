@@ -34,7 +34,7 @@ This is not a command list. Some of the descriptions after the dash are not actu
     * Chat Management - purge & lockdown
   * Utility Commands - server info, user info, bot info 
   * General Chat Commands - generate embed messages, quickly generate a server invite link, say, DM person in server as bot.
-  * Debate Comands - get research paper from sci-hub, start then track a debate round, track current speech, end the tracked debate round, coin flip, get judge's paradigm from Tabroom
+  * Debate Comands - get research paper from Google Scholar/ResearchGate/arXiv, start then track a debate round, track current speech, end the tracked debate round, coin flip, get judge's paradigm from Tabroom
   * Fun Commands :) - trump quotes, communism, capitalism, bataille & baudrillard themed quotes
 
 ## Self Hosting DB8Bot
