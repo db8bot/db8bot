@@ -118,3 +118,13 @@
 {"level":"info","message":"ocr command used by airfusion Time: Wed Nov 16 2022 20:31:49 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
 {"level":"info","message":"ocr command used by airfusion Time: Wed Nov 16 2022 20:32:38 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
 {"level":"info","message":"ocr command used by airfusion Time: Wed Nov 16 2022 20:35:26 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"ocr command used by airfusion Time: Fri Nov 18 2022 21:44:58 GMT-0800 (Pacific Standard Time) Guild: nullDM"}
+{"level":"info","message":"ocr command used by airfusion Time: Fri Nov 18 2022 21:46:46 GMT-0800 (Pacific Standard Time) Guild: nullDM"}
+{"level":"info","message":"ocr command used by airfusion Time: Fri Nov 18 2022 21:47:51 GMT-0800 (Pacific Standard Time) Guild: nullDM"}
+{"level":"info","message":"ping command used by airfusion Time: Fri Nov 18 2022 21:48:49 GMT-0800 (Pacific Standard Time) Guild: nullDM"}
+{"level":"info","message":"ocr command used by airfusion Time: Fri Nov 18 2022 21:49:29 GMT-0800 (Pacific Standard Time) Guild: nullDM"}
+{"level":"info","message":"ocr command used by airfusion Time: Fri Nov 18 2022 21:51:49 GMT-0800 (Pacific Standard Time) Guild: nullDM"}
+{"level":"info","message":"ocr command used by airfusion Time: Fri Nov 18 2022 21:59:25 GMT-0800 (Pacific Standard Time) Guild: nullDM"}
+{"level":"info","message":"ocr command used by airfusion Time: Fri Nov 18 2022 21:59:39 GMT-0800 (Pacific Standard Time) Guild: nullDM"}
+{"level":"info","message":"ocr command used by airfusion Time: Fri Nov 18 2022 21:59:47 GMT-0800 (Pacific Standard Time) Guild: nullDM"}
+{"level":"info","message":"ocr command used by airfusion Time: Fri Nov 18 2022 22:00:12 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}

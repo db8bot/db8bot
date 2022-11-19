@@ -178,13 +178,14 @@ module.exports = {
                 .set('Content-Type', 'application/x-www-form-urlencoded')
                 .send({
                     auth: process.env.BLAZEAUTH,
-                    serverID: interaction.guildId,
+                    serverID: (interaction.inGuild()) ? interaction.guildId : null,
                     channelID: interaction.channelId,
                     memberID: (interaction.member) ? interaction.member.id : null,
                     jobID,
                     lang,
                     source: source.trim().match(/https:\/\/(cdn|media).(discordapp|discord).(com|net)\/.*.(png|jpeg|jpg|webp|gif)/gmi)[0],
-                    time: Date.now()
+                    time: Date.now(),
+                    dmUser: interaction.user.id
                 })
                 .end((err, res) => {
                     if (err) console.error(err)
