@@ -44,42 +44,42 @@ module.exports = {
         require('../modules/telemetry').telemetry(__filename, interaction)
         let quotes
         switch (interaction.options.getSubcommand()) {
-            case 'agamben':
-                quotes = require('../quoteFiles/agambenQuotes.json')
-                require('../modules/quote').sendQuote(quotes, interaction, '#add8e6')
-                break
-            case 'amash':
-                quotes = require('../quoteFiles/amashQuotes.json')
-                require('../modules/quote').sendQuote(quotes, interaction, '#f9d334')
-                break
-            case 'jpow':
-                quotes = require('../quoteFiles/jpowQuotes.json')
-                require('../modules/quote').sendQuote(quotes, interaction, '#85bb65')
-                break
-            case 'bataille':
-                quotes = require('../quoteFiles/batailleQuotes.json')
-                require('../modules/quote').sendQuote(quotes, interaction, '#800080')
-                break
-            case 'baudrillard':
-                quotes = require('../quoteFiles/baudrillardQuotes.json')
-                require('../modules/quote').sendQuote(quotes, interaction, '#ffff00')
-                break
-            case 'biden':
-                quotes = require('../quoteFiles/bidenQuotes.json')
-                require('../modules/quote').sendQuote(quotes, interaction, '#0c2458')
-                break
-            case 'yellen':
-                quotes = require('../quoteFiles/yellenQuotes.json')
-                require('../modules/quote').sendQuote(quotes, interaction, '#85bb65')
-                break
-            case 'capitalism':
-                quotes = require('../quoteFiles/capitalismQuotes.json')
-                require('../modules/quote').sendQuote(quotes, interaction, '#2c80c6')
-                break
-            case 'communism':
-                quotes = require('../quoteFiles/communismQuotes.json')
-                require('../modules/quote').sendQuote(quotes, interaction, '#dd0200')
-                break
+        case 'agamben':
+            quotes = require('../quoteFiles/agambenQuotes.json')
+            require('../modules/quote').sendQuote(quotes, interaction, '#add8e6')
+            break
+        case 'amash':
+            quotes = require('../quoteFiles/amashQuotes.json')
+            require('../modules/quote').sendQuote(quotes, interaction, '#f9d334')
+            break
+        case 'jpow':
+            quotes = require('../quoteFiles/jpowQuotes.json')
+            require('../modules/quote').sendQuote(quotes, interaction, '#85bb65')
+            break
+        case 'bataille':
+            quotes = require('../quoteFiles/batailleQuotes.json')
+            require('../modules/quote').sendQuote(quotes, interaction, '#800080')
+            break
+        case 'baudrillard':
+            quotes = require('../quoteFiles/baudrillardQuotes.json')
+            require('../modules/quote').sendQuote(quotes, interaction, '#ffff00')
+            break
+        case 'biden':
+            quotes = require('../quoteFiles/bidenQuotes.json')
+            require('../modules/quote').sendQuote(quotes, interaction, '#0c2458')
+            break
+        case 'yellen':
+            quotes = require('../quoteFiles/yellenQuotes.json')
+            require('../modules/quote').sendQuote(quotes, interaction, '#85bb65')
+            break
+        case 'capitalism':
+            quotes = require('../quoteFiles/capitalismQuotes.json')
+            require('../modules/quote').sendQuote(quotes, interaction, '#2c80c6')
+            break
+        case 'communism':
+            quotes = require('../quoteFiles/communismQuotes.json')
+            require('../modules/quote').sendQuote(quotes, interaction, '#dd0200')
+            break
         }
     }
 }

@@ -1,11 +1,10 @@
-const { SlashCommandBuilder } = require('discord.js')
+const Discord = require('discord.js')
 const fs = require('fs')
 const dir = './commands'
 let commandsLength = 0
 fs.readdir(dir, (_err, files) => {
     commandsLength = files.length
 })
-const Discord = require('discord.js')
 const pkg = require('../package.json')
 const os = require('os')
 
@@ -31,7 +30,7 @@ function timeCon(time) {
 }
 
 module.exports = {
-    data: new SlashCommandBuilder()
+    data: new Discord.SlashCommandBuilder()
         .setName('botinfo')
         .setDescription('Basic Information About db8bot')
         .addStringOption(option =>

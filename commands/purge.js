@@ -1,7 +1,6 @@
-const { SlashCommandBuilder } = require('discord.js')
 const Discord = require('discord.js')
 module.exports = {
-    data: new SlashCommandBuilder()
+    data: new Discord.SlashCommandBuilder()
         .setName('purge')
         .setDescription('Purge some messages')
         .addIntegerOption(option =>

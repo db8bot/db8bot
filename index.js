@@ -1,6 +1,3 @@
-// temp before ventura releases
-require('dotenv').config({ path: './tempdev.env' })
-
 const { Client, Intents, Collection, GatewayIntentBits, EmbedBuilder, Permissions, REST, Routes } = require('discord.js')
 const fs = require('fs')
 const path = require('path')

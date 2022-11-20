@@ -1,11 +1,10 @@
-const { SlashCommandBuilder } = require('discord.js')
 const Discord = require('discord.js')
 function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
 module.exports = {
-    data: new SlashCommandBuilder()
+    data: new Discord.SlashCommandBuilder()
         .setName('help')
         .setDescription('Displays Bot Help Page'),
     async execute(interaction) {

@@ -1,8 +1,7 @@
-const { SlashCommandBuilder } = require('discord.js')
-var Long = require('long')
 const Discord = require('discord.js')
+var Long = require('long')
 module.exports = {
-    data: new SlashCommandBuilder()
+    data: new Discord.SlashCommandBuilder()
         .setName('serverinv')
         .setDescription('Generate an invite link for this server'),
     async execute(interaction) {

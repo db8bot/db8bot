@@ -1,7 +1,6 @@
-const { SlashCommandBuilder } = require('discord.js')
 const Discord = require('discord.js')
 module.exports = {
-    data: new SlashCommandBuilder()
+    data: new Discord.SlashCommandBuilder()
         .setName('commands')
         .setDescription('Show Bot\'s Available Commands!'),
     async execute(interaction) {
