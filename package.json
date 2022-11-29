@@ -31,7 +31,7 @@
   "homepage": "https://github.com/AirFusion45/db8bot#readme",
   "dependencies": {
     "@db8bot/ddosguard-bypass": "^1.0.0",
-    "@discordjs/builders": "^0.13.0",
+    "@discordjs/builders": "^1.4.0",
     "@discordjs/rest": "^0.4.1",
     "@google-cloud/tasks": "^2.5.0",
     "@sentry/node": "^6.19.6",
