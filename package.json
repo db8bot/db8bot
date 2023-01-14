@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "doppler run --token=${DOPPLER_TOKEN} --command=\"node index.js\"",
-    "build": "docker build . -t db8bot-v6.0.0-blue-jay-prod",
+    "build": "docker build . -t db8bot-v6.0.0-hummingbird-prod",
     "start-dev": "doppler run --command=\"node index.js\""
   },
   "repository": {
@@ -45,7 +45,7 @@
     "winston": "^3.8.2"
   },
   "devDependencies": {
-    "@vitalets/google-translate-api": "^8.0.0",
+    "@vitalets/google-translate-api": "^9.0.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.2.0",

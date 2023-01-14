@@ -4,7 +4,8 @@ const MongoClient = require('mongodb').MongoClient
 module.exports = {
     data: new Discord.SlashCommandBuilder()
         .setName('roundstatus')
-        .setDescription('Displays running debates in the server'),
+        .setDescription('Displays running debates in the server')
+        .setDMPermission(false),
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
         // ensure interaction is in server only

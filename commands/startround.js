@@ -39,7 +39,8 @@ module.exports = {
             option.setName('debater4')
                 .setDescription('Mention Debater 3. Order of mentions is from Aff to Neg. Optional')
                 .setRequired(false)
-        ),
+        )
+        .setDMPermission(false),
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
         // ensure interaction is in server only

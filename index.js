@@ -101,6 +101,8 @@ app.set('client', client)
 // setup express routes
 const ocrReceive = require('./routes/ocrReceive')
 app.use('/ocrinbound', ocrReceive)
+const getReceive = require('./routes/getReceive')
+app.use('/getinbound', getReceive)
 
 // auth & express listen
 var port = process.env.PORT

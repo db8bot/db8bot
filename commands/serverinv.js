@@ -3,7 +3,8 @@ var Long = require('long')
 module.exports = {
     data: new Discord.SlashCommandBuilder()
         .setName('serverinv')
-        .setDescription('Generate an invite link for this server'),
+        .setDescription('Generate an invite link for this server')
+        .setDMPermission(false),
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
         function getDefaultChannel(guild) {

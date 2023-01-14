@@ -7,7 +7,8 @@ module.exports = {
             option.setName('messages')
                 .setDescription('Number of messages to purge')
                 .setRequired(true)
-        ),
+        )
+        .setDMPermission(false), // no purge in dms - no perm system
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
         const args = interaction.options.getInteger('messages')

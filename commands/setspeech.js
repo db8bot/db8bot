@@ -15,7 +15,8 @@ module.exports = {
                 .setDescription('speech to set the debate round to')
                 .setRequired(true)
                 .setAutocomplete(true)
-        ),
+        )
+        .setDMPermission(false),
     async autocomplete(interaction) {
         const focusedValue = interaction.options.getFocused()
         const choices = ['1AC', 'Cross-Examination 1',

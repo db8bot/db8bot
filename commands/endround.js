@@ -16,7 +16,8 @@ module.exports = {
                 .setDescription('decision of the round')
                 .addChoices({ name: 'aff/pro', value: 'aff/pro' }, { name: 'neg/con', value: 'neg/con' })
                 .setRequired(true)
-        ),
+        )
+        .setDMPermission(false),
     async autocomplete(interaction) {
         const uri = `mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@db8botcluster.q3bif.mongodb.net/db8bot?retryWrites=true&w=majority`
         const database = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true })

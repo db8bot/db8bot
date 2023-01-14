@@ -2,7 +2,8 @@ const Discord = require('discord.js')
 module.exports = {
     data: new Discord.SlashCommandBuilder()
         .setName('serverinfo')
-        .setDescription('information about the current server'),
+        .setDescription('information about the current server')
+        .setDMPermission(false),
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
         // ensure interaction is in server only
