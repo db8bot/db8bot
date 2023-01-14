@@ -71,7 +71,7 @@ COPY . .
 # ENV DISPLAY :99
 
 # expose 8080 for APIs
-EXPOSE 8080
+EXPOSE 8081
 
 # start application
 CMD npm start
