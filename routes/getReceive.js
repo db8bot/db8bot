@@ -42,7 +42,7 @@ router.post('/', async (req, resApp) => {
             { name: 'Issued Month', value: (metadata.issuedMonth) ? '' + metadata.issuedMonth : 'No Issue Month', inline: true },
             { name: 'Volume', value: (metadata.volume) ? metadata.volume : 'No Volume #' },
             { name: 'Issue', value: (metadata.issue) ? metadata.issue : 'No Issue #', inline: true },
-            { name: 'Author(s)', value: authors },
+            { name: 'Author(s)', value: (authors) || 'No Authors Found' },
             { name: 'Original Query', value: director.source })
         getEmbed.setFooter({
             text: `Requested by ${director.tag}`
