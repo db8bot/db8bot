@@ -27,7 +27,12 @@ router.post('/', async (req, resApp) => {
         .setColor('#8b0000')
         .setTimestamp(new Date())
     if (result !== 'not found') { // if found - metadata is accessible, result is an obj - assemble embed
-        const authors = metadata.authors.map(author => author.given + ' ' + author.family).join(', ')
+        var authors
+        if (metadata.authors !== '') {
+            authors = metadata.authors.map(author => author.given + ' ' + author.family).join(', ')
+        } else {
+            authors = null
+        }
 
         getEmbed.setTitle((metadata.title) ? metadata.title : 'Requested Article (No Title)')
         if (result.multiLink) { // multiple entries, - dual links
