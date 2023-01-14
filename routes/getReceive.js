@@ -28,7 +28,7 @@ router.post('/', async (req, resApp) => {
         .setTimestamp(new Date())
     if (result !== 'not found') { // if found - metadata is accessible, result is an obj - assemble embed
         var authors
-        if (metadata.authors !== '') {
+        if (metadata.authors) {
             authors = metadata.authors.map(author => author.given + ' ' + author.family).join(', ')
         } else {
             authors = null

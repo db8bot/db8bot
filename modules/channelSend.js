@@ -4,7 +4,13 @@ async function channelSendSingleGuildSingleUser(client, body, content) {
         if (sendGuild.available) {
             var guildChannels = await sendGuild.channels.fetch(body.channelID)
             try {
-                guildChannels.send(content)
+                guildChannels.send(content).catch(err => {
+                    if (err.message === 'fetch failed') { // for get files > 8mb
+                        delete content.files
+                        guildChannels.send(content)
+                    }
+                    console.error(err)
+                })
             } catch (err) {
                 console.error(err)
                 return (err)
