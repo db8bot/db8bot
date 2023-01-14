@@ -10,7 +10,7 @@ executors:
     # environment:
     #   IMAGE_NAME: ndukwearm19docker/docker-node-app
     docker: # Each job requires specifying an executor
-      - image: cimg/node:17.3.0
+      - image: cimg/node:19.3.0
 
 jobs:
   buildDockerImg:

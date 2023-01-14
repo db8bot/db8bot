@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders')
+const { SlashCommandBuilder } = require('discord.js')
 const MongoClient = require('mongodb').MongoClient
 
 module.exports = {
@@ -12,51 +12,59 @@ module.exports = {
         )
         .addStringOption(option =>
             option.setName('speech')
-                .setDescription('speech to set the debate round to - for list of officially supported speeches, use /speeches')
+                .setDescription('speech to set the debate round to')
                 .setRequired(true)
-        ),
+                .setAutocomplete(true)
+        )
+        .setDMPermission(false),
+    async autocomplete(interaction) {
+        const focusedValue = interaction.options.getFocused()
+        const choices = ['1AC', 'Cross-Examination 1',
+            '1NC', 'Cross-Examination 2',
+            '2AC', 'Cross-Examination 3',
+            '2NC', 'Cross-Examination 4',
+            '1NR', '1AR',
+            '2NR', '2AR',
+            'AC', 'NC',
+            '1AR', 'NR',
+            '2AR', 'Constructive A',
+            'Constructive B', 'Crossfire 1',
+            'Rebuttle A', 'Rebuttle B',
+            'Crossfire 2', 'Summary A',
+            'Summary B', 'Grand Crossfire',
+            'Final Focus A', 'Final Focus B']
+        const filtered = choices.filter(choice => choice.toLowerCase().startsWith(focusedValue.toLowerCase()))
+        var options
+        if (filtered.length > 25) {
+            options = filtered.slice(0, 25)
+        } else {
+            options = filtered
+        }
+        await interaction.respond(
+            options.map(choice => ({ name: choice, value: choice }))
+        )
+    },
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
-        const uri = `mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@db8botcluster.q3bif.mongodb.net/23bot?retryWrites=true&w=majority`
+        // ensure interaction is in server only
+        if (!interaction.inGuild()) return interaction.reply('This command must be executed from a server!')
+        const uri = `mongodb+srv://${process.env.MONGOUSER}:${process.env.MONGOPASS}@db8botcluster.q3bif.mongodb.net/db8bot?retryWrites=true&w=majority`
         const database = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-        database.connect(async (err, dbClient) => {
-            if (err) console.error(err)
-            const collection = dbClient.db('db8bot').collection('debateTracking')
+        const dbClient = await database.connect()
+        const collection = dbClient.db('db8bot').collection('debateTracking')
 
-            var collectionFind = await collection.find({ debateId: interaction.guildId + interaction.options.getString('name') }).toArray()
+        var collectionFind = await collection.find({ debateId: interaction.guildId + interaction.options.getString('name') }).toArray()
 
-            if (collectionFind[0] === undefined) interaction.reply('Round not found!')
-            else {
-                var allowedSpeeches = [
-                    '1ac', 'cx1',
-                    '1nc', 'cx2',
-                    '2ac', 'cx3',
-                    '2nc', 'cx4',
-                    '1nr', '1ar',
-                    '2nr', '2ar',
-                    'ac', 'cx1',
-                    'nc', 'cx2',
-                    '1ar', 'nr',
-                    '2ar', 'constructive a',
-                    'constructive b', 'crossfire 1',
-                    'rebuttle a', 'rebuttle b',
-                    'crossfire 2', 'summary a',
-                    'summary b', 'grand crossfire',
-                    'final focus a', 'final focus b'
-                ]
-
-                const updateDocument = {
-                    $set: {
-                        speech: interaction.options.getString('speech')
-                    }
-                }
-                await collection.updateOne({ debateId: interaction.guildId + interaction.options.getString('name') }, updateDocument)
-                if (allowedSpeeches.includes(interaction.options.getString('speech').toLowerCase().replace(' ', ''))) {
-                    interaction.reply(`Supported Speech! :white_check_mark: Speech successfully set to ${interaction.options.getString('speech')}`)
-                } else {
-                    interaction.reply(`:warning: Unsupported Speech! :white_check_mark: Speech successfully set to ${interaction.options.getString('speech')}`)
+        if (collectionFind[0] === undefined) interaction.reply('Round not found!')
+        else {
+            const updateDocument = {
+                $set: {
+                    speech: interaction.options.getString('speech')
                 }
             }
-        })
+            await collection.updateOne({ debateId: interaction.guildId + interaction.options.getString('name') }, updateDocument)
+            interaction.reply(`:white_check_mark: Speech successfully set to ${interaction.options.getString('speech')}`)
+        }
+        database.close()
     }
 }

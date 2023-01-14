@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders')
+const { SlashCommandBuilder } = require('discord.js')
 const axios = require('axios').default
 const qs = require('qs')
 const Discord = require('discord.js')
@@ -24,12 +24,12 @@ module.exports = {
 
         const bookType = interaction.options.getString('type')
         const search = interaction.options.getString('isbn-or-name')
-        const bookEmbed = new Discord.MessageEmbed()
+        const bookEmbed = new Discord.EmbedBuilder()
             .setColor('#a00000')
             .setTimestamp(new Date())
         interaction.reply('Fetching...')
         try {
-            axios.post('https://db8bot-scihub-api.airfusion.workers.dev/book', qs.stringify({
+            axios.post('https://db8bot-scihub-api.airfusion.workers.dev/book', qs.stringify({ // pointing to old cloudflare workers api TODO: split this into separate repo & redeploy on cf workers
                 query: search,
                 params: bookType
             }), {
@@ -39,12 +39,12 @@ module.exports = {
                     bookEmbed.setTitle(res.data[2].title)
                     bookEmbed.setDescription(`[Access Book (1st result)](${res.data[0]}) | [Other Listings](${res.data[1]})`)
                     bookEmbed.setURL(res.data[0])
-                    bookEmbed.addField('ISBN(s)', (res.data[2].isbn) ? res.data[2].isbn : 'No ISBNs available')
-                    bookEmbed.addField('Author(s)', (res.data[2].author) ? res.data[2].author : 'No author data available')
-                    bookEmbed.addField('Publisher', (res.data[2].publisher) ? res.data[2].publisher : 'No publisher data available')
-                    bookEmbed.addField('Year Published', (res.data[2].year) ? res.data[2].year : 'No publishing date available')
-                    bookEmbed.addField('LibGen ID', (res.data[2].libgenID) ? res.data[2].libgenID : 'No LibGen ID')
-                    bookEmbed.addField('Original Query', `${search} | ${bookType}`)
+                    bookEmbed.addFields({ name: 'ISBN(s)', value: (res.data[2].isbn) ? res.data[2].isbn : 'No ISBNs available' },
+                        { name: 'Author(s)', value: (res.data[2].author) ? res.data[2].author : 'No author data available' },
+                        { name: 'Publisher', value: (res.data[2].publisher) ? res.data[2].publisher : 'No publisher data available' },
+                        { name: 'Year Published', value: (res.data[2].year) ? res.data[2].year : 'No publishing date available' },
+                        { name: 'LibGen ID', value: (res.data[2].libgenID) ? res.data[2].libgenID : 'No LibGen ID' },
+                        { name: 'Original Query', value: `${search} | ${bookType}` })
                     bookEmbed.setFooter({
                         text: `Requested by ${interaction.user.tag}`,
                         icon_url: interaction.user.avatarURL()
@@ -55,7 +55,7 @@ module.exports = {
                 } else {
                     bookEmbed.setTitle('Error')
                     bookEmbed.setDescription('Not found. If you used the ISBN try using the book name (and vice versa). If there are multiple ISBNs for a book (due to paperback, ebook, etc.) try those ISBNs as well.')
-                    bookEmbed.addField('Original Query', `${search} | ${bookType}`)
+                    bookEmbed.addFields({ name: 'Original Query', value: `${search} | ${bookType}` })
                     interaction.fetchReply().then(async () => {
                         interaction.editReply({ embeds: [bookEmbed] })
                     })
@@ -64,7 +64,7 @@ module.exports = {
                 console.error(err)
                 bookEmbed.setTitle('Error')
                 bookEmbed.setDescription('Not found. If you used the ISBN try using the book name (and vice versa). If there are multiple ISBNs for a book (due to paperback, ebook, etc.) try those ISBNs as well.')
-                bookEmbed.addField('Original Query', `${search} | ${bookType}`)
+                bookEmbed.addFields({ name: 'Original Query', value: `${search} | ${bookType}` })
                 interaction.fetchReply().then(async () => {
                     interaction.editReply({ embeds: [bookEmbed] })
                 })
@@ -72,7 +72,7 @@ module.exports = {
         } catch (e) {
             bookEmbed.setTitle('Error')
             bookEmbed.setDescription('Not found. If you used the ISBN try using the book name (and vice versa). If there are multiple ISBNs for a book (due to paperback, ebook, etc.) try those ISBNs as well.')
-            bookEmbed.addField('Original Query', `${search} | ${bookType}`)
+            bookEmbed.addFields({ name: 'Original Query', value: `${search} | ${bookType}` })
             interaction.fetchReply().then(async () => {
                 interaction.editReply({ embeds: [bookEmbed] })
             })

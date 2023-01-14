@@ -1,33 +1,54 @@
-function logTelemetry(filename, interaction) {
-    const path = require('path')
+// using twilio segment
+var Analytics = require('analytics-node')
+var analytics = new Analytics(process.env.TELEMETRYKEY)
+const path = require('path')
 
-    // local logging
-    if (interaction.guild === null) { // dms
-        interaction.client.logger.log('info', `${path.basename(filename, '.js')} command used by ${interaction.user.username} Time: ${Date()} Guild: null`)
-        interaction.client.telemetry.set('cd1', interaction.user.username)
-        interaction.client.telemetry.set('cd2', Buffer.from(interaction.user.username).toString('base64'))
-        interaction.client.telemetry.pageview({
-            v: interaction.client.pkg.version.replace(/\./g, '').trim(),
-            uid: Buffer.from(interaction.user.username).toString('base64'),
-            dp: `/${path.basename(filename, '.js')}`,
-            dt: path.basename(filename, '.js'),
-            dr: 'https://null'
-        }).send()
+function logTememetry(filename, interaction) {
+    // user id: base64 tag
+
+    interaction.client.logger.log('info', `${path.basename(filename, '.js')} command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild === null ? 'nullDM' : interaction.guild.name}`)
+
+    if (interaction.guild === null) { // interaction in dms
+        analytics.identify({
+            userId: Buffer.from(interaction.user.tag).toString('base64'),
+            traits: {
+                username: interaction.user.tag,
+                website: 'nullDM'
+            }
+        })
+        analytics.page({
+            userId: Buffer.from(interaction.user.tag).toString('base64'),
+            category: 'Command',
+            name: path.basename(filename, '.js'),
+            properties: {
+                url: 'https://db8.bot',
+                path: `/${path.basename(filename, '.js')}`,
+                title: path.basename(filename, '.js'),
+                referrer: 'nullDM'
+            }
+        })
     } else {
-        interaction.client.logger.log('info', `${path.basename(filename, '.js')} command used by ${interaction.user.username} Time: ${Date()} Guild: ${interaction.guild.name}`)
-        // GA logging
-        interaction.client.telemetry.set('cd1', interaction.user.username)
-        interaction.client.telemetry.set('cd2', Buffer.from(interaction.user.username).toString('base64'))
-        interaction.client.telemetry.pageview({
-            v: interaction.client.pkg.version.replace(/\./g, '').trim(),
-            uid: Buffer.from(interaction.user.username).toString('base64'),
-            dp: `/${path.basename(filename, '.js')}`,
-            dt: path.basename(filename, '.js'),
-            dr: `https://${interaction.guild.name.replace(/ /g, '')}`
-        }).send()
+        analytics.identify({
+            userId: Buffer.from(interaction.user.tag).toString('base64'),
+            traits: {
+                username: interaction.user.tag,
+                website: interaction.guild.name.replace(/ /g, '')
+            }
+        })
+        analytics.page({
+            userId: Buffer.from(interaction.user.tag).toString('base64'),
+            category: 'Command',
+            name: path.basename(filename, '.js'),
+            properties: {
+                url: 'https://db8.bot',
+                path: `/${path.basename(filename, '.js')}`,
+                title: path.basename(filename, '.js'),
+                referrer: interaction.guild.name.replace(/ /g, '')
+            }
+        })
     }
 }
 
 module.exports = {
-    telemetry: logTelemetry
+    telemetry: logTememetry
 }

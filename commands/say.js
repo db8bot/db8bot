@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders')
+const { SlashCommandBuilder } = require('discord.js')
 const Filter = require('bad-words')
 var filter = new Filter()
 module.exports = {

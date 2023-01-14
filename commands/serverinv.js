@@ -1,10 +1,10 @@
-const { SlashCommandBuilder } = require('@discordjs/builders')
-var Long = require('long')
 const Discord = require('discord.js')
+var Long = require('long')
 module.exports = {
-    data: new SlashCommandBuilder()
+    data: new Discord.SlashCommandBuilder()
         .setName('serverinv')
-        .setDescription('Generate an invite link for this server'),
+        .setDescription('Generate an invite link for this server')
+        .setDMPermission(false),
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
         function getDefaultChannel(guild) {
@@ -18,6 +18,6 @@ module.exports = {
                     Long.fromString(a.id).sub(Long.fromString(b.id)).toNumber())
                 .first()
         }
-        getDefaultChannel(interaction.guild).createInvite({ maxAge: 300 }).then(inv => interaction.reply(inv.url ? inv.url : 'discord.gg/' + inv.code))
+        getDefaultChannel(interaction.guild).createInvite({ maxAge: 1800 }).then(inv => interaction.reply(inv.url ? inv.url : 'discord.gg/' + inv.code))
     }
 }

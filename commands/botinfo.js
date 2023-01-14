@@ -1,11 +1,10 @@
-const { SlashCommandBuilder } = require('@discordjs/builders')
+const Discord = require('discord.js')
 const fs = require('fs')
 const dir = './commands'
 let commandsLength = 0
 fs.readdir(dir, (_err, files) => {
     commandsLength = files.length
 })
-const Discord = require('discord.js')
 const pkg = require('../package.json')
 const os = require('os')
 
@@ -27,11 +26,11 @@ function timeCon(time) {
     hours = hours > 9 ? hours : '' + hours
     minutes = minutes > 9 ? minutes : '' + minutes
     seconds = seconds > 9 ? seconds : '' + seconds
-    return (parseInt(days) > 0 ? days + ' days ' : ' ') + (parseInt(hours) === 0 && parseInt(days) === 0 ? '' : hours + ' hours ') + minutes + ' minutes ' + seconds + ' seconds.'
+    return (parseInt(days) > 0 ? days + ' days ' : ' ') + (parseInt(hours) === 0 && parseInt(days) === 0 ? '' : hours + ' hours ') + minutes + ' minutes ' + seconds + ' seconds'
 }
 
 module.exports = {
-    data: new SlashCommandBuilder()
+    data: new Discord.SlashCommandBuilder()
         .setName('botinfo')
         .setDescription('Basic Information About db8bot')
         .addStringOption(option =>
@@ -50,44 +49,50 @@ module.exports = {
         totalPeople = interaction.client.guilds.cache.map(person => person.memberCount).reduce(function (s, v) { return s + (v || 0) }, 0)
         // eslint-disable-next-line no-return-assign
         interaction.client.guilds.cache.map(botPerson => botNumber += botPerson.members.cache.filter(member => member.user.bot).size)
-        const embed = new Discord.MessageEmbed()
-            .setColor('36393E')
+        const embed = new Discord.EmbedBuilder()
+            .setColor('#222025')
             .setTitle(interaction.client.user.username + ' V: ' + pkg.version + ' ' + process.env.BUILD)
-            .setDescription(interaction.client.user.username + ' has been awake for ' + timeCon(process.uptime()))
-            .addField(':construction_worker: Creator', process.env.OWNERTAG, true)
-            .addField('🏠 Guilds', '' + interaction.client.guilds.cache.size, true)
-            .addField('📄 Channels', '' + interaction.client.channels.cache.size, true)
-            .addField('🤵 Total Users', '' + (totalPeople - botNumber), true) // repl with -test cmd contents
-            .addField(':arrow_left: Legacy Prefix', process.env.PREFIX, true)
-            .addField(':clipboard: # of Commands - Some not accessable to users', '' + commandsLength, true)
-            .addField(':gem: Shards', 'N/A')
-            // .addField(`:heart: Upvote ${config.name}`, `[Discord Bot List (discordbots.org)](https://discordbots.org/bot/460610749283172353)\n[Discord Bot List](https://discordbotlist.com/bots/460610749283172353)\n[Bots on Discord](https://bots.ondiscord.xyz/bots/460610749283172353)\n[Bots for Discord](https://botsfordiscord.com/bots/460610749283172353)`, true) // check if this is working with the custom emoji
-            // .addField(`:moneybag: Donate`, `[DonateBot](https://donatebot.io/checkout/430303752357019648)\n[Patreon](https://www.patreon.com/airfusion)`, true) //check if everything runs here.
-            // .addField('💾 Last Commit', jsonBody[0].commit.message, true)
-            .addField('🐏 RAM Usage', `${((process.memoryUsage().rss / 1024) / 1024).toFixed(2)} MB`, true)
-            .addField(':clock: System Uptime', timeCon(os.uptime()), true)
-            .addField('🏓 Ping', `${(interaction.client.ws.ping).toFixed(0)} ms`, true)
-            .addField(':control_knobs: Library', `Discord JS v${Discord.version}`, true)
-            .addField(':computer: Node.js ', `${process.version}`, true)
-            .addField(':regional_indicator_h: :regional_indicator_o: :regional_indicator_s: :regional_indicator_t: Host Name', `${os.hostname}`, true)
-            .addField(':white_check_mark: Host OS', `${os.platform} ${os.release}`, true)
+            .setDescription(interaction.client.user.username + ' has been awake for ' + timeCon(process.uptime()) + '.')
+            .setTimestamp()
+            .setThumbnail('https://cdn.discordapp.com/avatars/689368779305779204/c2a07a52298c2207e0f383f7d403ee30.webp?size=1024')
+            .addFields(
+                { name: ':construction_worker: Creator', value: process.env.OWNERTAG, inline: true },
+                { name: '🏠 Guilds', value: '' + interaction.client.guilds.cache.size, inline: true },
+                { name: '📄 Channels', value: '' + interaction.client.channels.cache.size, inline: true },
+                {
+                    name: '🤵 Total Users', value: '' + (totalPeople - botNumber), inline: true
+                },
+                { name: ':clipboard: # of registered Slash Commands', value: '' + commandsLength, inline: true },
+                { name: ':gem: Shards', value: 'N/A', inline: true },
+                { name: ':link: Invite', value: `[Click Here](${process.env.INVLINK})` },
+                { name: '🐏 RAM Usage', value: `${((process.memoryUsage().rss / 1024) / 1024).toFixed(2)} MB / ${(((os.totalmem() / 1024) / 1024) / 1024).toFixed(2)} GB`, inline: true },
+                { name: ':clock: System Uptime', value: timeCon(os.uptime()), inline: true },
+                { name: '🏓 Ping', value: `${(interaction.client.ws.ping).toFixed(0)} ms`, inline: true },
+                { name: ':bookmark_tabs: Library', value: `Discord JS v${Discord.version}`, inline: true },
+                { name: ':computer: Node.js ', value: `${process.version}`, inline: true },
+                { name: ':compass: Host Name', value: `${os.hostname}`, inline: true },
+                { name: ':cd: Host OS/Arch', value: `${os.platform} ${os.release}/${os.arch()}`, inline: true },
+                { name: ':fire: Load', value: `${os.loadavg().map(x => x.toFixed(4)).join(' | ')} / ${os.cpus().length} CPUs`, inline: true }
+            )
 
         if (args === 'nerdy') {
             interaction.reply({ embeds: [embed] })
         } else {
-            const embednotNerdy = new Discord.MessageEmbed()
-                .setColor('36393E')
+            const embednotNerdy = new Discord.EmbedBuilder()
+                .setColor('#5093d1')
                 .setTitle(interaction.client.user.username + ' V: ' + pkg.version + ' ' + process.env.BUILD)
-                .setDescription('Awake for ' + timeCon(process.uptime()))
-                .addField(':crown: Developer/Owner', process.env.OWNERTAG, true)
-                .addField('🏠 Guilds', '' + interaction.client.guilds.cache.size, true)
-                .addField('📄 Channels', '' + interaction.client.channels.cache.size, true)
-                .addField('🤵 Total Users', '' + (totalPeople - botNumber), true)
-                .addField(':arrow_left: Legacy Prefix', process.env.PREFIX, true)
-                .addField(':clipboard: # of Commands - Some not accessable to users', '' + commandsLength, true)
-                .addField(':gem: Shards', 'N/A', true)
-            // .addField(`:heart: Upvote ${config.name}`, `[Discord Bot List (discordbots.org)](https://discordbots.org/bot/460610749283172353)\n[Discord Bot List](https://discordbotlist.com/bots/460610749283172353)\n[Bots on Discord](https://bots.ondiscord.xyz/bots/460610749283172353)\n[Bots for Discord](https://botsfordiscord.com/bots/460610749283172353)`, true) // check if this is working with the custom emoji
-            // .addField(`:moneybag: Donate`, `[DonateBot](https://donatebot.io/checkout/430303752357019648)\n[Patreon](https://www.patreon.com/airfusion)`, true) //check if everything runs here.
+                .setDescription(interaction.client.user.username + ' has been awake for ' + timeCon(process.uptime()) + '.')
+                .setTimestamp()
+                .setThumbnail('https://cdn.discordapp.com/avatars/689368779305779204/c2a07a52298c2207e0f383f7d403ee30.webp?size=1024')
+                .addFields({ name: ':construction_worker: Creator', value: process.env.OWNERTAG, inline: true },
+                    { name: '🏠 Guilds', value: '' + interaction.client.guilds.cache.size, inline: true },
+                    { name: '📄 Channels', value: '' + interaction.client.channels.cache.size, inline: true },
+                    {
+                        name: '🤵 Total Users', value: '' + (totalPeople - botNumber), inline: true
+                    },
+                    { name: ':clipboard: # of registered Slash Commands', value: '' + commandsLength, inline: true },
+                    { name: ':gem: Shards', value: 'N/A', inline: true },
+                    { name: ':link: Invite', value: `[Click Here](${process.env.INVLINK})` })
             interaction.reply({ embeds: [embednotNerdy] })
         }
     }

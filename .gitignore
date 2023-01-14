@@ -1,39 +1,4 @@
+node_modules
 
-node_modules/
-
-config.json
-
-breakbotIMG/
-
-imgCleanTempFiles/
-
-commands/benmoshe<3.js
-
-commands/benmoshe_3.js
-
-legacyCommands/benmoshe_3.js
-
-legacyCommands/benmoshe<3.js
-
-bfg-1.14.0.jar
-
-configDev.json
-
-# *.env
-dev.env
-
-prod.env
-
-.DS_Store
-
-data/
-
-modules/mediaExt/bypass-paywalls-chrome-master/
-
-modules/cookieExt/i-dont-care-about-cookies/
-
-db8bot old sql data/
-
-log.txt
-
-gcloudservicekey.json
+*.env
+*.traineddata
