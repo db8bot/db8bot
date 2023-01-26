@@ -75,8 +75,8 @@ async function judgeAnalytics(judgeRecordsRaw, judgeEmail) {
 
         // # of rounds in total & in spec events
         // if rd was in last yr
-        let roundDateUnix = record.Date.substring(0, record.Date.indexOf('\n'))
-        let oneYrAgoUnix = Math.floor(Date.now() / 1000) - 31536000
+        const roundDateUnix = record.Date.substring(0, record.Date.indexOf('\n'))
+        const oneYrAgoUnix = Math.floor(Date.now() / 1000) - 31536000
 
         if (cxSearch.includes(record.Ev.replace(/\n/g).replace(/\t/g).toLowerCase())) {
             // total rounds & total event specific rounds
@@ -209,26 +209,25 @@ async function judgeAnalytics(judgeRecordsRaw, judgeEmail) {
 }
 
 async function buildEmbed(name, judgeInfo, paradigmLink) {
-    // let totalAff
     const embed0 = new EmbedBuilder()
         .setColor('#0099ff')
         .setTitle(`Judging Record Analysis: ${name}`)
         .setURL(paradigmLink)
         .addFields(
-            { name: 'Judge Contact', value: '==========' },
+            { name: 'Judge Contact', value: '========================================' },
             { name: 'Judge Email', value: `${'' + judgeInfo.total.judgeEmail}`, inline: true },
-            //paradigm link
-            { name: '\nAt a Glance: Lifetime Totals', value: '==========' },
+            { name: 'Paradigm Link', value: `[Here](${paradigmLink})`, inline: true },
+            { name: '‎\nAt a Glance: Lifetime Totals', value: '========================================' },
             { name: 'Total Rounds Judged', value: `${'' + judgeInfo.total.totalRounds}`, inline: true },
-            { name: 'Total Aff/Pro Vote Count', value: `${'' + judgeInfo.total.totalAffVote}`, inline: true },
-            { name: 'Total Neg/Con Vote Count', value: `${'' + judgeInfo.total.totalNegVote}`, inline: true },
+            { name: 'Total Aff/Pro Vote Count', value: `${'' + judgeInfo.total.totalAffVote} (${((judgeInfo.total.totalAffVote + judgeInfo.total.totalNegVote) > 0) ? (((judgeInfo.total.totalAffVote / (judgeInfo.total.totalAffVote + judgeInfo.total.totalNegVote)) * 100).toFixed(2)) : '0'}% of Total Rounds)`, inline: true },
+            { name: 'Total Neg/Con Vote Count', value: `${'' + judgeInfo.total.totalNegVote} (${((judgeInfo.total.totalAffVote + judgeInfo.total.totalNegVote) > 0) ? (((judgeInfo.total.totalNegVote / (judgeInfo.total.totalAffVote + judgeInfo.total.totalNegVote)) * 100).toFixed(2)) : '0'}% of Total Rounds)`, inline: true },
             { name: 'Total Panels Sat On', value: `${'' + judgeInfo.total.totalPanels}`, inline: true },
             { name: 'TOC Judging Experience in the Following Events', value: `${'' + judgeInfo.total.tocExperience}`, inline: true },
             { name: 'Judging Since', value: `${'' + judgeInfo.total.judgingSince} (${'' + judgeInfo.total.judgingYrs} Years)`, inline: true },
-            { name: '\nAt a Glance: Last Calendar Year', value: '==========' },
-            { name: 'Total Rounds Judged Last Calendar Year', value: `${'' + judgeInfo.total.roundsLastYr}`, inline: true },
-            { name: 'Aff/Pro Votes Last Calendar Year', value: `${'' + judgeInfo.total.affVoteLastYr}`, inline: true },
-            { name: 'Neg/Con Votes Last Calendar Year', value: `${'' + judgeInfo.total.negVoteLastYr}`, inline: true })
+            { name: '‎\nAt a Glance: Last Calendar Year', value: '========================================' },
+            { name: 'Total Rounds Judged Last Calendar Year', value: `${'' + judgeInfo.total.roundsLastYr} (${(judgeInfo.total.totalRounds > 0) ? (((judgeInfo.total.roundsLastYr / judgeInfo.total.totalRounds) * 100).toFixed(2)) : '0'}% of Lifetime Rounds)`, inline: true },
+            { name: 'Aff/Pro Votes Last Calendar Year', value: `${'' + judgeInfo.total.affVoteLastYr} (${(judgeInfo.total.roundsLastYr > 0) ? (((judgeInfo.total.affVoteLastYr / judgeInfo.total.roundsLastYr) * 100).toFixed(2)) : '0'}% of Rounds Last Calendar Yr)`, inline: true },
+            { name: 'Neg/Con Votes Last Calendar Year', value: `${'' + judgeInfo.total.negVoteLastYr} (${(judgeInfo.total.roundsLastYr > 0) ? (((judgeInfo.total.negVoteLastYr / judgeInfo.total.roundsLastYr) * 100).toFixed(2)) : '0'}% of Rounds Last Calendar Yr)`, inline: true })
         .setFooter({ text: 'Information from Tabroom.com' })
         .setTimestamp()
     const embed1 = new EmbedBuilder()
@@ -236,30 +235,30 @@ async function buildEmbed(name, judgeInfo, paradigmLink) {
         .setTitle(`Judging Record Analysis: ${name}`)
         .setURL(paradigmLink)
         .addFields(
-            { name: '\nIn Detail: Policy/CX Debate', value: '==========' },
+            { name: '\nIn Detail: Policy/CX Debate', value: '========================================' },
             { name: 'Total Lifetime Rounds Judged', value: `${'' + judgeInfo.cx.totalRounds}`, inline: true },
-            { name: 'Total Lifetime Aff Votes', value: `${'' + judgeInfo.cx.totalAffVote}`, inline: true },
-            { name: 'Total Lifetime Neg Votes', value: `${'' + judgeInfo.cx.totalNegVote}`, inline: true },
+            { name: 'Total Lifetime Aff Votes', value: `${'' + judgeInfo.cx.totalAffVote} (${(judgeInfo.cx.totalRounds > 0) ? (((judgeInfo.cx.totalAffVote) / judgeInfo.cx.totalRounds) * 100).toFixed(2) : '0'}% of Total Rounds)`, inline: true },
+            { name: 'Total Lifetime Neg Votes', value: `${'' + judgeInfo.cx.totalNegVote} (${(judgeInfo.cx.totalRounds > 0) ? (((judgeInfo.cx.totalNegVote) / judgeInfo.cx.totalRounds) * 100).toFixed(2) : '0'}% of Total Rounds)`, inline: true },
             { name: 'Total Panels Sat On', value: `${'' + judgeInfo.cx.totalPanels}`, inline: true },
             { name: 'Rounds Judged Last Calendar Year', value: `${'' + judgeInfo.cx.roundsLastYr}`, inline: true },
-            { name: 'Aff Votes Last Calendar Year', value: `${'' + judgeInfo.cx.affVoteLastYr}`, inline: true },
-            { name: 'Neg Votes Last Calendar Year', value: `${'' + judgeInfo.cx.negVoteLastYr}`, inline: true },
-            { name: '\nIn Detail: Public Forum/PF Debate', value: '==========' },
+            { name: 'Aff Votes Last Calendar Year', value: `${'' + judgeInfo.cx.affVoteLastYr} (${(judgeInfo.cx.roundsLastYr > 0) ? ((judgeInfo.cx.affVoteLastYr / judgeInfo.cx.roundsLastYr) * 100).toFixed(2) : '0'}% of Rounds last Calendar Yr)`, inline: true },
+            { name: 'Neg Votes Last Calendar Year', value: `${'' + judgeInfo.cx.negVoteLastYr} (${(judgeInfo.cx.roundsLastYr > 0) ? ((judgeInfo.cx.negVoteLastYr / judgeInfo.cx.roundsLastYr) * 100).toFixed(2) : '0'}% of Rounds last Calendar Yr)`, inline: true },
+            { name: '‎\nIn Detail: Public Forum/PF Debate', value: '========================================' },
             { name: 'Total Lifetime Rounds Judged', value: `${'' + judgeInfo.pf.totalRounds}`, inline: true },
-            { name: 'Total Lifetime Aff Votes', value: `${'' + judgeInfo.pf.totalAffVote}`, inline: true },
-            { name: 'Total Lifetime Neg Votes', value: `${'' + judgeInfo.pf.totalNegVote}`, inline: true },
+            { name: 'Total Lifetime Aff/Pro Votes', value: `${'' + judgeInfo.pf.totalAffVote} (${(judgeInfo.pf.totalRounds > 0) ? (((judgeInfo.pf.totalAffVote) / judgeInfo.pf.totalRounds) * 100).toFixed(2) : '0'}% of Total Rounds)`, inline: true },
+            { name: 'Total Lifetime Neg/Con Votes', value: `${'' + judgeInfo.pf.totalNegVote} (${(judgeInfo.pf.totalRounds > 0) ? (((judgeInfo.pf.totalNegVote) / judgeInfo.pf.totalRounds) * 100).toFixed(2) : '0'}% of Total Rounds)`, inline: true },
             { name: 'Total Panels Sat On', value: `${'' + judgeInfo.pf.totalPanels}`, inline: true },
             { name: 'Rounds Judged Last Calendar Year', value: `${'' + judgeInfo.pf.roundsLastYr}`, inline: true },
-            { name: 'Aff Votes Last Calendar Year', value: `${'' + judgeInfo.pf.affVoteLastYr}`, inline: true },
-            { name: 'Neg Votes Last Calendar Year', value: `${'' + judgeInfo.pf.negVoteLastYr}`, inline: true },
-            { name: '\nIn Detail: Lincoln Douglas Debate', value: '==========' },
+            { name: 'Aff/Pro Votes Last Calendar Year', value: `${'' + judgeInfo.pf.affVoteLastYr} (${(judgeInfo.pf.roundsLastYr > 0) ? ((judgeInfo.pf.affVoteLastYr / judgeInfo.pf.roundsLastYr) * 100).toFixed(2) : '0'}% of Rounds last Calendar Yr)`, inline: true },
+            { name: 'Neg/Con Votes Last Calendar Year', value: `${'' + judgeInfo.pf.negVoteLastYr} (${(judgeInfo.pf.roundsLastYr > 0) ? ((judgeInfo.pf.negVoteLastYr / judgeInfo.pf.roundsLastYr) * 100).toFixed(2) : '0'}% of Rounds last Calendar Yr)`, inline: true },
+            { name: '‎\nIn Detail: Lincoln Douglas Debate', value: '========================================' },
             { name: 'Total Lifetime Rounds Judged', value: `${'' + judgeInfo.ld.totalRounds}`, inline: true },
-            { name: 'Total Lifetime Aff Votes', value: `${'' + judgeInfo.ld.totalAffVote}`, inline: true },
-            { name: 'Total Lifetime Neg Votes', value: `${'' + judgeInfo.ld.totalNegVote}`, inline: true },
+            { name: 'Total Lifetime Aff Votes', value: `${'' + judgeInfo.ld.totalAffVote} (${(judgeInfo.ld.totalRounds > 0) ? (((judgeInfo.ld.totalAffVote) / judgeInfo.ld.totalRounds) * 100).toFixed(2) : '0'}% of Total Rounds)`, inline: true },
+            { name: 'Total Lifetime Neg Votes', value: `${'' + judgeInfo.ld.totalNegVote} (${(judgeInfo.ld.totalRounds > 0) ? (((judgeInfo.ld.totalNegVote) / judgeInfo.ld.totalRounds) * 100).toFixed(2) : '0'}% of Total Rounds)`, inline: true },
             { name: 'Total Panels Sat On', value: `${'' + judgeInfo.ld.totalPanels}`, inline: true },
             { name: 'Rounds Judged Last Calendar Year', value: `${'' + judgeInfo.ld.roundsLastYr}`, inline: true },
-            { name: 'Aff Votes Last Calendar Year', value: `${'' + judgeInfo.ld.affVoteLastYr}`, inline: true },
-            { name: 'Neg Votes Last Calendar Year', value: `${'' + judgeInfo.ld.negVoteLastYr}`, inline: true })
+            { name: 'Aff Votes Last Calendar Year', value: `${'' + judgeInfo.ld.affVoteLastYr} (${(judgeInfo.ld.roundsLastYr > 0) ? ((judgeInfo.ld.affVoteLastYr / judgeInfo.ld.roundsLastYr) * 100).toFixed(2) : '0'}% of Rounds last Calendar Yr)`, inline: true },
+            { name: 'Neg Votes Last Calendar Year', value: `${'' + judgeInfo.ld.negVoteLastYr} (${(judgeInfo.ld.roundsLastYr > 0) ? ((judgeInfo.ld.negVoteLastYr / judgeInfo.ld.roundsLastYr) * 100).toFixed(2) : '0'}% of Rounds last Calendar Yr)`, inline: true })
         .setFooter({ text: 'Information from Tabroom.com' })
         .setTimestamp()
     return ([embed0, embed1])
@@ -313,28 +312,26 @@ module.exports = {
             auth: process.env.TABAPIKEY
         }
         switch (interaction.options.getSubcommand()) {
-            case 'name':
-                payload.type = 'name'
-                payload.first = interaction.options.getString('firstname')
-                payload.last = interaction.options.getString('lastname')
-                paradigmLink = `https://www.tabroom.com/index/paradigm.mhtml?search_first=${payload.first}&search_last=${payload.last}`
-                break
-            case 'id':
-                payload.type = 'id'
-                payload.id = interaction.options.getString('judgeid')
-                paradigmLink = `https://www.tabroom.com/index/paradigm.mhtml?judge_person_id=${payload.id}}`
-                break
-            case 'link':
-                payload.type = 'link'
-                payload.link = interaction.options.getString('judgelink')
-                paradigmLink = payload.link
-                break
+        case 'name':
+            payload.type = 'name'
+            payload.first = interaction.options.getString('firstname')
+            payload.last = interaction.options.getString('lastname')
+            paradigmLink = `https://www.tabroom.com/index/paradigm.mhtml?search_first=${payload.first}&search_last=${payload.last}`
+            break
+        case 'id':
+            payload.type = 'id'
+            payload.id = interaction.options.getString('judgeid')
+            paradigmLink = `https://www.tabroom.com/index/paradigm.mhtml?judge_person_id=${payload.id}}`
+            break
+        case 'link':
+            payload.type = 'link'
+            payload.link = interaction.options.getString('judgelink')
+            paradigmLink = payload.link
+            break
         }
 
-
         superagent
-            // .post(`${process.env.BLAZEURL}/get`)
-            .post('http://localhost:8082/paradigm')
+            .post(`${process.env.TABURL}/paradigm`)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(payload)
             .end(async (err, res) => {
@@ -345,8 +342,8 @@ module.exports = {
                     let paradigmRaw = result.paradigm
                     const judgeRecordsRaw = result.judgeRecords[0]
                     const name = result.name
-                    // eslint-disable-next-line no-control-regex
-                    var judgeEmail = (paradigmRaw.match(/(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/g) || 'None')
+                    // eslint-disable-next-line no-control-regex, no-useless-escape
+                    var judgeEmail = (paradigmRaw.toLowerCase().match(/(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/g) || 'None')
                     if (judgeEmail !== 'None') judgeEmail = judgeEmail[0]
 
                     if (paradigmRaw.length !== 0) {
@@ -366,7 +363,6 @@ module.exports = {
                         }
                         paradigm.push(paradigmRaw)
                         const judgeInfo = await judgeAnalytics(judgeRecordsRaw, judgeEmail)
-                        console.log(judgeInfo)
                         // build the embed
                         const embedSend = await buildEmbed(name, judgeInfo, paradigmLink)
                         // send!
@@ -387,6 +383,13 @@ module.exports = {
                             interactionReply = true
                         } else {
                             interaction.channel.send('```md\nNo paradigm text found for ' + name + '\n==========```')
+                        }
+                        if (judgeRecordsRaw.length > 0) { // no paradigm text but they have a judging record (reverse is not possible: can't have a paradigm without a judging record)
+                            const judgeInfo = await judgeAnalytics(judgeRecordsRaw, judgeEmail)
+                            // build the embed
+                            const embedSend = await buildEmbed(name, judgeInfo, paradigmLink)
+                            interaction.channel.send({ embeds: [embedSend[0]] })
+                            interaction.channel.send({ embeds: [embedSend[1]] })
                         }
                     }
                 }
