@@ -5,13 +5,13 @@ Home for Discord (HFD.gg) - offline closed beta
 "List My Bots" - Project Dead, bot still in serv
 
 "Glenn Bot List" - Project dead, bot still in serv
-    - website redirect to https://voidbots.net/ - pending application **!**
+    - website redirect to https://voidbots.net/ - app submitted 2/22/23
 
 "Space Bots List" - Project dead, bot removed
 
-"discordbotlist.com" - need to list **!**
+"discordbotlist.com" - listed under personal acc - need update + transfer ownership **!**
 
-"bots.ondiscord.xyz" - bot listing alive - needs update **!**
+"bots.ondiscord.xyz" - bot listing alive - Updated 2/22/23
 
 "DiscordVote" - project dead
 
@@ -19,8 +19,28 @@ Home for Discord (HFD.gg) - offline closed beta
 
 "discordlist.space" - project dead, bot removed
 
-"discords.com" - bot listing alive - needs update **!**
+"discords.com" - bot listing alive - Updated 2/22/23
 
-top.gg - listing alive - needs update **!**
+top.gg - listing alive - Updated 2/22/23
 
-Discord Bots-  update listing
+Discord Bots "https://discord.bots.gg/" -  Updated 2/22/23
+
+------NEW GEN
+
+https://botblock.org/lists
+
+https://botlist.me - listed 2/22/23
+
+https://bhbotlist.tech/ - listed 2/23/23 - approved 2/23/23
+
+https://blist.xyz/ - listed 2/23/23 - approved 2/23/23
+
+https://discord-botlist.eu/ - listed 2/23/23
+
+https://discordextremelist.xyz/ - listed 2/23/23
+
+https://discordlist.gg/ - listed 2/23/23
+
+https://discord.me/ - listed 2/23/23
+
+https://disforge.com/ - listed 2/23/23
