@@ -29,7 +29,7 @@ module.exports = {
             .setTimestamp(new Date())
         interaction.reply('Fetching...')
         try {
-            axios.post('https://db8bot-scihub-api.airfusion.workers.dev/book', qs.stringify({ // pointing to old cloudflare workers api TODO: split this into separate repo & redeploy on cf workers
+            axios.post(`${process.env.BLAZEDGEURL}/book`, qs.stringify({ // pointing to old cloudflare workers api TODO: split this into separate repo & redeploy on cf workers
                 query: search,
                 params: bookType
             }), {
