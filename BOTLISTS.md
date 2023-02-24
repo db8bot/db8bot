@@ -39,8 +39,8 @@ https://discord-botlist.eu/ - listed 2/23/23
 
 https://discordextremelist.xyz/ - listed 2/23/23
 
-https://discordlist.gg/ - listed 2/23/23
+https://discordlist.gg/ - listed 2/23/23 - approved 2/23/23
 
-https://discord.me/ - listed 2/23/23
+https://discord.me/ - listed 2/23/23 - approved 2/23/23
 
-https://disforge.com/ - listed 2/23/23
+https://disforge.com/ - listed 2/23/23 
