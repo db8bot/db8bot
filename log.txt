@@ -1,6 +1,0 @@
-{"level":"info","message":"botinfo command used by airfusion Time: Wed Mar 08 2023 07:28:25 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
-{"level":"info","message":"botinfo command used by airfusion Time: Wed Mar 08 2023 07:28:49 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
-{"level":"info","message":"botinfo command used by airfusion Time: Wed Mar 08 2023 07:29:52 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
-{"level":"info","message":"botinfo command used by airfusion Time: Wed Mar 08 2023 07:30:32 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
-{"level":"info","message":"botinfo command used by airfusion Time: Wed Mar 08 2023 07:31:03 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
-{"level":"info","message":"botinfo command used by airfusion Time: Wed Mar 08 2023 07:31:20 GMT-0800 (Pacific Standard Time) Guild: db8bottest"}
