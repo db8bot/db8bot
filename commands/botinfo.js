@@ -1,4 +1,5 @@
 const Discord = require('discord.js')
+const superagent = require('superagent')
 const fs = require('fs')
 const dir = './commands'
 let commandsLength = 0
@@ -29,6 +30,24 @@ function timeCon(time) {
     return (parseInt(days) > 0 ? days + ' days ' : ' ') + (parseInt(hours) === 0 && parseInt(days) === 0 ? '' : hours + ' hours ') + minutes + ' minutes ' + seconds + ' seconds'
 }
 
+async function apiStatus() {
+    // other apis to be added soon
+    return new Promise((resolve, reject) => {
+        const pingStart = Date.now()
+        superagent
+            .get(`${process.env.BLAZEURL}/heartbeat`)
+            .set('Content-Type', 'application/json')
+            .end((err, res) => {
+                if (err) reject(err)
+                if (res.body.status === true) {
+                    resolve([res.body, Date.now() - pingStart])
+                } else {
+                    resolve([{ status: false }])
+                }
+            })
+    })
+}
+
 module.exports = {
     data: new Discord.SlashCommandBuilder()
         .setName('botinfo')
@@ -47,6 +66,9 @@ module.exports = {
         let botNumber = 0
 
         totalPeople = interaction.client.guilds.cache.map(person => person.memberCount).reduce(function (s, v) { return s + (v || 0) }, 0)
+
+        const blazeStatus = await apiStatus()
+
         // eslint-disable-next-line no-return-assign
         interaction.client.guilds.cache.map(botPerson => botNumber += botPerson.members.cache.filter(member => member.user.bot).size)
         const embed = new Discord.EmbedBuilder()
@@ -69,10 +91,25 @@ module.exports = {
                 { name: ':clock: System Uptime', value: timeCon(os.uptime()), inline: true },
                 { name: '🏓 Ping', value: `${(interaction.client.ws.ping).toFixed(0)} ms`, inline: true },
                 { name: ':bookmark_tabs: Library', value: `Discord JS v${Discord.version}`, inline: true },
-                { name: ':computer: Node.js ', value: `${process.version}`, inline: true },
-                { name: ':compass: Host Name', value: `${os.hostname}`, inline: true },
                 { name: ':cd: Host OS/Arch', value: `${os.platform} ${os.release}/${os.arch()}`, inline: true },
-                { name: ':fire: Load', value: `${os.loadavg().map(x => x.toFixed(4)).join(' | ')} / ${os.cpus().length} CPUs`, inline: true }
+                { name: ':computer: Node.js ', value: `${process.version}`, inline: true },
+                { name: ':fire: Load', value: `${os.loadavg().map(x => x.toFixed(4)).join(' | ')} / ${os.cpus().length} CPUs`, inline: true },
+                {
+                    name: ':zap: Service APIs Information',
+                    value: `
+                **Blaze API:**
+                Journal Requests & OCR
+                > Status: ${blazeStatus[0].status ? ':green_circle: Online' : ':red_circle: Offline'} ${blazeStatus[0].status
+    ? `\n> :ping_pong: Ping: ${blazeStatus[1]} ms
+                    > :clock: Uptime: ${timeCon(blazeStatus[0].uptime)}
+                    > :computer: Platform: ${blazeStatus[0].platform} ${blazeStatus[0].arch}
+                    > :ram: Memory Usage: ${((blazeStatus[0].mem.rss / 1024) / 1024).toFixed(2)} MB / ${(((blazeStatus[0].totalMem / 1024) / 1024) / 1024).toFixed(2)} GB
+                    > :fire: Load: ${blazeStatus[0].load.map(x => x.toFixed(4)).join(' | ')} / ${blazeStatus[0].cpus.length}x ${blazeStatus[0].cpus[0].model}
+                    `
+    : ''}
+                `,
+                    inline: false
+                }
             )
 
         if (args === 'nerdy') {
@@ -92,6 +129,16 @@ module.exports = {
                     },
                     { name: ':clipboard: # of registered Slash Commands', value: '' + commandsLength, inline: true },
                     { name: ':gem: Shards', value: 'N/A', inline: true },
+                    { name: ':compass: Host Name', value: `${os.hostname}`, inline: true },
+                    {
+                        name: ':zap: Service APIs Status',
+                        value: `
+                    **Blaze API:**
+                    Journal Requests & OCR
+                    > Status: ${blazeStatus[0].status ? ':green_circle: Online' : ':red_circle: Offline'}
+                    `,
+                        inline: true
+                    },
                     { name: ':link: Invite', value: `[Click Here](${process.env.INVLINK})` })
             interaction.reply({ embeds: [embednotNerdy] })
         }

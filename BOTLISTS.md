@@ -29,7 +29,7 @@ Discord Bots "https://discord.bots.gg/" -  Updated 2/22/23
 
 https://botblock.org/lists
 
-https://botlist.me - listed 2/22/23
+https://botlist.me - listed 2/22/23 - no approval needed
 
 https://bhbotlist.tech/ - listed 2/23/23 - approved 2/23/23
 
@@ -37,10 +37,10 @@ https://blist.xyz/ - listed 2/23/23 - approved 2/23/23
 
 https://discord-botlist.eu/ - listed 2/23/23
 
-https://discordextremelist.xyz/ - listed 2/23/23
+https://discordextremelist.xyz/ - listed 2/23/23 - approved 3/5/23
 
 https://discordlist.gg/ - listed 2/23/23 - approved 2/23/23
 
 https://discord.me/ - listed 2/23/23 - approved 2/23/23
 
-https://disforge.com/ - listed 2/23/23 
+https://disforge.com/ - listed 2/23/23 - approved 2/27/23

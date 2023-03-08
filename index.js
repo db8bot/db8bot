@@ -202,10 +202,9 @@ app.use(express.urlencoded({ limit: '50mb', extended: true, parameterLimit: 5000
 app.set('client', client)
 
 // setup express routes
-const ocrReceive = require('./routes/ocrReceive')
-app.use('/ocrinbound', ocrReceive)
-const getReceive = require('./routes/getReceive')
-app.use('/getinbound', getReceive)
+app.use('/ocrinbound', require('./routes/ocrReceive'))
+app.use('/getinbound', require('./routes/getReceive'))
+app.use('/heartbeat', require('./routes/heartbeat'))
 
 // auth & express listen
 var port = process.env.PORT
