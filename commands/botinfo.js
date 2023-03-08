@@ -30,7 +30,7 @@ function timeCon(time) {
     return (parseInt(days) > 0 ? days + ' days ' : ' ') + (parseInt(hours) === 0 && parseInt(days) === 0 ? '' : hours + ' hours ') + minutes + ' minutes ' + seconds + ' seconds'
 }
 
-async function apiStatus() {
+async function blazeStatusF() {
     // other apis to be added soon
     return new Promise((resolve, reject) => {
         const pingStart = Date.now()
@@ -44,6 +44,25 @@ async function apiStatus() {
                 } else {
                     resolve([{ status: false }])
                 }
+            })
+    })
+}
+
+async function blazeEdgeStatusF() {
+    // other apis to be added soon
+    return new Promise((resolve, reject) => {
+        const pingStart = Date.now()
+        superagent
+            .get(`${process.env.BLAZEDGEURL}/heartbeat`)
+            .set('Content-Type', 'application/json')
+            .end((err, res) => {
+                if (err) reject(err)
+                console.log(res.body)
+                // if (res.body.status === 'true') {
+                //     resolve([{ status: true, version: res.body.version }, Date.now() - pingStart])
+                // } else {
+                //     resolve([{ status: false }])
+                // }
             })
     })
 }
@@ -67,7 +86,8 @@ module.exports = {
 
         totalPeople = interaction.client.guilds.cache.map(person => person.memberCount).reduce(function (s, v) { return s + (v || 0) }, 0)
 
-        const blazeStatus = await apiStatus()
+        const blazeStatus = await blazeStatusF()
+        const blazeEdgeStatus = await blazeEdgeStatusF()
 
         // eslint-disable-next-line no-return-assign
         interaction.client.guilds.cache.map(botPerson => botNumber += botPerson.members.cache.filter(member => member.user.bot).size)
@@ -100,14 +120,18 @@ module.exports = {
                 **Blaze API:**
                 Journal Requests & OCR
                 > Status: ${blazeStatus[0].status ? ':green_circle: Online' : ':red_circle: Offline'} ${blazeStatus[0].status
-    ? `\n> :ping_pong: Ping: ${blazeStatus[1]} ms
+                            ? `\n> :ping_pong: Ping: ${blazeStatus[1]} ms
                     > :clock: Uptime: ${timeCon(blazeStatus[0].uptime)}
                     > :computer: Platform: ${blazeStatus[0].platform} ${blazeStatus[0].arch}
                     > :ram: Memory Usage: ${((blazeStatus[0].mem.rss / 1024) / 1024).toFixed(2)} MB / ${(((blazeStatus[0].totalMem / 1024) / 1024) / 1024).toFixed(2)} GB
                     > :fire: Load: ${blazeStatus[0].load.map(x => x.toFixed(4)).join(' | ')} / ${blazeStatus[0].cpus.length}x ${blazeStatus[0].cpus[0].model}
                     `
-    : ''}
-                `,
+                            : ''}
+                **Blaze Edge API:**
+                Book Requests
+                > Status: ${blazeEdgeStatus[0].status ? ':green_circle: Online' : ':red_circle: Offline'} ${blazeEdgeStatus[0].status ? `\n> :1234: Version: ${blazeEdgeStatus[0].version}
+                `: ''}
+    `,
                     inline: false
                 }
             )
