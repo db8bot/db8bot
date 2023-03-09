@@ -35,8 +35,7 @@ async function blazeStatusF() {
     return new Promise((resolve, reject) => {
         const pingStart = Date.now()
         superagent
-            // .get(`${process.env.BLAZEURL}/heartbeat`)
-            .get('http://34.28.172.135:8080/heartbeat')
+            .get(`${process.env.BLAZEURL}/heartbeat`)
             .set('Content-Type', 'application/json')
             .end((err, res) => {
                 if (err) reject(err)

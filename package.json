@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "doppler run --token=${DOPPLER_TOKEN} --command=\"node index.js\"",
-    "build": "docker build . -t db8bot-v6.1.5-hummingbird-prod",
+    "build": "docker build . -t db8bot-v6.2.5-hummingbird-prod",
     "start-dev": "doppler run --command=\"node index.js\""
   },
   "repository": {
