@@ -63,7 +63,7 @@ router.post('/', async (req, resApp) => {
         resApp.status(200).send('OK')
     } else { // result is a string
         getEmbed.setTitle('Error')
-        getEmbed.setDescription('No results found. If the article has a DOI, you should try using that (both the doi.org link and just the DOI). You should also try setting the paper\'s title as the source. Sometimes an journal/article is stored under different identifiers in the database.\nIf you are searching a book, use `/getbook`, if you are trying to get a news article from the press, use `/getmedia.`')
+        getEmbed.setDescription('No results found. If the article has a DOI, you should try using that (both the doi.org link and just the DOI). You should also try setting the paper\'s title as the source. Sometimes an journal/article is stored under different identifiers in the database.\nIf you are searching a book, use `/getbook`.`')
         getEmbed.addFields({ name: 'Original Query', value: director.source })
         const content = {
             content: `<@${director.serverID ? director.memberID : director.dmUser}> | Get Job: \`${director.jobID}\` | Execution Time: \`${Date.now() - director.time}ms\``,
