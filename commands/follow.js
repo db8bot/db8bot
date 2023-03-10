@@ -12,11 +12,11 @@ const fs = require('fs').promises
 function follow(followPayload) {
     return new Promise((resolve, reject) => {
         superagent
-            .post('https://debateapis.wm.r.appspot.com/me/follow')
+            .post(`${process.env.TABURL}/follow`)
             .set('Content-Type', 'application/x-www-form-urlencoded')
             .send(JSON.parse(JSON.stringify(followPayload)))
             .end((err, res) => {
-                // if (err) reject(err)
+                if (err) reject(err)
                 resolve(res.body)
             })
     })
@@ -25,11 +25,11 @@ function follow(followPayload) {
 function getTournInfo(link) {
     return new Promise((resolve, reject) => {
         superagent
-            .post('https://debateapis.wm.r.appspot.com/tournamentinfo')
+            .post(`${process.env.TABURL}/tournamentinfo`)
             .set('Content-Type', 'application/x-www-form-urlencoded')
-            .send(JSON.parse(`{"apiauth": "${process.env.TABAPIKEY}", "link": "${link}"}`))
+            .send(JSON.parse(`{"auth": "${process.env.TABAPIKEY}", "link": "${link}"}`))
             .end((err, res) => {
-                // if (err) reject(err)
+                if (err) reject(err)
                 resolve(res.body)
             })
     })
@@ -45,7 +45,7 @@ async function createCloudTasks(followRes, tournInfo) {
     const unfollowPayload = { // The task HTTP request body
         username: process.env.TABUSERNAME,
         password: process.env.TABPASSWORD,
-        tabapiauth: process.env.TABAPIKEY,
+        auth: process.env.TABAPIKEY,
         unfollowLink: followRes.unfollowLink
     }
     // write service account key to file
@@ -153,14 +153,15 @@ module.exports = {
                 .setDescription('Mention a bot accessible role to be pinged with updates. Assign the role to additional users.')
                 .setRequired(false)
         )
-        .addStringOption(option =>
-            option.setName('enable-analytics')
-                .setDescription('Allows user1 & user2 to use /roundinfo for analytics. Enabled by default.')
-                .setRequired(false)
-                .addChoice('Enabled', 'true')
-                .addChoice('Disabled', 'false')
-        ),
-        // disable in dms
+        .setDMPermission(false),
+    // .addStringOption(option =>
+    //     option.setName('enable-analytics')
+    //         .setDescription('Allows user1 & user2 to use /roundinfo for analytics. Enabled by default.')
+    //         .setRequired(false)
+    //         .addChoice('Enabled', 'true')
+    //         .addChoice('Disabled', 'false')
+    // ),
+    // disable in dms
     async execute(interaction) {
         require('../modules/telemetry').telemetry(__filename, interaction)
         // if (!interaction.guild) return (interaction.reply('Command not available in DMs.'))
@@ -192,8 +193,8 @@ module.exports = {
                         server: interaction.guildId,
                         channel: interaction.options.getChannel('notify-channel').id,
                         users: usersToNotify.length > 0 ? usersToNotify : null,
-                        role: interaction.options.getRole('notify-role') ? interaction.options.getRole('notify-role').id : null,
-                        analytics: interaction.options.getString('enable-analytics') === 'true'
+                        role: interaction.options.getRole('notify-role') ? interaction.options.getRole('notify-role').id : null
+                        // analytics: interaction.options.getString('enable-analytics') === 'true'
                     }
                     collection.updateOne({
                         trackedTeamCode: interaction.options.getString('team-code'),
@@ -202,18 +203,18 @@ module.exports = {
                         $push: { notify: serverDetails }
                     })
                     // followed! send confirmation
-                    const existingFollowEmbed = new Discord.MessageEmbed()
+                    const existingFollowEmbed = new Discord.EmbedBuilder()
                         .setColor('#016f94')
                         .setTitle(`Following ${interaction.options.getString('team-code')}`)
-                        .addField('Event', sameTeamDBSearchRes.event, true)
-                        .addField('Tournament', sameTeamDBSearchRes.tournName, true)
-                        .addField('Start', new Date(sameTeamDBSearchRes.tournStart).toString(), true)
-                        .addField('End', new Date(sameTeamDBSearchRes.tournEnd).toString(), true)
-                        .addField('Notify Channel', `#${interaction.options.getChannel('notify-channel').name}`, true)
-                        .addField('Notify Role', interaction.options.getRole('notify-role') ? `@${interaction.options.getRole('notify-role').name}` : 'No notify role specified.', true)
-                        .addField('Notify Users', usersToNotify.map(user => `<@${user}>`).join(', '), true)
-                        .addField('Analytics', interaction.options.getString('enable-analytics') === 'true' ? 'Enabled' : 'Disabled', true)
-                        .addField('Follow Expires', new Date(sameTeamDBSearchRes.tournEnd).toString(), true)
+                        .addFields({ name: 'Event', value: sameTeamDBSearchRes.event, inline: true },
+                            { name: 'Tournament', value: sameTeamDBSearchRes.tournName, inline: true },
+                            { name: 'Start', value: new Date(sameTeamDBSearchRes.tournStart).toString(), inline: true },
+                            { name: 'End', value: new Date(sameTeamDBSearchRes.tournEnd).toString(), inline: true },
+                            { name: 'Notify Channel', value: `#${interaction.options.getChannel('notify-channel').name}`, inline: true },
+                            { name: 'Notify Role', value: interaction.options.getRole('notify-role') ? `@${interaction.options.getRole('notify-role').name}` : 'No notify role specified.', inline: true },
+                            { name: 'Notify Users', value: usersToNotify.map(user => `<@${user}>`).join(', '), inline: true },
+                            // .addField('Analytics', interaction.options.getString('enable-analytics') === 'true' ? 'Enabled' : 'Disabled', true)
+                            { name: 'Follow Expires', value: new Date(sameTeamDBSearchRes.tournEnd).toString(), inline: true })
                     interaction.reply({ embeds: [existingFollowEmbed] })
                 } else { // if inputted server is already following this team, do nothing
                     interaction.reply('You or this server are/is already following this team.')
@@ -239,12 +240,12 @@ module.exports = {
                 // @TODO Sort out the copy-pasted code - pull into functions.
                 await interaction.reply(`Following... Track the operation progress below:\n- Authenticating with Tabroom.com\n- Requesting Tabroom.com to follow ${interaction.options.getString('team-code')}\n- Requesting tournament information from Tabroom.com\n- Adding to database\n- Scheduling automatic unfollow on tournament end date`)
                 var authPayload = {
-                    apiauth: process.env.TABAPIKEY,
+                    auth: process.env.TABAPIKEY,
                     username: process.env.TABUSERNAME,
                     password: process.env.TABPASSWORD
                 }
                 superagent
-                    .post('https://debateapis.wm.r.appspot.com/login')
+                    .post(`${process.env.TABURL}/login`)
                     .set('Content-Type', 'application/x-www-form-urlencoded')
                     .send(JSON.parse(JSON.stringify(authPayload)))
                     .end(async (err, res) => {
@@ -255,8 +256,8 @@ module.exports = {
                             })
                         var token = res.body.token
                         var followPayload = {
-                            apiauth: process.env.TABAPIKEY,
-                            token: token,
+                            auth: process.env.TABAPIKEY,
+                            token,
                             entryLink: interaction.options.getString('entry-list'),
                             code: interaction.options.getString('team-code')
                         }
@@ -280,15 +281,13 @@ module.exports = {
                                 server: interaction.guildId,
                                 channel: interaction.options.getChannel('notify-channel').id,
                                 users: usersToNotify.length > 0 ? usersToNotify : null,
-                                role: interaction.options.getRole('notify-role') ? interaction.options.getRole('notify-role').id : null,
-                                analytics: interaction.options.getString('enable-analytics') === 'true'
+                                role: interaction.options.getRole('notify-role') ? interaction.options.getRole('notify-role').id : null
+                                // analytics: interaction.options.getString('enable-analytics') === 'true'
                             }],
-                            event: 'null',
+                            event: followRes.event,
                             expireAt: new Date(parseInt(tournInfo.endDateUnix))
                         }
-                        collection.insertOne(mongoEntry, (err, res) => {
-                            if (err) console.error(err)
-                        })
+                        await collection.insertOne(mongoEntry)
                         interaction.fetchReply()
                             .then(reply => {
                                 interaction.editReply(`Following... Track the operation progress below:\n:white_check_mark: Authenticating with Tabroom.com\n:white_check_mark: Requesting Tabroom.com to follow ${interaction.options.getString('team-code')}\n:white_check_mark: Requesting tournament information from Tabroom.com\n:white_check_mark: Adding to database\n- Scheduling automatic unfollow on tournament end date`)
@@ -300,18 +299,18 @@ module.exports = {
                             })
                         interaction.fetchReply()
                             .then(reply => {
-                                const followEmbed = new Discord.MessageEmbed()
+                                const followEmbed = new Discord.EmbedBuilder()
                                     .setColor('#016f94')
                                     .setTitle(`Following ${interaction.options.getString('team-code')}`)
-                                    .addField('Event', mongoEntry.event, true)
-                                    .addField('Tournament', mongoEntry.tournName, true)
-                                    .addField('Start', new Date(mongoEntry.tournStart).toString(), true)
-                                    .addField('End', new Date(mongoEntry.tournEnd).toString(), true)
-                                    .addField('Notify Channel', `#${interaction.options.getChannel('notify-channel').name}`, true)
-                                    .addField('Notify Role', interaction.options.getRole('notify-role') ? `<@&${interaction.options.getRole('notify-role').name}>` : 'No notify role specified.', true)
-                                    .addField('Notify Users', usersToNotify.map(user => `<@${user}>`).join(', '), true)
-                                    .addField('Analytics', interaction.options.getString('enable-analytics') === 'true' ? 'Enabled' : 'Disabled', true)
-                                    .addField('Follow Expires', new Date(mongoEntry.tournEnd).toString(), true)
+                                    .addFields({ name: 'Event', value: mongoEntry.event, inline: true },
+                                        { name: 'Tournament', value: mongoEntry.tournName, inline: true },
+                                        { name: 'Start', value: new Date(mongoEntry.tournStart).toString(), inline: true },
+                                        { name: 'End', value: new Date(mongoEntry.tournEnd).toString(), inline: true },
+                                        { name: 'Notify Channel', value: `#${interaction.options.getChannel('notify-channel').name}`, inline: true },
+                                        { name: 'Notify Role', value: interaction.options.getRole('notify-role') ? `<@&${interaction.options.getRole('notify-role').name}>` : 'No notify role specified.', inline: true },
+                                        { name: 'Notify Users', value: usersToNotify.map(user => `<@${user}>`).join(', '), inline: true },
+                                        // .addField('Analytics', interaction.options.getString('enable-analytics') === 'true' ? 'Enabled' : 'Disabled', true)
+                                        { name: 'Follow Expires', value: new Date(mongoEntry.tournEnd).toString(), inline: true })
                                 interaction.editReply({ embeds: [followEmbed] })
                             })
                     })
@@ -320,12 +319,12 @@ module.exports = {
             // team with same code does not exist, create new entry, follow normally
             await interaction.reply(`Following... Track the operation progress below:\n- Authenticating with Tabroom.com\n- Requesting Tabroom.com to follow ${interaction.options.getString('team-code')}\n- Requesting tournament information from Tabroom.com\n- Adding to database\n- Scheduling automatic unfollow on tournament end date`)
             var authPayload = {
-                apiauth: process.env.TABAPIKEY,
+                auth: process.env.TABAPIKEY,
                 username: process.env.TABUSERNAME,
                 password: process.env.TABPASSWORD
             }
             superagent
-                .post('https://debateapis.wm.r.appspot.com/login')
+                .post(`${process.env.TABURL}/login`)
                 .set('Content-Type', 'application/x-www-form-urlencoded')
                 .send(JSON.parse(JSON.stringify(authPayload)))
                 .end((err, res) => {
@@ -336,8 +335,8 @@ module.exports = {
                         })
                     var token = res.body.token
                     var followPayload = {
-                        apiauth: process.env.TABAPIKEY,
-                        token: token,
+                        auth: process.env.TABAPIKEY,
+                        token,
                         entryLink: interaction.options.getString('entry-list'), // need to be regex tested for the correct link
                         code: interaction.options.getString('team-code')
                     }
@@ -356,15 +355,13 @@ module.exports = {
                                 server: interaction.guildId,
                                 channel: interaction.options.getChannel('notify-channel').id,
                                 users: usersToNotify.length > 0 ? usersToNotify : null,
-                                role: interaction.options.getRole('notify-role') ? interaction.options.getRole('notify-role').id : null,
-                                analytics: interaction.options.getString('enable-analytics') === 'true'
+                                role: interaction.options.getRole('notify-role') ? interaction.options.getRole('notify-role').id : null
+                                // analytics: interaction.options.getString('enable-analytics') === 'true'
                             }],
-                            event: 'null', // this will change later once pf is implemented
+                            event: followRes.event,
                             expireAt: new Date(parseInt(tournInfo.endDateUnix))
                         }
-                        collection.insertOne(mongoEntry, (err, res) => {
-                            if (err) console.error(err)
-                        })
+                        await collection.insertOne(mongoEntry)
                         interaction.editReply(`Following... Track the operation progress below:\n:white_check_mark: Authenticating with Tabroom.com\n:white_check_mark: Requesting Tabroom.com to follow ${interaction.options.getString('team-code')}\n:white_check_mark: Requesting tournament information from Tabroom.com\n:white_check_mark: Adding to database\n- Scheduling automatic unfollow on tournament end date`)
 
                         await createCloudTasks(followRes, tournInfo) // create cloud tasks for auto-unfollow
@@ -373,18 +370,18 @@ module.exports = {
 
                         interaction.fetchReply()
                             .then(reply => {
-                                const followEmbed = new Discord.MessageEmbed()
+                                const followEmbed = new Discord.EmbedBuilder()
                                     .setColor('#016f94')
                                     .setTitle(`Following ${interaction.options.getString('team-code')}`)
-                                    .addField('Event', mongoEntry.event, true)
-                                    .addField('Tournament', mongoEntry.tournName, true)
-                                    .addField('Start', new Date(mongoEntry.tournStart).toString(), true)
-                                    .addField('End', new Date(mongoEntry.tournEnd).toString(), true)
-                                    .addField('Notify Channel', `#${interaction.options.getChannel('notify-channel').name}`, true)
-                                    .addField('Notify Role', interaction.options.getRole('notify-role') ? `@${interaction.options.getRole('notify-role').name}` : 'No notify role specified.', true)
-                                    .addField('Notify Users', usersToNotify.map(user => `<@${user}>`).join(', '), true)
-                                    .addField('Analytics', interaction.options.getString('enable-analytics') === 'true' ? 'Enabled' : 'Disabled', true)
-                                    .addField('Follow Expires', new Date(mongoEntry.tournEnd).toString(), true)
+                                    .addFields({ name: 'Event', value: mongoEntry.event, inline: true },
+                                        { name: 'Tournament', value: mongoEntry.tournName, inline: true },
+                                        { name: 'Start', value: new Date(mongoEntry.tournStart).toString(), inline: true },
+                                        { name: 'End', value: new Date(mongoEntry.tournEnd).toString(), inline: true },
+                                        { name: 'Notify Channel', value: `#${interaction.options.getChannel('notify-channel').name}`, inline: true },
+                                        { name: 'Notify Role', value: interaction.options.getRole('notify-role') ? `@${interaction.options.getRole('notify-role').name}` : 'No notify role specified.', inline: true },
+                                        { name: 'Notify Users', value: usersToNotify.map(user => `<@${user}>`).join(', '), inline: true },
+                                        // .addField('Analytics', interaction.options.getString('enable-analytics') === 'true' ? 'Enabled' : 'Disabled', true)
+                                        { name: 'Follow Expires', value: new Date(mongoEntry.tournEnd).toString(), inline: true })
                                 interaction.editReply({ embeds: [followEmbed] })
                             })
                     })

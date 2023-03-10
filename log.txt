@@ -1,0 +1,2 @@
+{"level":"info","message":"follow command used by airfusion Time: Thu Mar 09 2023 23:12:47 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
+{"level":"info","message":"follow command used by airfusion Time: Thu Mar 09 2023 23:15:28 GMT-0800 (Pacific Standard Time) Guild: db8bottest2slash1"}
