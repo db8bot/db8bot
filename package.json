@@ -1,12 +1,12 @@
 {
   "name": "db8bot",
-  "version": "6.2.5",
+  "version": "6.3.5",
   "description": "db8bot/Debate Bot is a multipurpose high school debate bot - Provides helpful functions for debate such as research tools & debate tracking.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "doppler run --token=${DOPPLER_TOKEN} --command=\"node index.js\"",
-    "build": "docker build . -t db8bot-v6.2.5-hummingbird-prod",
+    "build": "docker build . -t db8bot-v6.3.5-hummingbird-prod",
     "start-dev": "doppler run --command=\"node index.js\""
   },
   "repository": {
@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/AirFusion45/db8bot#readme",
   "dependencies": {
+    "@google-cloud/tasks": "^3.1.1",
     "analytics-node": "^6.2.0",
     "bad-words": "^3.0.4",
     "chalk": "^4.0.0",
