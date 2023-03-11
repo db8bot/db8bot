@@ -31,7 +31,7 @@ router.post('/', async (req, resApp) => {
         tournName: ,
     */
     console.log(req.body)
-    const body = JSON.parse(req.body)
+    const body = req.body
     if (body.bye === 'true') {
         const byeEmbed = new Discord.EmbedBuilder()
             .setColor('#daeaf1')
