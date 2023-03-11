@@ -74,7 +74,7 @@ router.post('/', async (req, resApp) => {
             pairingsEmbed.addFields({ name: 'Flip?', value: 'Yes', inline: false })
         }
         pairingsEmbed.addFields(
-            { name: 'Judging', value: body.judging.join(', '), inline: false },
+            { name: 'Judging', value: body.judging.join('| '), inline: false },
             { name: 'Start Time', value: body.start, inline: false }
         )
         if (body.flight !== 'false') {
