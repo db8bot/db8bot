@@ -30,19 +30,20 @@ router.post('/', async (req, resApp) => {
         notify: ,
         tournName: ,
     */
-
-    if (req.body.bye) {
+    console.log(req.body)
+    const body = JSON.parse(req.body)
+    if (body.bye === 'true') {
         const byeEmbed = new Discord.EmbedBuilder()
             .setColor('#daeaf1')
-            .setTitle(`${req.body.subject} Pairings`)
-            .setDescription(`**${req.body.byeTeam} BYE**`)
+            .setTitle(`${body.subject} Pairings`)
+            .setDescription(`**${body.byeTeam} BYE**`)
             .setTimestamp(new Date())
             .setFooter({
-                text: req.body.tournName
+                text: body.tournName
             })
 
         resApp.status(200).send('OK')
-        var notifyArr = req.body.notify
+        var notifyArr = body.notify
         for (const server of notifyArr) {
             var sendGuild = await client.guilds.fetch(server.server)
             if (sendGuild.available) {
@@ -55,48 +56,48 @@ router.post('/', async (req, resApp) => {
                 }
             }
         }
-    } else if (!req.body.bye) {
+    } else if (body.bye === 'false') {
         const pairingsEmbed = new Discord.EmbedBuilder()
             .setColor('#daeaf1')
-            .setTitle(`${req.body.subject} Pairings`)
+            .setTitle(`${body.subject} Pairings`)
             .addFields(
-                { name: 'Competition', value: req.body.competitionTeamsStr, inline: false }
+                { name: 'Competition', value: body.competitionTeamsStr, inline: false }
             )
             .setTimestamp(new Date())
             .setFooter({
-                text: req.body.tournName
+                text: body.tournName
             })
-        if (req.body.sidelock) {
+        if (body.sidelock === 'true') {
             pairingsEmbed.addFields({ name: 'Side lock?', value: 'Yes', inline: false })
         }
-        if (req.body.flip) {
+        if (body.fli === 'true') {
             pairingsEmbed.addFields({ name: 'Flip?', value: 'Yes', inline: false })
         }
         pairingsEmbed.addFields(
-            { name: 'Judging', value: req.body.judging.join(', '), inline: false },
-            { name: 'Start Time', value: req.body.start, inline: false }
+            { name: 'Judging', value: body.judging.join(', '), inline: false },
+            { name: 'Start Time', value: body.start, inline: false }
         )
-        if (req.body.flight) {
-            pairingsEmbed.addFields({ name: 'Flight', value: req.body.flight, inline: false })
+        if (body.flight !== 'false') {
+            pairingsEmbed.addFields({ name: 'Flight', value: body.flight, inline: false })
         }
         pairingsEmbed.addFields(
-            { name: 'Room', value: req.body.room, inline: false }
+            { name: 'Room', value: body.room, inline: false }
         )
-        if (req.body.extraInfo) {
-            pairingsEmbed.addFields({ name: 'Extra Info', value: req.body.extraInfo, inline: false })
+        if (body.extraInfo) {
+            pairingsEmbed.addFields({ name: 'Extra Info', value: body.extraInfo, inline: false })
         }
-        if (req.body.map) {
-            pairingsEmbed.addFields({ name: 'Map', value: req.body.map, inline: false })
+        if (body.map) {
+            pairingsEmbed.addFields({ name: 'Map', value: body.map, inline: false })
         }
 
         resApp.status(200).send('OK')
-        var notifyArr = req.body.notify
+        var notifyArr = body.notify
         for (const server of notifyArr) {
             var sendGuild = await client.guilds.fetch(server.server)
             if (sendGuild.available) {
                 var guildChannels = await sendGuild.channels.fetch(server.channel)
                 try {
-                    var tagging = server.users.map(user => `<@${user}>`).join(', ') + '\n' + (server.role !== null ? `<@&${server.role}>` : '')
+                    var tagging = server.users.map(user => `<@${user}>`).join(', ') + '\n' + (server.role !== 'null' ? `<@&${server.role}>` : '')
                     guildChannels.send({ content: tagging, embeds: [pairingsEmbed] })
                 } catch (err) {
                     console.error(err)
