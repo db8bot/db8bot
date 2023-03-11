@@ -205,6 +205,7 @@ app.set('client', client)
 app.use('/ocrinbound', require('./routes/ocrReceive'))
 app.use('/getinbound', require('./routes/getReceive'))
 app.use('/heartbeat', require('./routes/heartbeat'))
+app.use('/followinbound', require('./routes/followinbound'))
 
 // auth & express listen
 var port = process.env.PORT
