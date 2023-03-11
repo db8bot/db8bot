@@ -30,7 +30,7 @@ router.post('/', async (req, resApp) => {
         notify: ,
         tournName: ,
     */
-    console.log(req.body)
+
     const body = req.body
     if (body.bye === 'true') {
         const byeEmbed = new Discord.EmbedBuilder()
@@ -97,7 +97,7 @@ router.post('/', async (req, resApp) => {
             if (sendGuild.available) {
                 var guildChannels = await sendGuild.channels.fetch(server.channel)
                 try {
-                    var tagging = server.users.map(user => `<@${user}>`).join(', ') + '\n' + (server.role !== 'null' ? `<@&${server.role}>` : '')
+                    var tagging = server.users.map(user => `<@${user}>`).join(', ') + '\n' + (server.role !== '' ? `<@&${server.role}>` : '')
                     guildChannels.send({ content: tagging, embeds: [pairingsEmbed] })
                 } catch (err) {
                     console.error(err)
