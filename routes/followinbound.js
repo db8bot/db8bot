@@ -49,7 +49,7 @@ router.post('/', async (req, resApp) => {
             if (sendGuild.available) {
                 var guildChannels = await sendGuild.channels.fetch(server.channel)
                 try {
-                    var tagging = server.users.map(user => `<@${user}>`).join(', ') + '\n' + (server.role !== null ? `<@&${server.role}>` : '')
+                    var tagging = server.users.map(user => `<@${user}>`).join(', ') + '\n' + (server.role !== '' ? `<@&${server.role}>` : '')
                     guildChannels.send({ content: tagging, embeds: [byeEmbed] })
                 } catch (err) {
                     console.error(err)
@@ -70,11 +70,11 @@ router.post('/', async (req, resApp) => {
         if (body.sidelock === 'true') {
             pairingsEmbed.addFields({ name: 'Side lock?', value: 'Yes', inline: false })
         }
-        if (body.fli === 'true') {
+        if (body.flip === 'true') {
             pairingsEmbed.addFields({ name: 'Flip?', value: 'Yes', inline: false })
         }
         pairingsEmbed.addFields(
-            { name: 'Judging', value: body.judging.join('| '), inline: false },
+            { name: 'Judging', value: body.judging.join(' | '), inline: false },
             { name: 'Start Time', value: body.start, inline: false }
         )
         if (body.flight !== 'false') {
