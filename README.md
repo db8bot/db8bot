@@ -1,5 +1,7 @@
-# DB8Bot
-DB8Bot or db8bot is a high school/college debate discord bot made using [discord.js](https://discord.js.org/).
+# db8bot
+db8bot is a high school/college debate discord bot made using [discord.js](https://discord.js.org/).
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdb8bot%2Fdb8bot.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdb8bot%2Fdb8bot?ref=badge_large)
 
 <!-- [![db8bot's Widget](https://api.botlist.space/widget/689368779305779204/5 "db8bot's Widget")](https://botlist.space/bot/689368779305779204?utm_source=bls&utm_medium=widget&utm_campaign=689368779305779204) -->
 
@@ -7,7 +9,7 @@ DB8Bot or db8bot is a high school/college debate discord bot made using [discord
 
 <!-- [![MBL](https://mythicalbots.xyz/bot/689368779305779204/embed?q=dark/ )](https://mythicalbots.xyz/bot/689368779305779204) -->
 
-<!-- [![Discord Bots](https://top.gg/api/widget/689368779305779204.svg)](https://top.gg/bot/689368779305779204) -->
+[![Discord Bots](https://top.gg/api/widget/689368779305779204.svg)](https://top.gg/bot/689368779305779204)
 
 ## Adding db8bot
 We do not recommend self-hosting db8bot. For the best experience, please invite the hosted version of db8bot to your server.
@@ -20,18 +22,16 @@ We do not recommend self-hosting db8bot. For the best experience, please invite 
 
 ## Basic Usage
 
-* The prefix of db8bot is `-`.
-    * For general help, the support server & additional notes type `-help`.
-    * For the full commands list, type `-commands`.
-    * Each command is called using the prefix, in the following form: `-<command>` where <command> is the command. For example, to call the command ping, you would type `-ping`.
+* The prefix of db8bot is `/`.
+    * For general help, the support server & additional notes type `/help`.
+    * For the full commands list, type `/commands`.
+    * Each command is called using the prefix, in the following form: `/<command>` where <command> is the command. For example, to call the command ping, you would type `/ping`.
     * Feel free to join [this support server](https://discord.gg/rEQc7C7) if additional help is needed!
 
 ## Features
 
 This is not a command list. Some of the descriptions after the dash are not actually how you use that command. Use `-commands` in a server with db8bot to find db8bot's full command list.
-  * Moderation:
-    * Admin/Mod Commands - mute
-    * Chat Management - purge & lockdown
+  * Moderation: purge
   * Utility Commands - server info, user info, bot info 
   * General Chat Commands - generate embed messages, quickly generate a server invite link, say, DM person in server as bot.
   * Debate Comands - get research paper from Google Scholar/ResearchGate/arXiv, start then track a debate round, track current speech, end the tracked debate round, coin flip, get judge's paradigm from Tabroom
@@ -93,22 +93,22 @@ This Project is licensed under MIT License - see the LICENSE.md file for more de
   * We also store non-personally identifiable information about what commands our users have used. This includes: the time the command was used, the name of the command that was used, the name of the server (server IDs are not stored), the username of the user that used the command (the 4 discriminator digits are not stored). This information and this information ONLY is stored on Google Analytics.
 
   ### Length of storage
-  * Debate round information is stored until the user deletes it through `-endround` 
+  * Debate round information is stored until the user deletes it through `/endround` 
 
   ### Questions about the deletion of your data
-  * Please join the help server or use the `-feedback` command.
+  * Please join the help server or use the `/feedback` command.
 
 ## Credits
 Here are credits for all the code I used that was from other repositories.
-  * /botinfo command's uptime calculations code & general ideas/inspiration from Dank-Memer's Dank-Memer [here](https://github.com/Dank-Memer/Dank-Memer).
+  * `/botinfo` command's uptime calculations code & general ideas/inspiration from Dank-Memer's Dank-Memer [here](https://github.com/Dank-Memer/Dank-Memer).
   * Majority of bot structure from AnIdiotsGuide's Tutorial-Bot [here](https://github.com/AnIdiotsGuide/Tutorial-Bot).
-  * /get media command core from iamadamdev's bypass-paywalls-chrome [here](https://github.com/iamadamdev/bypass-paywalls-chrome/)
+  * `/get` media command core from iamadamdev's bypass-paywalls-chrome [here](https://github.com/iamadamdev/bypass-paywalls-chrome/)
 
 ## Contact Me
 Feel free to contact me if you find bugs, license issues, missing credits, etc.
 
   * Please contact me here:
-    * Email: jfang.cv.ca.us@gmail.com
+    * Email: jim@db8bot.app
     * Discord: AirFusion#5112
 
 ## Note/Notes 
