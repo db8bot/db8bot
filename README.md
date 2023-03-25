@@ -1,4 +1,4 @@
-# DB8Bot
+# db8bot
 DB8Bot or db8bot is a high school/college debate discord bot made using [discord.js](https://discord.js.org/).
 
 <!-- [![db8bot's Widget](https://api.botlist.space/widget/689368779305779204/5 "db8bot's Widget")](https://botlist.space/bot/689368779305779204?utm_source=bls&utm_medium=widget&utm_campaign=689368779305779204) -->
@@ -90,13 +90,15 @@ This Project is licensed under MIT License - see the LICENSE.md file for more de
 
   ### The data we collect
   * In order to track debates, the names of each debate round are stored in our database in the form of <server id><name of the round given by the user>. For each debate round, we also store information about which members in the server are debating (in the form of mentionable user objects), the judge (in the form of a user object), the name of the debate event (ex: Public Forum, Policy, Lincoln Douglas), and the name of the round given by the user.
-  * We also store non-personally identifiable information about what commands our users have used. This includes: the time the command was used, the name of the command that was used, the name of the server (server IDs are not stored), the username of the user that used the command (the 4 discriminator digits are not stored). This information and this information ONLY is stored on Google Analytics.
+  * We also store non-personally identifiable information about what commands our users have used. This includes: the time the command was used, the name of the command that was used, the name of the server (server IDs are not stored), the username of the user that used the command (the 4 discriminator digits are not stored). This information and this information ONLY is stored on Google Analytics. 
+
+  In addition, by using db8bot, you give us permission to use your server name and the logos of any organization that your server name refers to in our marketing and advertising materials. We will ensure that your organization is represented truthfully. See [here](https://www.gfrlaw.com/what-we-do/insights/beyond-brand-x-using-another%E2%80%99s-trademark-your-own-advertising) for more legal information.
 
   ### Length of storage
-  * Debate round information is stored until the user deletes it through `-endround` 
+  * Debate round information is stored until the user deletes it through `/endround` 
 
   ### Questions about the deletion of your data
-  * Please join the help server or use the `-feedback` command.
+  * Please join the help server or use the `/feedback` command.
 
 ## Credits
 Here are credits for all the code I used that was from other repositories.
