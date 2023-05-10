@@ -1,7 +1,11 @@
 # db8bot
-DB8Bot or db8bot is a high school/college debate discord bot made using [discord.js](https://discord.js.org/).
+## db8bot aims to make academic journals/research, online debate, and digital learning accessible to all.
 
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdb8bot%2Fdb8bot.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdb8bot%2Fdb8bot?ref=badge_large)
+[Invite db8bot](https://discord.com/oauth2/authorize?client_id=689368779305779204&permissions=310647056497&scope=bot%20applications.commands) | [db8bot Website](https://db8bot.app)
+
+**You must have the *Manage Server* or be the owner of the server in order to invite the bot. Please do not modify any of the pre-selected permissions provided in the above link.**
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdb8bot%2Fdb8bot.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdb8bot%2Fdb8bot?ref=badge_large) [![Discord Bots](https://top.gg/api/widget/689368779305779204.svg)](https://top.gg/bot/689368779305779204)
 
 <!-- [![db8bot's Widget](https://api.botlist.space/widget/689368779305779204/5 "db8bot's Widget")](https://botlist.space/bot/689368779305779204?utm_source=bls&utm_medium=widget&utm_campaign=689368779305779204) -->
 
@@ -9,16 +13,9 @@ DB8Bot or db8bot is a high school/college debate discord bot made using [discord
 
 <!-- [![MBL](https://mythicalbots.xyz/bot/689368779305779204/embed?q=dark/ )](https://mythicalbots.xyz/bot/689368779305779204) -->
 
-[![Discord Bots](https://top.gg/api/widget/689368779305779204.svg)](https://top.gg/bot/689368779305779204)
+<!-- [discord.js](https://discord.js.org/). -->
+## Table of Contents
 
-## Adding db8bot
-We do not recommend self-hosting db8bot. For the best experience, please invite the hosted version of db8bot to your server.
-
-**You must have the *Manage Server* or be the owner of the server in order to invite the bot.**
-
-[Invite DB8Bot](https://discord.com/oauth2/authorize?client_id=689368779305779204&permissions=310647056497&scope=bot%20applications.commands)
-
-**Please do not modify any of the pre-selected permissions provided in the above link.**
 
 ## Basic Usage
 
@@ -37,8 +34,58 @@ This is not a command list. Some of the descriptions after the dash are not actu
   * Debate Comands - get research paper from Google Scholar/ResearchGate/arXiv, start then track a debate round, track current speech, end the tracked debate round, coin flip, get judge's paradigm from Tabroom
   * Fun Commands :) - trump quotes, communism, capitalism, bataille & baudrillard themed quotes
 
-## Self Hosting DB8Bot
-db8bot depends on several custom 3rd party solutions. Therefore we do not recommand self-hosting db8bot. A brief outline of the requirements for self-hosting is listed below. We assume you have a basic understanding of Node.js, npm and mongoDB.
+## Self-Hosting/Build for Developement
+
+We do not recommend self-hosting db8bot. The application depends on numerous custom in-house APIs and services. For the best experience, please invite the [hosted version](https://discord.com/oauth2/authorize?client_id=689368779305779204&permissions=310647056497&scope=bot%20applications.commands) of db8bot to your server.
+
+A brief outline of the requirements for self-hosting is listed below. We assume you have a basic understanding of Node.js, npm and mongoDB.
+
+We only support hosting on Linux machines at this time. We plan on releasing a docker image soon.
+
+### Install & Dependencies
+* Clone the master branch or download the source code from our latest release.
+* Assuming Node.js (We recommend LTS) and NPM are installed, run `npm install` to install production dependencies. If you are planning to modify the code, run `npm install --save-dev` instead to install dev dependencies as well.
+
+### Register with Discord Developers
+* Head to the [Discord Developers Portal](https://discord.com/developers). Register a developer account, create a bot & grab your bot token, bot ID.
+
+
+### Helper APIs & Services
+* db8bot depends on several in-house APIs & services. Please head to [db8bot's GitHub page](https:/github.com/db8bot) for the following instructions.
+
+#### Blaze API
+> Blaze API handles high intensity work loads such as OCR, journal requests, web scraping, Tabroom.com inbound email processing. Please follow instructions [here](https://github.com/db8bot/blaze-api) to set this API up.
+
+#### Blaze-Edge API
+> Blaze Edge API handles book requests. This API runs on runs on Cloudflare's Workers platform to decrease latency. Please follow instructions [here](https://github.com/db8bot/blaze-api-edge) to set this API up.
+
+#### Tabroom API
+
+#### /follow Google Cloud Cloud Function (Lambda Function) & Tasks
+For the `/follow` command, db8bot uses Google Tasks to schedule the execution of a Cloud Function that automatically unsubscribes db8bot's Tabroom.com 
+
+
+### Database
+- MongoDB
+
+
+### Telemetry & Analytics
+- Twilio Segment
+- Google Analytics
+- Sentry
+
+### Secrets
+* db8bot uses [Doppler](https://doppler.com) to manage secrets, including for local development. You should sign up there and create a project for db8bot.
+* If you plan to develop on your machine, follow Doppler's documentation to configure your machine for development (this includes installing their CLI).
+* If you are planning to host, generate an access token for the project you just created.
+* Create the following fields in your Doppler project:
+```txt
+
+
+```
+
+### Hosting Configurations
+Please configure your firewall to allow incoming & outgoing http & https requests. Please also expose port 8081 for db8bot's built-in service to receive returned results from helper APIs.
 
 ### Instructions for POSIX Like Environment
   1. Open `example.env`, rename it to `prod.env` & fill out the fields.
@@ -70,10 +117,16 @@ db8bot depends on several custom 3rd party solutions. Therefore we do not recomm
 
 ## Contributors
 
-* *AirFusion45* - Original Author
+* *AirFusion45* - Original author
 * *Extinction Inevitable#2404* - Capitalism command request
-* *julianv#0044* - Improvements on -say
+* *julianv#0044* - Improvements on `/say`
 * [*ethamitc*](https://github.com/ethamitc) - Improvement on formatting of readme.md
+
+## Sponsors
+db8bot is supported by the following sponsors. This project would not be possible without them. Thank you for your support!
+
+* The Open-Source Collective on Open Collective
+* FOSSA Inc.
 
 ## License 
 This Project is licensed under MIT License - see the LICENSE.md file for more details. The main points of the MIT License are:
