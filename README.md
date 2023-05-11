@@ -15,7 +15,7 @@
 
 <!-- [discord.js](https://discord.js.org/). -->
 ## Table of Contents
-
+> **This current readme is a work in progress. Please see the old readme [here](https://github.com/db8bot/db8bot/tree/caaec73741188615dcf0d0408c03270a59f8ed4e#readme).**
 
 ## Basic Usage
 
