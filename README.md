@@ -15,14 +15,14 @@
 
 <!-- [discord.js](https://discord.js.org/). -->
 ## Table of Contents
-[Basic Usage](#basic-usage)
-[Features](#features)
-[Self Hosting & Building for Development](#self-hostingbuilding-for-development)
-[Contributors](#contributors)
-[Sponsors](#sponsors)
-[License](#license)
-[Privacy](#privacy)
-[Credits & Mentions](#credits)
+[Basic Usage](#basic-usage)\
+[Features](#features)\
+[Self Hosting & Building for Development](#self-hostingbuilding-for-development)\
+[Contributors](#contributors)\
+[Sponsors](#sponsors)\
+[License](#license)\
+[Privacy](#privacy)\
+[Credits & Mentions](#credits)\
 [Contact](#contact-me)
 
 ## Basic Usage
@@ -52,7 +52,7 @@ We do not recommend self-hosting db8bot. The application depends on numerous cus
 
 We only support hosting on Linux machines at this time. We plan on releasing an image on Docker Hub soon.
 
-Please find instructions [here](https://github.com/db8bot/db8bot/wiki/Self-Hosting-&-Building-for-Development)
+Please find instructions [here](https://github.com/db8bot/db8bot/wiki/Self-Hosting-&-Building-for-Development).
 
 ## Contributors
 
