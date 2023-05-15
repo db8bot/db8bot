@@ -15,14 +15,14 @@
 
 <!-- [discord.js](https://discord.js.org/). -->
 ## Table of Contents
-[Basic Usage](#basic-usage)
-[Features](#features)
-[Self Hosting & Building for Development](#self-hostingbuilding-for-development)
-[Contributors](#contributors)
-[Sponsors](#sponsors)
-[License](#license)
-[Privacy](#privacy)
-[Credits & Mentions](#credits)
+[Basic Usage](#basic-usage)\
+[Features](#features)\
+[Self Hosting & Building for Development](#self-hostingbuilding-for-development)\
+[Contributors](#contributors)\
+[Sponsors](#sponsors)\
+[License](#license)\
+[Privacy](#privacy)\
+[Credits & Mentions](#credits)\
 [Contact](#contact-me)
 
 ## Basic Usage
