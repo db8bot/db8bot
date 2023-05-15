@@ -1,7 +1,6 @@
 # syntax=docker/dockerfile:1
 
-# using APT for xvfb so can't use alpine yet :(
-FROM node:19
+FROM node:18.16.0
 
 ENV NODE_ENV=production
 

@@ -1,6 +1,6 @@
 {
   "name": "db8bot",
-  "version": "6.3.9",
+  "version": "6.3.10",
   "description": "db8bot/Debate Bot is a multipurpose high school debate bot - Provides helpful functions for debate such as research tools & debate tracking.",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AirFusion45/db8bot.git"
+    "url": "git+https://github.com/db8bot/db8bot.git"
   },
   "keywords": [
     "discord",
@@ -23,7 +23,7 @@
     "debate",
     "debate-tracking"
   ],
-  "author": "AirFusion45",
+  "author": "Jim Fang",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/AirFusion45/db8bot/issues"

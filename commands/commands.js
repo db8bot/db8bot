@@ -11,10 +11,11 @@ module.exports = {
             .setDescription('**Prefix:** `/`')
             .setFooter({ text: `${process.env.NAME} Commands` })
             .setTimestamp()
-            .setTitle('Access commands by typing `/` and then the command name.')
+            .setTitle('Command descriptions will show after typing the command.')
             .addFields(
                 { name: ':tools: **General**', value: 'commands, help, feedback, invite, ping, say, serverinv, clean, purge', inline: true },
-                { name: ':information_source: **Information**', value: 'botinfo, serverinfo', inline: true }, { name: ':trophy: **Debate**', value: 'get, **startround: setspeech, endround, roundstatus, flip**, judgeinfo, speeches', inline: true },
+                { name: ':information_source: **Information**', value: 'botinfo, serverinfo', inline: true },
+                { name: ':trophy: **Debate & Research**', value: 'get, getbook, startround, setspeech, endround, roundstatus, judgeinfo', inline: true },
                 { name: ':partying_face: **Fun**', value: 'communism, capitalism, jpow, yellen, trump, biden, amash, baudrillard, bataille, agamben, foucault', inline: true }
             )
         interaction.reply({ embeds: [embedNew] })

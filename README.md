@@ -15,118 +15,57 @@
 
 <!-- [discord.js](https://discord.js.org/). -->
 ## Table of Contents
-> **This current readme is a work in progress. Please see the old readme [here](https://github.com/db8bot/db8bot/tree/caaec73741188615dcf0d0408c03270a59f8ed4e#readme).**
+[Basic Usage](#basic-usage)
+[Features](#features)
+[Self Hosting & Building for Development](#self-hostingbuilding-for-development)
+[Contributors](#contributors)
+[Sponsors](#sponsors)
+[License](#license)
+[Privacy](#privacy)
+[Credits & Mentions](#credits)
+[Contact](#contact-me)
 
 ## Basic Usage
 
-* The prefix of db8bot is `/`.
-    * For general help, the support server & additional notes type `/help`.
-    * For the full commands list, type `/commands`.
-    * Each command is called using the prefix, in the following form: `/<command>` where <command> is the command. For example, to call the command ping, you would type `/ping`.
-    * Feel free to join [this support server](https://discord.gg/rEQc7C7) if additional help is needed!
+* db8bot uses slash commands!
+  * Start a command by typing "/"
+  * Here are a few to get you started:
+    * "/help" - Shows a quick guide to get you started
+    * "/commands" - Shows available commands
+    * "/get" - Attempt to find an accessible version of an academic journal given a DOI or link to the paywalled article
+    * "/getbook" - Attempt to find an accessible version of a book (non-fiction & fiction) given an ISBN or name.
+    * "/startround" - Start a debate round tracked by db8bot.
+  * Feel free to join [this support server](https://discord.gg/rEQc7C7) if additional help is needed!
 
 ## Features
 
 This is not a command list. Some of the descriptions after the dash are not actually how you use that command. Use `-commands` in a server with db8bot to find db8bot's full command list.
   * Moderation: purge
   * Utility Commands - server info, user info, bot info 
-  * General Chat Commands - generate embed messages, quickly generate a server invite link, say, DM person in server as bot.
-  * Debate Comands - get research paper from Google Scholar/ResearchGate/arXiv, start then track a debate round, track current speech, end the tracked debate round, coin flip, get judge's paradigm from Tabroom
+  * General Chat Commands - quickly generate a server invite link, say as bot
+  * Debate Commands - get research paper from Google Scholar/Semantic Scholar/arXiv/Sci-Hub, start then track a debate round, track current speech, end the tracked debate round, get judge's paradigm from Tabroom
   * Fun Commands :) - trump quotes, communism, capitalism, bataille & baudrillard themed quotes
 
-## Self-Hosting/Build for Developement
+## Self-Hosting/Building for Development
 
 We do not recommend self-hosting db8bot. The application depends on numerous custom in-house APIs and services. For the best experience, please invite the [hosted version](https://discord.com/oauth2/authorize?client_id=689368779305779204&permissions=310647056497&scope=bot%20applications.commands) of db8bot to your server.
 
-A brief outline of the requirements for self-hosting is listed below. We assume you have a basic understanding of Node.js, npm and mongoDB.
+We only support hosting on Linux machines at this time. We plan on releasing an image on Docker Hub soon.
 
-We only support hosting on Linux machines at this time. We plan on releasing a docker image soon.
-
-### Install & Dependencies
-* Clone the master branch or download the source code from our latest release.
-* Assuming Node.js (We recommend LTS) and NPM are installed, run `npm install` to install production dependencies. If you are planning to modify the code, run `npm install --save-dev` instead to install dev dependencies as well.
-
-### Register with Discord Developers
-* Head to the [Discord Developers Portal](https://discord.com/developers). Register a developer account, create a bot & grab your bot token, bot ID.
-
-
-### Helper APIs & Services
-* db8bot depends on several in-house APIs & services. Please head to [db8bot's GitHub page](https:/github.com/db8bot) for the following instructions.
-
-#### Blaze API
-> Blaze API handles high intensity work loads such as OCR, journal requests, web scraping, Tabroom.com inbound email processing. Please follow instructions [here](https://github.com/db8bot/blaze-api) to set this API up.
-
-#### Blaze-Edge API
-> Blaze Edge API handles book requests. This API runs on runs on Cloudflare's Workers platform to decrease latency. Please follow instructions [here](https://github.com/db8bot/blaze-api-edge) to set this API up.
-
-#### Tabroom API
-
-#### /follow Google Cloud Cloud Function (Lambda Function) & Tasks
-For the `/follow` command, db8bot uses Google Tasks to schedule the execution of a Cloud Function that automatically unsubscribes db8bot's Tabroom.com 
-
-
-### Database
-- MongoDB
-
-
-### Telemetry & Analytics
-- Twilio Segment
-- Google Analytics
-- Sentry
-
-### Secrets
-* db8bot uses [Doppler](https://doppler.com) to manage secrets, including for local development. You should sign up there and create a project for db8bot.
-* If you plan to develop on your machine, follow Doppler's documentation to configure your machine for development (this includes installing their CLI).
-* If you are planning to host, generate an access token for the project you just created.
-* Create the following fields in your Doppler project:
-```txt
-
-
-```
-
-### Hosting Configurations
-Please configure your firewall to allow incoming & outgoing http & https requests. Please also expose port 8081 for db8bot's built-in service to receive returned results from helper APIs.
-
-### Instructions for POSIX Like Environment
-  1. Open `example.env`, rename it to `prod.env` & fill out the fields.
-  ```
-  TOKEN=<DISCORD BOT TOKEN>
-  OWNER=<BOT OWNER ID>
-  OWNERTAG=<BOT OWNER DISCORD TAG (USERNAME + DISCRIMINATOR)>
-  PREFIX=<PREFIX FOR CMDS THAT STILL USE THE MESSAGE INTENT>
-  NAME=<NAME OF BOT>
-  INVLINK=<BOT INVITE LINK>
-  TEMPTOKEN=<TEMP DISCORD TOKEN FOR TESTING>
-  BOTID=<BOT ID>
-  TABAPIKEY=<TABROOM API KEY - SEE INSTRUCTIONS BELOW>
-  MONGOURI=<MONGODB URI WITH USERNAME & PASSWORD FILLED IN>
-  MONGOUSER=<MONGODB USERNAME>
-  MONGOPASS=<MONGODB PASSWORD>
-  TELEMETRYKEY=<GOOGLE ANALYTICS UA TRACKING CODE>
-  IPINFOTOKEN=<TOKEN FROM ipinfo.io>
-  ```
-  2. Go to the unofficial tabroomAPI [here](https://github.com/AirFusion45/tabroomAPI). Download the main branch, fill out the `apiKeysExample.json` & rename it to `apiKeys.json`. Deploy this Express.js API on any VPS of your choice. The api key goes in the TABAPIKEY. The ip of the API goes in the `judgeinfo.js` file.
-
-  3. Go to MongoDB, create a database deployment, then create a database in the deployment. Create 4 collections: `debateTracking`, `debateTrackingArchive`, `ipfsKeys`, `prodCommandConfig`. Fill out the missing fields in `prod.env`
-
-  4. Go to Discord Developers, setup bot account & get token, etc.
-
-  5. `npm install`
-
-  6. `docker build . -t db8bot`
+Please find instructions [here](https://github.com/db8bot/db8bot/wiki/Self-Hosting-&-Building-for-Development)
 
 ## Contributors
 
 * *AirFusion45* - Original author
 * *Extinction Inevitable#2404* - Capitalism command request
 * *julianv#0044* - Improvements on `/say`
-* [*ethamitc*](https://github.com/ethamitc) - Improvement on formatting of readme.md
+* [*ethamitc*](https://github.com/ethamitc) - Improvement on the formatting of readme.md
 
 ## Sponsors
 db8bot is supported by the following sponsors. This project would not be possible without them. Thank you for your support!
 
-* The Open-Source Collective on Open Collective
-* FOSSA Inc.
+* [The Open-Source Collective on Open Collective](https://opencollective.com/db8bot)
+* [FOSSA Inc.](https://www.fossa.com/?utm_source=FOSSA&utm_medium=db8bot)
 
 ## License 
 This Project is licensed under MIT License - see the LICENSE.md file for more details. The main points of the MIT License are:
@@ -143,7 +82,9 @@ This Project is licensed under MIT License - see the LICENSE.md file for more de
 
   ### The data we collect
   * In order to track debates, the names of each debate round are stored in our database in the form of <server id><name of the round given by the user>. For each debate round, we also store information about which members in the server are debating (in the form of mentionable user objects), the judge (in the form of a user object), the name of the debate event (ex: Public Forum, Policy, Lincoln Douglas), and the name of the round given by the user.
-  * We also store non-personally identifiable information about what commands our users have used. This includes: the time the command was used, the name of the command that was used, the name of the server (server IDs are not stored), the username of the user that used the command (the 4 discriminator digits are not stored). This information and this information ONLY is stored on Google Analytics. 
+    * All debate rounds are archived after they are ended in the same file structure.
+  * We also store non-personally identifiable information about what commands our users have used. This includes: the time the command was used, the name of the command that was used, the name of the server (server IDs are not stored), and the username of the user that used the command (the 4 discriminator digits are not stored). This information is stored on Google Analytics. 
+  * We also store Tabroom.com team codes, entry list URLs, user-specified notification channels, a list of users to notify & roles to notify if someone setup the `/`follow` command to follow a team during a specified tournament. 
   * In addition, by using db8bot, you give us permission to use your server name and the logos of any organization that your server name refers to in our marketing and advertising materials. We will ensure that your organization is represented truthfully. See [here](https://www.gfrlaw.com/what-we-do/insights/beyond-brand-x-using-another%E2%80%99s-trademark-your-own-advertising) for more legal information.
 
   ### Length of storage
@@ -155,8 +96,8 @@ This Project is licensed under MIT License - see the LICENSE.md file for more de
 ## Credits
 Here are credits for all the code I used that was from other repositories.
   * `/botinfo` command's uptime calculations code & general ideas/inspiration from Dank-Memer's Dank-Memer [here](https://github.com/Dank-Memer/Dank-Memer).
-  * Majority of bot structure from AnIdiotsGuide's Tutorial-Bot [here](https://github.com/AnIdiotsGuide/Tutorial-Bot).
-  * `/get` media command core from iamadamdev's bypass-paywalls-chrome [here](https://github.com/iamadamdev/bypass-paywalls-chrome/)
+Majority of the bot structure from AnIdiotsGuide's Tutorial-Bot [here](https://github.com/AnIdiotsGuide/Tutorial-Bot).
+  * `/get` media command (Deprecated) core from iamadamdev's bypass-paywalls-chrome [here](https://github.com/iamadamdev/bypass-paywalls-chrome/)
 
 ## Contact Me
 Feel free to contact me if you find bugs, license issues, missing credits, etc.
@@ -164,6 +105,3 @@ Feel free to contact me if you find bugs, license issues, missing credits, etc.
   * Please contact me here:
     * Email: jim@db8bot.app
     * Discord: AirFusion#5112
-
-## Note/Notes 
-  When self-hosting db8bot, we recommend downloading the latest release under the releases tab. As that is the most stable version.

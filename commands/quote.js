@@ -22,6 +22,10 @@ module.exports = {
                 .setDescription('Quote by Georges Bataille'))
         .addSubcommand(subcommand =>
             subcommand
+                .setName('foucault')
+                .setDescription('Quote by Michel Foucault'))
+        .addSubcommand(subcommand =>
+            subcommand
                 .setName('baudrillard')
                 .setDescription('Quote by Jean Baudrillard'))
         .addSubcommand(subcommand =>
@@ -59,6 +63,10 @@ module.exports = {
         case 'bataille':
             quotes = require('../quoteFiles/batailleQuotes.json')
             require('../modules/quote').sendQuote(quotes, interaction, '#800080')
+            break
+        case 'foucault':
+            quotes = require('../quoteFiles/foucaultQuote.json')
+            require('../modules/quote').sendQuote(quotes, interaction, '#800080') // CHANGE COLOR
             break
         case 'baudrillard':
             quotes = require('../quoteFiles/baudrillardQuotes.json')
