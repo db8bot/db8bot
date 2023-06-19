@@ -66,6 +66,7 @@ db8bot is supported by the following sponsors. This project would not be possibl
 
 * [The Open-Source Collective on Open Collective](https://opencollective.com/db8bot)
 * [FOSSA Inc.](https://www.fossa.com/?utm_source=FOSSA&utm_medium=db8bot)
+* [Vercel](https://vercel.com/?utm_source=db8bot&utm_campaign=oss)
 
 ## License 
 This Project is licensed under MIT License - see the LICENSE.md file for more details. The main points of the MIT License are:
